@@ -1,0 +1,19 @@
+plugins {
+    id 'java-library' // api 키워드를 사용하기 위해 필수
+}
+
+
+dependencies {
+
+    implementation project(':emoforge-core')
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server' // JWT 검증용 (선택)
+
+    // === @FeignClient  ===
+    api 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+
+    compileOnly 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.15'
+}

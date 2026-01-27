@@ -1,0 +1,15 @@
+plugins {
+    id 'java-library' // api 키워드를 사용하기 위해 필수
+}
+
+dependencies {
+    implementation project(':emoforge-core')
+    implementation project(':module-auth')
+
+    // === DB Driver ===
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+    //mysql db (aws rds 접속)
+    runtimeOnly 'com.mysql:mysql-connector-j:8.2.0'
+
+}

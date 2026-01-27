@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+
+allprojects {
+    group = 'com.emoforge'
+    version = '1.0.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    java {
+        sourceCompatibility = '17' // Java 버전 확인
+    }
+
+    // [추가] Spring Cloud 버전 관리 설정
+    dependencyManagement {
+        imports {
+            // Spring Boot 3.3.4 (사용자님 버전) 기준, 2023.0.3 버전이 가장 안정적입니다.
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.3"
+        }
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    dependencies {
+        // 모든 하위 모듈이 공통으로 사용하는 최소 의존성
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+    // [중요] bootJar 설정: 실행 모듈인 app만 활성화, 나머지는 비활성화
+    if (project.name == 'emoforge-app') {
+        bootJar { enabled = true }
+        jar { enabled = false }
+    } else {
+        bootJar { enabled = false }
+        jar { enabled = true }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}

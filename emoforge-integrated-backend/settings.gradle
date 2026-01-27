@@ -1,0 +1,5 @@
+rootProject.name = 'emoforge-integrated-backend'
+include 'emoforge-core'
+include 'emoforge-app'
+include 'module-auth'
+
