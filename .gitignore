@@ -1,0 +1,57 @@
+### 공통 ###
+.DS_Store
+Thumbs.db
+*.log
+/logs/
+/*.log
+
+### IDE ###
+*.iml
+.idea/
+.vscode/
+
+### Java / Spring Boot ###
+/*/target/
+/*/build/
+/*/out/
+*.class
+*.jar
+*.war
+*.ear
+
+### Spring Boot Config ###
+*/src/main/resources/application.yml
+*/src/main/resources/application-*.yml
+
+application*.yml
+application*.yaml
+
+### Node / React / Vite ###
+/*/node_modules/
+/*/dist/
+/*/.cache/
+/*/npm-debug.log*
+/*/yarn-debug.log*
+/*/yarn-error.log*
+/*/pnpm-debug.log*
+/*/vite.config.ts.timestamp*
+
+### Env files ###
+# Root-level .env
+.env
+.env.*
+
+# Any nested envs
+**/.env
+**/.env.*
+
+# Allow example templates
+!**/.env.example
+
+# Windows reserved / temp
+nul
+admin-frontend/nul
+
+# Claude / AI artifacts
+admin-frontend/.claude/
+admin-frontend/claude_history/
