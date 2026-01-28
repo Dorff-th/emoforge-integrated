@@ -1,4 +1,4 @@
-
+// dev.emoforge.auth.service.MemberPublicProfileService.java
 package dev.emoforge.auth.service;
 
 import dev.emoforge.auth.dto.PublicProfileResponse;

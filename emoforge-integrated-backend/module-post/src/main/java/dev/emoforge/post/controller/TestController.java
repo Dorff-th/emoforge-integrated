@@ -1,0 +1,19 @@
+package dev.emoforge.post.controller;
+
+import dev.emoforge.post.config.CustomUserPrincipal;
+import io.swagger.v3.oas.annotations.Hidden;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Hidden
+@RestController
+public class TestController {
+
+    @GetMapping("/api/posts/test/jwt")
+    public String testJwt(Authentication authentication) {
+        CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
+        String memberUuid = principal.getUuid();
+        return "Post-Service : JWT member_uuid (USER ROLE) = " + memberUuid;
+    }
+}

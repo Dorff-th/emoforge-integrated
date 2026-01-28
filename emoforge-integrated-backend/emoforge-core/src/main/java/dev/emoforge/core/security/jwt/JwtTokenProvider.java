@@ -1,7 +1,7 @@
 package dev.emoforge.core.security.jwt;
 
-import dev.emoforge.core.security.CustomUserPrincipal;
-import dev.emoforge.core.security.CustomUserPrincipal;
+
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * JwtTokenProvider의 역할은 JwtTokenService, JwtTokenVerifier로 이관
+ * 이 클래스는 JwtTokenService, JwtTokenVerifier 안정적으로 동작하면 삭졔예정
+ */
 
 @Slf4j
 @Component

@@ -1,19 +1,19 @@
 plugins {
-    id 'java-library' // api 키워드를 사용하기 위해 필수
+    id "org.springframework.boot"
 }
 
-
 dependencies {
+    implementation project(":emoforge-core")
 
-    implementation project(':emoforge-core')
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server' // JWT 검증용 (선택)
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    //implementation "org.springframework.boot:spring-boot-starter-security" -> emoforge-core모듈로 이동
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
-    // === @FeignClient  ===
-    api 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    implementation "org.springframework.boot:spring-boot-starter-webflux"
 
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
-
-    compileOnly 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.15'
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:0.11.5"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.11.5"
 }

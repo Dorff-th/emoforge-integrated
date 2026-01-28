@@ -1,15 +1,21 @@
 plugins {
-    id 'java-library' // api 키워드를 사용하기 위해 필수
+    id "org.springframework.boot"
+    id "io.spring.dependency-management"
+    id "java"
 }
 
 dependencies {
-    implementation project(':emoforge-core')
-    implementation project(':module-auth')
+    // 실행 앱은 반드시 starter 필요
+    implementation "org.springframework.boot:spring-boot-starter-web"
 
-    // === DB Driver ===
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation project(":module-auth")
+    implementation project(":module-post")
+    implementation project(":module-diary")
+    implementation project(":module-attachment")
 
-    //mysql db (aws rds 접속)
-    runtimeOnly 'com.mysql:mysql-connector-j:8.2.0'
+    // DB Driver - 딱 하나만
+    runtimeOnly "org.mariadb.jdbc:mariadb-java-client"
+    // runtimeOnly "com.mysql:mysql-connector-j"
 
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

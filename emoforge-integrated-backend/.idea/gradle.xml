@@ -12,7 +12,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/emoforge-app" />
             <option value="$PROJECT_DIR$/emoforge-core" />
+            <option value="$PROJECT_DIR$/module-attachment" />
             <option value="$PROJECT_DIR$/module-auth" />
+            <option value="$PROJECT_DIR$/module-diary" />
+            <option value="$PROJECT_DIR$/module-post" />
           </set>
         </option>
       </GradleProjectSettings>
