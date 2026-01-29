@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * 미사용 클래스
+ */
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {

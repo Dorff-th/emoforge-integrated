@@ -1,7 +1,7 @@
 package dev.emoforge.diary.controller;
 
 import dev.emoforge.diary.dto.response.MemberDiaryStatsResponse;
-import dev.emoforge.diary.global.security.CustomUserPrincipal;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.diary.service.DiaryActivityStatsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -56,31 +56,31 @@ public class AuthController {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Value("${auth.cookie.access-domain}")
+    @Value("${security.cookie.access-domain}")
     private String accessDomain;
 
-    @Value("${auth.cookie.refresh-domain}")
+    @Value("${security.cookie.refresh-domain}")
     private String refreshDomain;
 
-    @Value("${auth.cookie.remove-domain}")
+    @Value("${security.cookie.remove-domain}")
     private String removeDomain;
 
-    @Value("${auth.cookie.secure}")
+    @Value("${security.cookie.secure}")
     private boolean secure;
 
-    @Value("${auth.cookie.same-site}")
+    @Value("${security.cookie.same-site}")
     private String sameSite;
 
-    @Value("${auth.cookie.expiration.access-hours}")
+    @Value("${security.cookie.expiration.access-hours}")
     private long accessHours;
 
-    @Value("${auth.cookie.expiration.refresh-days}")
+    @Value("${security.cookie.expiration.refresh-days}")
     private long refreshDays;
 
-    @Value("${auth.cookie.names.access}")
+    @Value("${security.cookie.names.access}")
     private String accessCookieName;
 
-    @Value("${auth.cookie.names.refresh}")
+    @Value("${security.cookie.names.refresh}")
     private String refreshCookieName;
 
     // ---------------------------------------------------------

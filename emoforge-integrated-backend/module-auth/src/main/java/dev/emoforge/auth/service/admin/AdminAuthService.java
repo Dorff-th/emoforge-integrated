@@ -2,8 +2,10 @@ package dev.emoforge.auth.service.admin;
 
 import dev.emoforge.auth.dto.admin.AdminLoginRequest;
 import dev.emoforge.auth.entity.Member;
+import dev.emoforge.auth.enums.Role;
 import dev.emoforge.auth.repository.MemberRepository;
-import dev.emoforge.core.security.jwt.JwtTokenProvider;
+import dev.emoforge.auth.token.JwtTokenIssuer;
+//import dev.emoforge.core.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,10 @@ public class AdminAuthService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public String login(AdminLoginRequest request) {
+    private final JwtTokenIssuer jwtTokenIssuer;
+
+    public Member authenticate(AdminLoginRequest request) {
         // 1. 사용자 조회
         Member member = memberRepository.findByUsername(request.username())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 관리자 계정입니다."));
@@ -32,11 +35,12 @@ public class AdminAuthService {
         }
 
         // 3. 권한 확인
-        if (!"ADMIN".equalsIgnoreCase(member.getRole().toString())) {
+        if (member.getRole() != Role.ADMIN) {
             throw new RuntimeException("관리자 권한이 없습니다.");
         }
 
-        // 4. JWT 생성 (관리자 전용 토큰)
-        return jwtTokenProvider.generateAdminToken(member.getUuid(), member.getUsername());
+        // ✅ 여기까지가 AdminAuthService의 책임
+        return member;
     }
+
 }

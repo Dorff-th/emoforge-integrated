@@ -23,7 +23,7 @@ import java.util.Map;
 @Hidden
 @RestController
 @RequestMapping("/api/posts/health")
-public class HealthController {
+public class PostHealthController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> health() {

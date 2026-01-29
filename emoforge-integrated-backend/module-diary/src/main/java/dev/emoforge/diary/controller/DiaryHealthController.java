@@ -13,7 +13,7 @@ import java.util.Map;
 @Hidden
 @RestController
 @RequestMapping("/api/diary/health")
-public class HealthController {
+public class DiaryHealthController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> health() {

@@ -1,6 +1,6 @@
 package dev.emoforge.attach.controller;
 
-import dev.emoforge.attach.security.CustomUserPrincipal;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.Authentication;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
         description = "개발 단계에서 JWT 연동 검증을 위해 사용된 테스트 엔드포인트 (현재는 운영 기능 아님)"
 )
 @RestController
-public class TestController {
+public class AttachTestController {
 
     @Operation(
             summary = "JWT 인증 연동 테스트 (현재 사용되지 않음)",

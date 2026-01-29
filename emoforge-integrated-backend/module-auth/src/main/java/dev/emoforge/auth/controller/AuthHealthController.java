@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * HealthController
+ * AuthHealthController
  *
  * Auth-Service의 헬스 체크 엔드포인트를 제공하는 컨트롤러.
  * - 서비스 상태(status) 확인
@@ -27,7 +27,7 @@ import java.util.Map;
 @Tag(name = "Health", description = "서비스 헬스 체크 API")
 @RestController
 @RequestMapping("/api/auth/health")
-public class HealthController {
+public class AuthHealthController {
 
     @Operation(
             summary = "Auth-Service 헬스 체크",

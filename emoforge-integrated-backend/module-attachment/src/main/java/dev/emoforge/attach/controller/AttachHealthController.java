@@ -21,7 +21,7 @@ import java.util.Map;
 )
 @RestController
 @RequestMapping("/api/attach/health")
-public class HealthController {
+public class AttachHealthController {
 
     @Operation(
             summary = "Attachment-Service 헬스 체크",

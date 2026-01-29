@@ -3,7 +3,7 @@ package dev.emoforge.diary.controller;
 
 import dev.emoforge.diary.dto.request.DiarySearchRequestDTO;
 import dev.emoforge.diary.dto.response.DiarySearchResultDTO;
-import dev.emoforge.diary.global.security.CustomUserPrincipal;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.diary.service.DiarySearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

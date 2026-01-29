@@ -2,6 +2,9 @@ package dev.emoforge.auth.controller.admin;
 
 import dev.emoforge.auth.dto.admin.AdminLoginRequest;
 import dev.emoforge.auth.dto.admin.AdminLoginResponse;
+import dev.emoforge.auth.entity.Member;
+import dev.emoforge.auth.enums.LoginType;
+import dev.emoforge.auth.service.LoginTokenService;
 import dev.emoforge.core.security.jwt.JwtTokenProvider;
 import dev.emoforge.auth.service.admin.AdminAuthService;
 import dev.emoforge.auth.service.admin.RecaptchaService;
@@ -42,24 +45,24 @@ public class AdminAuthController {
 
     private final AdminAuthService adminAuthService;
     private final RecaptchaService recaptchaService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final LoginTokenService loginTokenService;
 
-    @Value("${admin.cookie.name}")
-    private String adminCookieName;
+    //@Value("${admin.cookie.name}")
+    //private String adminCookieName;
 
-    @Value("${admin.cookie.domain}")
+    @Value("${security.cookie.domain}")
     private String adminCookieDomain;
 
-    @Value("${admin.cookie.secure}")
+    @Value("${security.cookie.secure}")
     private boolean secure;
 
-    @Value("${admin.cookie.http-only}")
+    @Value("${security.cookie.http-only}")
     private boolean httpOnly;
 
-    @Value("${admin.cookie.same-site}")
+    @Value("${security.cookie.same-site}")
     private String sameSite;
 
-    @Value("${admin.cookie.max-age-seconds}")
+    @Value("${security.cookie.max-age-seconds}")
     private long maxAgeSeconds;
 
     // ---------------------------------------------------------
@@ -81,7 +84,8 @@ public class AdminAuthController {
             @ApiResponse(responseCode = "401", description = "잘못된 관리자 계정 정보")
     })
     @PostMapping("/login")
-    public ResponseEntity<AdminLoginResponse> login(@Valid @RequestBody AdminLoginRequest request) {
+    public ResponseEntity<AdminLoginResponse> login(@Valid @RequestBody AdminLoginRequest request
+        ,HttpServletResponse response) {
 
         // ✅ 1. reCAPTCHA 검증
         if (!recaptchaService.verify(request.captchaToken())) {
@@ -90,23 +94,17 @@ public class AdminAuthController {
         }
 
         // ✅ 2. 로그인 시도
-        String token = adminAuthService.login(request);
+        Member admin = adminAuthService.authenticate(request);
 
-        // ✅ 3. 쿠키 설정 (환경 기반)
-        ResponseCookie cookie = ResponseCookie.from(adminCookieName, token)
-                .httpOnly(httpOnly)
-                .secure(secure)
-                .sameSite(sameSite)
-                .domain(adminCookieDomain)
-                .path("/")
-                .maxAge(maxAgeSeconds)
-                .build();
+        loginTokenService.handleLoginSuccess(
+                response,
+                admin,
+                LoginType.ADMIN
+        );
 
-        AdminLoginResponse response = new AdminLoginResponse("관리자 로그인 성공", maxAgeSeconds);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(response);
+        return ResponseEntity.ok(
+                new AdminLoginResponse("관리자 로그인 성공", maxAgeSeconds)
+        );
     }
 
     // ---------------------------------------------------------
@@ -144,18 +142,18 @@ public class AdminAuthController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getAdminInfo(Authentication authentication) {
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
 
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(401).body(Map.of("message", "인증되지 않았습니다."));
         }
 
         // JwtTokenProvider에서 사용자 정보 추출
-        //System.out.println("\n\n\nauthentication : " +  authentication.toString());
+
         String username = authentication.getName();
-        //System.out.println("username : " + username);
+
         String role = authentication.getAuthorities().iterator().next().getAuthority();
-        //System.out.println("role : " + role);
+
 
         return ResponseEntity.ok(Map.of(
                 "username", username,

@@ -1,6 +1,6 @@
 package dev.emoforge.post.controller;
 
-import dev.emoforge.post.config.CustomUserPrincipal;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.post.dto.internal.PostStatsResponse;
 import dev.emoforge.post.service.internal.PostStatisticsService;
 import io.swagger.v3.oas.annotations.Operation;

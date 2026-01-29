@@ -8,7 +8,7 @@ import dev.emoforge.diary.dto.request.GPTSummaryRequestDTO;
 import dev.emoforge.diary.dto.response.DiaryGroupPageResponseDTO;
 import dev.emoforge.diary.dto.response.DiaryGroupResponseDTO;
 import dev.emoforge.diary.dto.response.GPTSummaryResponseDTO;
-import dev.emoforge.diary.global.security.CustomUserPrincipal;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.diary.repository.DiaryEntryRepository;
 import dev.emoforge.diary.repository.GptSummaryRepository;
 import dev.emoforge.diary.service.DiaryEntryService;

@@ -27,13 +27,13 @@ public class KakaoSignupService {
     private final PasswordEncoder passwordEncoder;
 
     // 쿠키 설정
-    @Value("${auth.cookie.secure}")
+    @Value("${security.cookie.secure}")
     private boolean secure;
 
-    @Value("${auth.cookie.access-domain}")
+    @Value("${security.cookie.access-domain}")
     private String accessDomain;
 
-    @Value("${auth.cookie.same-site}")
+    @Value("${security.cookie.same-site}")
     private String sameSite;
 
     public record SignupResult(

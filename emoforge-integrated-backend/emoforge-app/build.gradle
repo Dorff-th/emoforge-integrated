@@ -8,6 +8,9 @@ dependencies {
     // 실행 앱은 반드시 starter 필요
     implementation "org.springframework.boot:spring-boot-starter-web"
 
+    // ✅ core 직접 의존 (중요!)
+    implementation project(":emoforge-core")
+
     implementation project(":module-auth")
     implementation project(":module-post")
     implementation project(":module-diary")
@@ -18,4 +21,7 @@ dependencies {
     // runtimeOnly "com.mysql:mysql-connector-j"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+    // ✅ 추가 (GlobalExceptionHandler)
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 }

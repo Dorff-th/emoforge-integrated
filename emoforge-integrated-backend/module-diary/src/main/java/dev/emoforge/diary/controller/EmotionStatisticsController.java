@@ -2,7 +2,7 @@ package dev.emoforge.diary.controller;
 
 
 import dev.emoforge.diary.dto.statistics.EmotionStatisticsDTO;
-import dev.emoforge.diary.global.security.CustomUserPrincipal;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.diary.service.EmotionStatisticsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

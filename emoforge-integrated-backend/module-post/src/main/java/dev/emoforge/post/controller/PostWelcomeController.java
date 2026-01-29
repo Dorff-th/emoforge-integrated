@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Hidden
 @RestController
-public class WelcomeController {
+public class PostWelcomeController {
 
     @GetMapping("/api/posts/welcome")
     public String welcome() {

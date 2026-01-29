@@ -1,6 +1,6 @@
 package dev.emoforge.post.controller;
 
-import dev.emoforge.post.config.CustomUserPrincipal;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Hidden
 @RestController
-public class TestController {
+public class PostTestController {
 
     @GetMapping("/api/posts/test/jwt")
     public String testJwt(Authentication authentication) {

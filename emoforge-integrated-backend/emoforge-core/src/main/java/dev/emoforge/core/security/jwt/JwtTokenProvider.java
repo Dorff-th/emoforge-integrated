@@ -24,7 +24,7 @@ import java.util.List;
  */
 
 @Slf4j
-@Component
+//@Component
 public class JwtTokenProvider {
 
     // ✅ (변경) 사용자 / 관리자 secret 분리

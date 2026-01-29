@@ -2,7 +2,7 @@ package dev.emoforge.attach.controller;
 
 import dev.emoforge.attach.domain.UploadType;
 import dev.emoforge.attach.dto.MemberAttachmentStatsResponse;
-import dev.emoforge.attach.security.CustomUserPrincipal;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.attach.service.AttachmentStatsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

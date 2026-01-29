@@ -1,6 +1,6 @@
 package dev.emoforge.post.controller;
 
-import dev.emoforge.post.config.CustomUserPrincipal;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.post.domain.Post;
 import dev.emoforge.post.dto.bff.PageResponseDTO;
 import dev.emoforge.post.dto.bff.PostDetailResponse;

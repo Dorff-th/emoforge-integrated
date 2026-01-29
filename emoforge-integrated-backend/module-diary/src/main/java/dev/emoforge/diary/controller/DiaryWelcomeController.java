@@ -1,6 +1,6 @@
 package dev.emoforge.diary.controller;
 
-import dev.emoforge.diary.global.security.CustomUserPrincipal;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.diary.service.GptService;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/diary/welcome")
 @RequiredArgsConstructor
-public class WelcomeController {
+public class DiaryWelcomeController {
 
     final private GptService gptService;
 
