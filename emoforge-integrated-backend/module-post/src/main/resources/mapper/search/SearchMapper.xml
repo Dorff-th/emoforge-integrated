@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.emoforge.post.mapper.SearchMapper">
+
+    <!-- ========================================================
+         공용 게시글 검색 (Context 중립)
+         ======================================================== -->
+
+    <!-- 검색 결과 매핑 -->
+    <resultMap id="PostSearchResultMap" type="dev.emoforge.post.dto.internal.PostSearchResultDTO">
+        <constructor>
+            <idArg column="id"           javaType="Long"             name="id"/>
+            <arg   column="title"        javaType="String"           name="title"/>
+            <arg   column="content"      javaType="String"           name="content"/>
+            <arg   column="created_at"   javaType="java.time.LocalDateTime" name="createdAt"/>
+            <arg   column="member_uuid"  javaType="String"           name="memberUuid"/>
+            <arg   column="category_id"  javaType="Long"             name="categoryId"/>
+            <arg   column="category_name"   javaType="String"           name="categoryName"/>
+            <arg   column="comment_count"   javaType="Long"             name="commentCount"/>
+        </constructor>
+    </resultMap>
+
+    <!-- 공용 WHERE 조건 (list/count 쿼리 동일하게 사용) -->
+    <sql id="searchWhereConditions">
+        <!-- 카테고리 필터 -->
+        <if test="filter.categoryId != null and filter.categoryId > 0">
+            AND p.category_id = #{filter.categoryId}
+        </if>
+
+        <!-- 키워드 검색 -->
+        <if test="filter.keyword != null and filter.keyword != ''">
+            <choose>
+                <!-- 제목 + 내용 OR 검색 (둘 다 체크된 경우) -->
+                <when test="filter.titleChecked == true and filter.contentChecked == true">
+                    AND (
+                        p.title LIKE CONCAT('%', #{filter.keyword}, '%')
+                        OR p.content LIKE CONCAT('%', #{filter.keyword}, '%')
+                    )
+                </when>
+                <!-- 제목만 검색 -->
+                <when test="filter.titleChecked == true">
+                    AND p.title LIKE CONCAT('%', #{filter.keyword}, '%')
+                </when>
+                <!-- 내용만 검색 -->
+                <when test="filter.contentChecked == true">
+                    AND p.content LIKE CONCAT('%', #{filter.keyword}, '%')
+                </when>
+                <!-- 댓글 내용 검색 (확장용) -->
+                <when test="filter.commentChecked == true">
+                    AND EXISTS (
+                        SELECT 1 FROM comment cm
+                        WHERE cm.post_id = p.id
+                        AND cm.content LIKE CONCAT('%', #{filter.keyword}, '%')
+                    )
+                </when>
+                <!-- 기본: 제목 + 내용 OR 검색 -->
+                <otherwise>
+                    AND (
+                        p.title LIKE CONCAT('%', #{filter.keyword}, '%')
+                        OR p.content LIKE CONCAT('%', #{filter.keyword}, '%')
+                    )
+                </otherwise>
+            </choose>
+        </if>
+
+        <!-- 기간 필터 -->
+        <if test="filter.startDate != null and filter.endDate != null">
+            AND p.created_at BETWEEN #{filter.startDate} AND #{filter.endDate}
+        </if>
+    </sql>
+
+    <!-- 조건 기반 게시글 목록 검색 (페이징 포함) -->
+    <select id="searchPostsByFilter" resultMap="PostSearchResultMap">
+        SELECT
+            p.id,
+            p.title,
+            p.content,
+            p.created_at,
+            p.member_uuid,
+            p.category_id,
+            c.name AS category_name,
+            (SELECT COUNT(*) FROM comment cm WHERE cm.post_id = p.id) AS comment_count
+        FROM post p
+            LEFT JOIN category c ON p.category_id = c.id
+        WHERE 1 = 1
+        <include refid="searchWhereConditions"/>
+
+        <!-- 정렬 -->
+        ORDER BY
+        <choose>
+            <when test="page.sort == 'title'">p.title</when>
+            <when test="page.sort == 'viewCount'">p.view_count</when>
+            <when test="page.sort == 'id'">p.id</when>
+            <otherwise>p.created_at</otherwise>
+        </choose>
+        <choose>
+            <when test="page.direction.name() == 'ASC'">ASC</when>
+            <otherwise>DESC</otherwise>
+        </choose>
+
+        <!-- 페이징 -->
+        LIMIT #{page.size} OFFSET #{page.offset}
+    </select>
+
+    <!-- 조건 기반 게시글 검색 개수 -->
+    <select id="countPostsByFilter" resultType="int">
+        SELECT COUNT(*)
+        FROM post p
+            LEFT JOIN category c ON p.category_id = c.id
+        WHERE 1 = 1
+        <include refid="searchWhereConditions"/>
+    </select>
+
+</mapper>

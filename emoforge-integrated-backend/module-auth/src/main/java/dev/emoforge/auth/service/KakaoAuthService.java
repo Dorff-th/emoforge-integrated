@@ -7,6 +7,7 @@ import dev.emoforge.auth.infra.kakao.KakaoLoginResult;
 import dev.emoforge.auth.infra.kakao.KakaoTokenResponse;
 import dev.emoforge.auth.infra.kakao.KakaoUserResponse;
 import dev.emoforge.auth.repository.MemberRepository;
+
 import dev.emoforge.auth.token.JwtTokenIssuer;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import dev.emoforge.auth.response.LoginResponseHandler;
+
 
 @Service
 @RequiredArgsConstructor
@@ -26,17 +27,8 @@ public class KakaoAuthService {
     private final MemberRepository memberRepository;
     private final JwtTokenIssuer jwtTokenIssuer;
     private final KakaoClient kakaoClient;  // 카카오 API 호출 담당 (아래 제공)
-    private final LoginResponseHandler loginResponseHandler;
+
     private final LoginTokenService loginTokenService;
-
-    @Value("${security.cookie.secure}")
-    private boolean secure;
-
-    @Value("${security.cookie.access-domain}")
-    private String accessDomain;
-
-    @Value("${security.cookie.same-site}")
-    private String sameSite;
 
     public KakaoLoginResult processKakaoLogin(String code, HttpServletResponse response) {
 

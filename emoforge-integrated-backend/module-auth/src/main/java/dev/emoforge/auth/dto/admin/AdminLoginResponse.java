@@ -32,15 +32,6 @@ public record AdminLoginResponse(
                 description = "로그인 처리 결과 메시지",
                 example = "관리자 로그인 성공"
         )
-        String message,
+        String message
 
-        @Schema(
-                description = """
-                        JWT(admin_token)의 유효 시간(초 단위).
-                        실제 토큰은 HttpOnly 쿠키로 전달되며, 프런트는 이 값을 이용해
-                        타이머 표시, 자동 로그아웃 처리 등을 구현할 수 있다.
-                        """,
-                example = "86400"
-        )
-        long expiresInSeconds
 ) {}

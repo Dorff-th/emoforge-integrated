@@ -5,10 +5,13 @@ import dev.emoforge.auth.dto.LoginResponse;
 import dev.emoforge.auth.dto.MemberDTO;
 import dev.emoforge.auth.dto.SignUpRequest;
 import dev.emoforge.auth.entity.Member;
+import dev.emoforge.auth.enums.LoginType;
 import dev.emoforge.auth.repository.MemberRepository;
+import dev.emoforge.auth.service.LoginTokenService;
+import dev.emoforge.core.security.jwt.JwtTokenVerifier;
 import dev.emoforge.core.security.principal.CustomUserPrincipal;
-import dev.emoforge.core.security.jwt.JwtTokenProvider;
-import dev.emoforge.auth.service.AuthService;
+
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -52,73 +55,13 @@ import java.time.Duration;
 @Slf4j
 public class AuthController {
     
-    private final AuthService authService;
+
     private final MemberRepository memberRepository;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    @Value("${security.cookie.access-domain}")
-    private String accessDomain;
+    private final JwtTokenVerifier jwtTokenVerifier;
 
-    @Value("${security.cookie.refresh-domain}")
-    private String refreshDomain;
+    private final LoginTokenService loginTokenService;
 
-    @Value("${security.cookie.remove-domain}")
-    private String removeDomain;
-
-    @Value("${security.cookie.secure}")
-    private boolean secure;
-
-    @Value("${security.cookie.same-site}")
-    private String sameSite;
-
-    @Value("${security.cookie.expiration.access-hours}")
-    private long accessHours;
-
-    @Value("${security.cookie.expiration.refresh-days}")
-    private long refreshDays;
-
-    @Value("${security.cookie.names.access}")
-    private String accessCookieName;
-
-    @Value("${security.cookie.names.refresh}")
-    private String refreshCookieName;
-
-    // ---------------------------------------------------------
-    // 🔹 회원가입 (not used)
-    // ---------------------------------------------------------
-    @Operation(
-            summary = "회원가입 (not used)",
-            description = "새로운 회원을 생성합니다. 유효성 검증 후 Member 객체를 반환합니다."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "회원가입 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
-    })
-    @PostMapping("/signup")
-    public ResponseEntity<Member> signUp(@Valid @RequestBody SignUpRequest request) {
-        Member member = authService.signUp(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(member);
-    }
-
-    // ---------------------------------------------------------
-    // 🔹 로그인 (not used)
-    // ---------------------------------------------------------
-    @Operation(
-            summary = "로그인  (not used)",
-            description = """
-                    사용자 로그인 처리 후 AccessToken / RefreshToken을 포함한 응답을 반환합니다.
-                    토큰은 HttpOnly 쿠키에 저장되지 않으며 LoginResponse로 전달됩니다.
-                    """
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "로그인 성공"),
-            @ApiResponse(responseCode = "401", description = "잘못된 로그인 정보")
-    })
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        LoginResponse response = authService.login(request);
-        return ResponseEntity.ok(response);
-    }
 
     // ---------------------------------------------------------
     // 🔹 현재 사용자 정보 조회
@@ -167,7 +110,6 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
 
-
         String refreshToken = null;
 
         if (request.getCookies() != null) {
@@ -179,64 +121,24 @@ public class AuthController {
             }
         }
 
-        // ✅ (변경) validateToken(refreshToken, false) → userSecret으로 검증
-        if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken, false)) {
+        if (refreshToken == null || !jwtTokenVerifier.validateToken(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         }
 
-        // 🛡 [2026-01-24 22:14 KST] access/admin 토큰으로 refresh 시도 방지
-        if (!"refresh".equals(jwtTokenProvider.getTokenType(refreshToken))) {
+        /*if (!"refresh".equals(jwtTokenVerifier.getTokenType(refreshToken))) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token type");
-        }
+        }*/
 
-
-        //String memberUuid = jwtTokenProvider.getClaims(refreshToken).get("uuid", String.class);
-        // 🔄 [2026-01-24 22:14 KST] refresh 토큰의 식별자는 JWT subject(uuid) 기준
-        //    - claim("uuid") 의존 제거
-        String memberUuid = jwtTokenProvider.getUuidFromToken(refreshToken);
+        String memberUuid = jwtTokenVerifier.getUuidFromToken(refreshToken);
         Member member = memberRepository.findByUuid(memberUuid)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
 
-        // 새 토큰 발급
-        // 🔄 [2026-01-24 22:14 KST] generateAccessToken(subject=uuid) 기준으로 파라미터 정렬
-        String newAccessToken = jwtTokenProvider.generateAccessToken(
-                member.getUuid(),
-                member.getRole().name(),
-                member.getUsername()
-        );
-
-
-        // 🔄 [2026-01-24 22:14 KST] refresh 토큰은 uuid만 필요
-        String newRefreshToken = jwtTokenProvider.generateRefreshToken(
-                member.getUuid()
-        );
-
-
-        // ✅ (변경) domain을 auth 서브도메인으로 제한
-        ResponseCookie accessCookie = ResponseCookie.from(accessCookieName, newAccessToken)
-                .httpOnly(true)
-                .secure(secure)
-                .sameSite(sameSite)
-                .domain(accessDomain)
-                .path("/")
-                .maxAge(Duration.ofHours(accessHours))
-                .build();
-
-        ResponseCookie refreshCookie = ResponseCookie.from(refreshCookieName, newRefreshToken)
-                .httpOnly(true)
-                .secure(secure)
-                .sameSite(sameSite)
-                .domain(refreshDomain)
-                .path("/")
-                .maxAge(Duration.ofDays(refreshDays))
-                .build();
-
-
-        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        // ✅ 쿠키 + 토큰 재발급은 Service로 위임
+        loginTokenService.handleTokenRefresh(response, member);
 
         return ResponseEntity.ok("Token refreshed");
     }
+
 
     // ---------------------------------------------------------
     // 🔹 로그아웃
@@ -252,62 +154,17 @@ public class AuthController {
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "로그아웃 성공")
     })
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
 
-        // (옵션) 세션 무효화 - OAuth2Login 사용 시 잔여 세션 끊기
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        // (옵션) OAuth2Login 세션 잔여 정리
         var session = request.getSession(false);
         if (session != null) session.invalidate();
 
-        // 1) 과거에 '.127.0.0.1.nip.io' 로 발급된 토큰 쿠키 제거 (옵션 동일)
-        response.addHeader("Set-Cookie",
-                ResponseCookie.from(accessCookieName, "")
-                        .domain(removeDomain)
-                        .path("/")
-                        .httpOnly(true)
-                        .sameSite(sameSite)
-                        .secure(secure)
-                        .maxAge(0)
-                        .build().toString()
-        );
-        response.addHeader("Set-Cookie",
-                ResponseCookie.from(refreshCookieName, "")
-                        .domain(removeDomain)
-                        .path("/")
-                        .httpOnly(true)
-                        .sameSite(sameSite)
-                        .secure(secure)
-                        .maxAge(0)
-                        .build().toString()
-        );
-
-        // 2) 혹시 모르는 변형들(호스트 전용/도메인 미지정)도 함께 정리
-        response.addHeader("Set-Cookie",
-                ResponseCookie.from(accessCookieName, "")
-                        .path("/")
-                        .httpOnly(true)
-                        .sameSite(sameSite)
-                        .secure(false)
-                        .maxAge(0)
-                        .build().toString()
-        );
-        response.addHeader("Set-Cookie",
-                ResponseCookie.from(refreshCookieName, "")
-                        .path("/")
-                        .httpOnly(true)
-                        .sameSite(sameSite)
-                        .secure(secure)
-                        .maxAge(0)
-                        .build().toString()
-        );
-
-        // 3) JSESSIONID도 끊기 (OAuth2Login 세션 잔여 대비)
-        response.addHeader("Set-Cookie",
-                ResponseCookie.from("JSESSIONID", "")
-                        .path("/")
-                        .maxAge(0)
-                        .build().toString()
-        );
+        loginTokenService.handleLogout(response, LoginType.KAKAO);
 
         return ResponseEntity.noContent().build();
     }

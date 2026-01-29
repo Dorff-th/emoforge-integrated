@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenVerifier jwtTokenVerifier;     // 🔁 변경: 토큰 검증 전담
     private final JwtTokenParser  jwtTokenParser ;       // 🔁 변경: Claims 파싱 전담
 
-    // 🔁 변경: JwtTokenProvider/Function 대신 명시적 의존성 주입
+
     public JwtAuthenticationFilter(JwtTokenVerifier jwtTokenVerifier,
                                    JwtTokenParser jwtTokenParser) {
         this.jwtTokenVerifier = jwtTokenVerifier;

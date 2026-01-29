@@ -5,6 +5,10 @@ plugins {
 }
 
 dependencies {
+
+    // ✅ MyBatis Spring Boot Starter (필수)
+    implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3"
+
     // 실행 앱은 반드시 starter 필요
     implementation "org.springframework.boot:spring-boot-starter-web"
 

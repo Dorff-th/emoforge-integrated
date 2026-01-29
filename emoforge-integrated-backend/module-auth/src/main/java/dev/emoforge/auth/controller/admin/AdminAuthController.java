@@ -5,7 +5,7 @@ import dev.emoforge.auth.dto.admin.AdminLoginResponse;
 import dev.emoforge.auth.entity.Member;
 import dev.emoforge.auth.enums.LoginType;
 import dev.emoforge.auth.service.LoginTokenService;
-import dev.emoforge.core.security.jwt.JwtTokenProvider;
+import dev.emoforge.core.properties.CookieProvider;
 import dev.emoforge.auth.service.admin.AdminAuthService;
 import dev.emoforge.auth.service.admin.RecaptchaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +25,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+
+
 
 /**
  * AdminAuthController
@@ -46,11 +48,9 @@ public class AdminAuthController {
     private final AdminAuthService adminAuthService;
     private final RecaptchaService recaptchaService;
     private final LoginTokenService loginTokenService;
+    private final CookieProvider cookieProvider;
 
-    //@Value("${admin.cookie.name}")
-    //private String adminCookieName;
-
-    @Value("${security.cookie.domain}")
+/*    @Value("${security.cookie.domain}")
     private String adminCookieDomain;
 
     @Value("${security.cookie.secure}")
@@ -63,7 +63,7 @@ public class AdminAuthController {
     private String sameSite;
 
     @Value("${security.cookie.max-age-seconds}")
-    private long maxAgeSeconds;
+    private long maxAgeSeconds;*/
 
     // ---------------------------------------------------------
     // 🔹 관리자 로그인
@@ -84,16 +84,15 @@ public class AdminAuthController {
             @ApiResponse(responseCode = "401", description = "잘못된 관리자 계정 정보")
     })
     @PostMapping("/login")
-    public ResponseEntity<AdminLoginResponse> login(@Valid @RequestBody AdminLoginRequest request
-        ,HttpServletResponse response) {
-
-        // ✅ 1. reCAPTCHA 검증
+    public ResponseEntity<AdminLoginResponse> login(
+            @Valid @RequestBody AdminLoginRequest request,
+            HttpServletResponse response
+    ) {
         if (!recaptchaService.verify(request.captchaToken())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new AdminLoginResponse("reCAPTCHA 검증 실패", 0));
+                    .body(new AdminLoginResponse("reCAPTCHA 검증 실패"));
         }
 
-        // ✅ 2. 로그인 시도
         Member admin = adminAuthService.authenticate(request);
 
         loginTokenService.handleLoginSuccess(
@@ -103,7 +102,7 @@ public class AdminAuthController {
         );
 
         return ResponseEntity.ok(
-                new AdminLoginResponse("관리자 로그인 성공", maxAgeSeconds)
+                new AdminLoginResponse("관리자 로그인 성공")
         );
     }
 
@@ -123,19 +122,7 @@ public class AdminAuthController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse response) {
 
-        log.debug("\n\n\n======/api/auth/admin/logout");
-        String adminCookieName = "admin_token";
-
-        ResponseCookie deleteCookie = ResponseCookie.from(adminCookieName, "")
-                .domain(adminCookieDomain)     // 로그인 시 설정과 동일해야 함
-                .path("/")                   // 동일하게
-                .httpOnly(httpOnly)
-                .secure(secure)
-                .sameSite(sameSite)            // 크로스사이트 쿠키 허용
-                .maxAge(0)                   // 즉시 만료
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
+        loginTokenService.handleLogout(response, LoginType.ADMIN);
 
         return ResponseEntity.ok().build();
     }
@@ -147,8 +134,6 @@ public class AdminAuthController {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(401).body(Map.of("message", "인증되지 않았습니다."));
         }
-
-        // JwtTokenProvider에서 사용자 정보 추출
 
         String username = authentication.getName();
 

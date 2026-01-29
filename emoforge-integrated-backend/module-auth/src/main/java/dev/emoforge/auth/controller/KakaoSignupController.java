@@ -2,11 +2,14 @@ package dev.emoforge.auth.controller;
 
 import dev.emoforge.auth.dto.KakaoSignupRequest;
 import dev.emoforge.auth.dto.KakaoSignupResponse;
+import dev.emoforge.auth.entity.Member;
 import dev.emoforge.auth.service.KakaoSignupService;
+import dev.emoforge.auth.service.LoginTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+import dev.emoforge.auth.enums.LoginType;
 
 /**
  * KakaoSignupController
@@ -50,7 +57,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class KakaoSignupController {
 
     private final KakaoSignupService signupService;
-
+    private final LoginTokenService loginTokenService;
 
     @Operation(
             summary = "카카오 신규 회원가입 처리",
@@ -73,23 +80,23 @@ public class KakaoSignupController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping("/signup")
-    public ResponseEntity<KakaoSignupResponse> signup(
-            @RequestBody KakaoSignupRequest request
+    public ResponseEntity<?> signup(
+            @RequestBody KakaoSignupRequest request,
+            HttpServletResponse response
     ) {
-        log.info("🆕 Kakao signup 요청: kakaoId={}, nickname={}",
-                request.getKakaoId(), request.getNickname());
+        Member member = signupService.signupNewMember(request);
 
-        var result = signupService.signupNewMember(request);
+        loginTokenService.handleLoginSuccess(
+                response,
+                member,
+                LoginType.KAKAO
+        );
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, result.accessCookie().toString())
-                .header(HttpHeaders.SET_COOKIE, result.refreshCookie().toString())
-                .body(
-                        KakaoSignupResponse.builder()
-                                .status("SIGNED_UP")
-                                .uuid(result.uuid())
-                                .nickname(result.nickname())
-                                .build()
-                );
+        return ResponseEntity.ok(
+                Map.of(
+                        "uuid", member.getUuid(),
+                        "nickname", member.getNickname()
+                )
+        );
     }
 }
