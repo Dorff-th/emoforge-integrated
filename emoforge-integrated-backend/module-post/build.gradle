@@ -4,6 +4,9 @@ plugins {
 
 dependencies {
     implementation project(":emoforge-core")
+    implementation project(":module-attachment")
+
+    testImplementation project(":emoforge-app") // 테스트에서만 EmoforgeApplication이 필요함
 
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-security"
@@ -12,4 +15,6 @@ dependencies {
 
     implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3"
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+
+
 }

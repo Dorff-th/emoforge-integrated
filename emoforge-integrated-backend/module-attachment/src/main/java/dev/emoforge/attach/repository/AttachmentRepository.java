@@ -29,7 +29,7 @@ public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
     // 소유자 기준 전체 조회 (필요 시)
     List<Attachment> findByMemberUuidAndDeletedFalse(String memberUuid);
 
-    //post에 첨부된 파일 개수 구하기(Post-Service 에서 bbf로직에서 사용)
+    //post에 첨부된 파일 개수 구하기(Post-Service 에서 bbf로직에서 사용) <-- 폐기 검토
     @Query("SELECT a.postId, COUNT(a) FROM Attachment a " +
             "WHERE a.postId IN :postIds AND a.uploadType = :uploadType " +
             "GROUP BY a.postId")
@@ -38,7 +38,7 @@ public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
             @Param("uploadType") UploadType uploadType
     );
 
-    //post에 첨부된 파일 메타 정보 구하기(Post-Service 에서 bbf로직에서 사용)
+    //post에 첨부된 파일 메타 정보 구하기(Post-Service 에서 bbf로직에서 사용) <-- 폐기 검토
     @Query("SELECT a FROM Attachment a WHERE a.postId = :postId AND a.uploadType = :uploadType")
     List<Attachment> findByPostId(@Param("postId") Long postId, @Param("uploadType") UploadType uploadType);
 
@@ -98,5 +98,10 @@ public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
             @Param("memberUuid") String memberUuid,
             @Param("types") List<UploadType> types
     );
+
+    /* ============= emoforge 통합에 필요한 신규 쿼리 메서드  ============= */
+    //post에 첨부된 파일 메타 정보 구하기(PostQueryService의 getPostDetail에서 사용
+    @Query("SELECT a FROM Attachment a WHERE a.postId = :postId AND a.uploadType = :uploadType")
+    List<Attachment> findByPostIdAndUploadType(@Param("postId") Long postId, @Param("uploadType") UploadType uploadType);
 
 }

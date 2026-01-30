@@ -1,6 +1,7 @@
 package dev.emoforge.post.service.internal;
 
 
+import dev.emoforge.attach.repository.AttachmentRepository;
 import dev.emoforge.post.domain.Category;
 import dev.emoforge.post.domain.Post;
 import dev.emoforge.post.domain.PostTag;
@@ -8,6 +9,7 @@ import dev.emoforge.post.domain.Tag;
 import dev.emoforge.post.dto.internal.PostRequestDTO;
 import dev.emoforge.post.dto.internal.PostUpdateDTO;
 import dev.emoforge.post.repository.CategoryRepository;
+import dev.emoforge.post.repository.CommentRepository;
 import dev.emoforge.post.repository.PostRepository;
 import dev.emoforge.post.repository.PostTagRepository;
 import dev.emoforge.post.util.StringUtils;
@@ -25,12 +27,11 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
-
     private final CategoryRepository categoryRepository;
-
-
     private final TagService tagService;
     private final PostTagRepository postTagRepository;
+    private CommentRepository commentRepository;
+    private AttachmentRepository attachmentRepository;
 
 
 
@@ -93,10 +94,20 @@ public class PostService {
     }
 
 
-    //Post 삭제
+    //Post 삭제 (2026.01.30 Emoforge-integrated project)
     @Transactional
-    public void deletePost(Long id) {
-        postRepository.deleteById(id);
+    public void deletePost(Long postId) {
+        if (!postRepository.existsById(postId)) {
+            throw new IllegalArgumentException("Post not found: " + postId);
+        }
+
+        // 1️⃣ 연관 메타 먼저 정리
+        postTagRepository.deleteByPostId(postId);
+        commentRepository.deleteByPostId(postId);
+        attachmentRepository.deleteByPostId(postId);
+
+        // 2️⃣ 마지막에 post 삭제
+        postRepository.deleteById(postId);
     }
 
 

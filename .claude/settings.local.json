@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(if [ -d \"./md\" ])",
+      "Bash(then echo \"exists\")",
+      "Bash(else mkdir -p ./md)",
+      "Bash(fi:*)"
+    ]
+  }
+}

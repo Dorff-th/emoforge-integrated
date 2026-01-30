@@ -2,24 +2,26 @@ package dev.emoforge.post.controller;
 
 import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.post.domain.Post;
-import dev.emoforge.post.dto.bff.PageResponseDTO;
-import dev.emoforge.post.dto.bff.PostDetailResponse;
-import dev.emoforge.post.dto.bff.PostListItemResponse;
+import dev.emoforge.post.dto.legacy.bff.PageResponseDTO;
+import dev.emoforge.post.dto.internal.PostDetailResponse;
+import dev.emoforge.post.dto.legacy.bff.PostListItemResponse;
 import dev.emoforge.post.dto.internal.PageRequestDTO;
 import dev.emoforge.post.dto.internal.PostRequestDTO;
 import dev.emoforge.post.dto.internal.PostUpdateDTO;
 import dev.emoforge.post.dto.internal.TagResponse;
-import dev.emoforge.post.service.bff.PostDeleteFacadeService;
-import dev.emoforge.post.service.bff.PostDetailFacadeService;
-import dev.emoforge.post.service.bff.PostListFacadeService;
+import dev.emoforge.post.dto.query.PostListItemSummary;
+import dev.emoforge.post.service.legacy.bff.PostDeleteFacadeService;
+import dev.emoforge.post.service.legacy.bff.PostDetailFacadeService;
 import dev.emoforge.post.service.internal.PostService;
 import dev.emoforge.post.service.internal.PostTagService;
+import dev.emoforge.post.service.query.PostQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -59,11 +61,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PostController {
 
-    private final PostListFacadeService postListFacadeService;  // bff
-    private final PostDetailFacadeService postDetailFacadeService; // bff
+    private final PostDetailFacadeService postDetailFacadeService; // bff <-- remove 대상
     private final PostTagService postTagService;
     private final PostService postService;
-    private final PostDeleteFacadeService postDeleteFacadeService; // bbf
+    private final PostDeleteFacadeService postDeleteFacadeService; // bbf <-- remove 대상
+    private final PostQueryService postQueryService;
+
+    private static final int PAGE_BLOCK_SIZE = 10;
 
 
     // ============================================================
@@ -93,7 +97,13 @@ public class PostController {
     )
     @GetMapping
     public PageResponseDTO<PostListItemResponse> getPostList(PageRequestDTO requestDTO) {
-        return postListFacadeService.getPostList(null, requestDTO);
+
+        Page<PostListItemSummary> page =
+                postQueryService.getPostList(null, requestDTO);
+
+        PageResponseDTO pageResponseDTO = new PageResponseDTO(requestDTO, page.getTotalElements(), page.stream().toList(), PAGE_BLOCK_SIZE);
+
+        return pageResponseDTO;
     }
 
     // ============================================================
@@ -118,7 +128,12 @@ public class PostController {
     public PageResponseDTO<PostListItemResponse> getPostListByTag(
         @PathVariable("tagName") String tagName,
         PageRequestDTO requestDTO) {
-        return postListFacadeService.getPostList(tagName, requestDTO);
+        Page<PostListItemSummary> page =
+                postQueryService.getPostList(tagName, requestDTO);
+
+        PageResponseDTO pageResponseDTO = new PageResponseDTO(requestDTO, page.getTotalElements(), page.stream().toList(), PAGE_BLOCK_SIZE);
+
+        return pageResponseDTO;
     }
 
     // ============================================================
@@ -143,7 +158,7 @@ public class PostController {
     @GetMapping("/{id:\\d+}")
     public ResponseEntity<PostDetailResponse> getPost(@PathVariable("id") Long id) throws NotFoundException {
 
-        PostDetailResponse resultDTO = postDetailFacadeService.getPostDetail(id);
+        PostDetailResponse resultDTO = postQueryService.getPostDetail(id);
 
         return ResponseEntity.ok(resultDTO);
     }
@@ -277,7 +292,7 @@ public class PostController {
             throw new AccessDeniedException("권한이 없습니다.");
         }
 
-        postDeleteFacadeService.deletePost(id);
+        postService.deletePost(id);
         return ResponseEntity.noContent().build(); // 204 반환
     }
 }

@@ -3,12 +3,14 @@ package dev.emoforge.post.controller;
 
 import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.post.domain.Post;
-import dev.emoforge.post.dto.bff.CommentDetailResponse;
+import dev.emoforge.post.dto.legacy.bff.CommentDetailResponse;
 import dev.emoforge.post.dto.internal.CommentRequest;
 import dev.emoforge.post.dto.internal.CommentResponse;
-import dev.emoforge.post.service.bff.CommentsFacadeService;
+import dev.emoforge.post.dto.query.CommentViewDTO;
+import dev.emoforge.post.service.legacy.bff.CommentsFacadeService;
 import dev.emoforge.post.service.internal.CommentService;
 import dev.emoforge.post.service.internal.PostService;
+import dev.emoforge.post.service.query.CommentQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +52,8 @@ public class CommentController {
 
     private final PostService postService;
     private final CommentService commentService;
-    private final CommentsFacadeService commentsFacadeService;
+    //private final CommentsFacadeService commentsFacadeService;
+    private final CommentQueryService commentQueryService;
 
     @Operation(
         summary = "특정 게시글의 댓글 목록 조회",
@@ -80,8 +83,8 @@ public class CommentController {
                     """
     )
     @GetMapping
-    public ResponseEntity<List<CommentDetailResponse>> getCommentsByPostId(@PathVariable("postId") Long postId) {
-        List<CommentDetailResponse> comments = commentsFacadeService.getCommentsByPost(postId);
+    public ResponseEntity<List<CommentViewDTO>> getCommentsByPostId(@PathVariable("postId") Long postId) {
+        List<CommentViewDTO> comments = commentQueryService.findByPostId(postId);
         return ResponseEntity.ok(comments);
     }
 
