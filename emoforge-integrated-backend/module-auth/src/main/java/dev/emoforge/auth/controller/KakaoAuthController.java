@@ -82,6 +82,7 @@ public class KakaoAuthController {
                                         HttpServletResponse response) {
 
         KakaoLoginResult result = kakaoAuthService.processKakaoLogin(request.code(), response);
+
         return ResponseEntity.ok(result);
     }
 }

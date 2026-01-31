@@ -16,6 +16,13 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* 추가 */
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@store/*": ["src/store/*"]
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

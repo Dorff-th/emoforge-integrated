@@ -45,7 +45,7 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
                 .authorizeHttpRequests(auth -> auth
                         // 🔓 Auth 공개 엔드포인트
@@ -82,6 +82,23 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+
+        if (Arrays.asList(env.getActiveProfiles()).contains("prod")) {
+            config.setAllowedOriginPatterns(corsProps.allowedOriginPatterns());
+        } else {
+            config.setAllowedOrigins(corsProps.allowedOrigins());
+        }
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }
 

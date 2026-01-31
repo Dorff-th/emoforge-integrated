@@ -1,5 +1,6 @@
 package dev.emoforge.core.security.jwt;
 
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -58,11 +59,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String uuid = claims.getSubject(); // sub = member_uuid
                 String role = claims.get("role", String.class);
 
+                CustomUserPrincipal principal =
+                        new CustomUserPrincipal(
+                                uuid,
+                                List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                        );
+
                 Authentication auth =
                         new UsernamePasswordAuthenticationToken(
-                                uuid,
+                                principal,
                                 null,
-                                List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                                principal.getAuthorities()
                         );
 
                 SecurityContextHolder.getContext().setAuthentication(auth);

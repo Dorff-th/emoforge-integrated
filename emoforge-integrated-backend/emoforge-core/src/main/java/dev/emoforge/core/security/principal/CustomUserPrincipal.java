@@ -6,12 +6,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 public class CustomUserPrincipal implements UserDetails {
-    private final String username;
+    //private final String username;
     private final String uuid;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserPrincipal(String username, String uuid, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username;
+    public CustomUserPrincipal(String uuid, Collection<? extends GrantedAuthority> authorities) {
+        //this.username = username;
         this.uuid = uuid;
         this.authorities = authorities;
     }
@@ -22,7 +22,8 @@ public class CustomUserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        //return username;
+        return null;
     }
 
     @Override
