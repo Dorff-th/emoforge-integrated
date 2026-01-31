@@ -3,6 +3,7 @@ package dev.emoforge.auth.dto;
 import dev.emoforge.auth.entity.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +21,7 @@ import java.time.format.DateTimeFormatter;
                 """
 )
 @Getter
+@ToString
 public class MemberDTO {
 
     @Schema(description = "사용자 UUID", example = "a12f81ab-9cd1-4cbb-983a-2b52a918e9b4")

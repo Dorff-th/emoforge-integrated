@@ -1,44 +1,60 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { authApi } from "@/features/auth/api/authApi";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { OAuthFlow } from "../api/authFlow";
 
 export function OAuthCallbackPage() {
   const navigate = useNavigate();
   const { refetchMe } = useAuth();
+  const ranRef = useRef(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
+    if (ranRef.current) return;
+    ranRef.current = true;
 
-    if (!code) {
-      navigate("/login?status=unauthorized", { replace: true });
-      return;
-    }
+    OAuthFlow.start();
 
-    (async () => {
+    const run = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+
+      if (!code) {
+        OAuthFlow.end();
+        navigate("/login?status=unauthorized", { replace: true });
+        return;
+      }
+
       try {
-        // 🔑 핵심: code를 BE로 전달
+        // ✅ OAuth 성공의 기준
         await authApi.kakaoLogin(code);
 
-        // 쿠키 세팅 이후 /me 재조회
+        // 🔄 /me는 "시도만" 한다 (성공하면 좋고, 아니어도 OK)
         try {
           await refetchMe();
         } catch (e: any) {
           if (e.response?.status === 401) {
-            // 한번 정도는 재시도 or 대기
-            await setTimeout(() => {}, 100);
-            await refetchMe();
-          } else {
-            throw e;
+            await new Promise((r) => setTimeout(r, 150));
+            try {
+              await refetchMe();
+            } catch {
+              // 🔕 여기서는 아무 것도 안 함
+              // 로그인 실패 아님
+            }
           }
         }
 
+        // ✅ 무조건 홈 이동
         navigate("/", { replace: true });
-      } catch (e) {
+      } catch {
+        // ❌ kakaoLogin 자체가 실패한 경우만
         navigate("/login?status=unauthorized", { replace: true });
+      } finally {
+        OAuthFlow.end();
       }
-    })();
+    };
+
+    run();
   }, [navigate, refetchMe]);
 
   return (

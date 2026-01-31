@@ -18,7 +18,9 @@ export function AppLayout() {
 
           <div className="flex items-center gap-4">
             {user && (
-              <span className="text-sm text-slate-600">{user.data?.username}</span>
+              <span className="text-sm text-slate-600">
+                {user.data?.username}
+              </span>
             )}
             <button
               type="button"

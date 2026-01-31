@@ -1,4 +1,5 @@
 import axios, { AxiosError, type AxiosInstance } from "axios";
+import { OAuthFlow } from "@/features/auth/api/authFlow";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -27,29 +28,35 @@ function onRefreshed() {
  * Response Interceptor
  */
 http.interceptors.response.use(
-  response => response,
+  res => res,
   async (error: AxiosError) => {
     const status = error.response?.status;
     const originalRequest: any = error.config;
+    
 
-    // 401이 아니면 그대로 에러 전달
+    // 🔒 OAuth 진행 중이면 401도 그냥 통과
+    if (status === 401 && OAuthFlow.isActive()) {
+      return Promise.reject(error);
+    }
+
+    // 401 아니면 패스
     if (status !== 401) {
       return Promise.reject(error);
     }
 
-    // refresh API 자체에서 401 → 상위에서 logout 판단
+    // refresh 자체의 401은 더 이상 확산 ❌
     if (originalRequest?.url?.includes("/api/auth/refresh")) {
       return Promise.reject(error);
     }
 
-    // 이미 retry 한 요청이면 더 이상 시도 X
+    // retry 중복 방지
     if (originalRequest._retry) {
       return Promise.reject(error);
     }
 
     originalRequest._retry = true;
 
-    // 이미 refresh 중이면 큐에 대기
+    // refresh 중이면 큐 대기
     if (isRefreshing) {
       await new Promise<void>(resolve => subscribeTokenRefresh(resolve));
       return http(originalRequest);
@@ -67,12 +74,11 @@ http.interceptors.response.use(
       onRefreshed();
       return http(originalRequest);
 
-    } catch (refreshError) {
-      // refresh 실패 → 판단은 상위 레이어 몫
-      return Promise.reject(refreshError);
-
     } finally {
       isRefreshing = false;
     }
   }
 );
+
+
+

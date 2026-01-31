@@ -13,17 +13,17 @@ export const router = createBrowserRouter([
   {
     element: <PublicLayout />,
     children: [
-      { index: true, element: <Navigate to="/login" replace /> },
       { path: "/login", element: <LoginPage /> },
       { path: "/kakao/callback", element: <OAuthCallbackPage /> },
     ],
   },
   {
+    path: "/", // ✅ 명시
     element: <RequireAuth />,
     children: [
       {
         element: <AppLayout />,
-        children: [{ path: "/", element: <HomePage /> }],
+        children: [{ index: true, element: <HomePage /> }],
       },
     ],
   },
