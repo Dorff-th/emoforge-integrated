@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "../api/authApi";
 
@@ -15,11 +16,15 @@ export function useAuth() {
 
   const queryClient = useQueryClient();
 
+  const navigate = useNavigate();
+
+
   const logout = async () => {
     try {
       await authApi.logout();
     } finally {
       queryClient.clear();
+      navigate("/login");
     }
   };
 

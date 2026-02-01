@@ -1,0 +1,38 @@
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { authApi } from "../api/authApi";
+
+export function useAuth() {
+  const queryClient = useQueryClient();
+
+  const meQuery = useQuery({
+    queryKey: ["auth", "me"],
+    queryFn: authApi.me,
+    retry: false,
+    staleTime: 0,
+  });
+
+  // 🔥 여기서 "인증 실패의 의미"를 해석
+  useEffect(() => {
+    if (meQuery.isError) {
+      // refresh 실패 이후 도달하는 지점
+      queryClient.clear();
+    }
+  }, [meQuery.isError, queryClient]);
+
+  const logout = async () => {
+    try {
+      await authApi.logout();
+    } finally {
+      queryClient.clear();
+    }
+  };
+
+  return {
+    user: meQuery.data ?? null,
+    isAuthenticated: !!meQuery.data,
+    isLoading: meQuery.isLoading,
+    isError: meQuery.isError,
+    logout,
+  };
+}
