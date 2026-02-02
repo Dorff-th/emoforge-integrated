@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { queryClient } from "@/lib/queryClient";
 import { authApi } from "@/features/auth/api/authApi";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { OAuthFlow } from "../api/authFlow";
@@ -27,19 +28,37 @@ export function OAuthCallbackPage() {
 
       try {
         // ✅ OAuth 성공의 기준
-        await authApi.kakaoLogin(code);
+        // 1) 인가코드 → 백엔드 전달
+        const res = await authApi.kakaoLogin(code);
+        const data = res.data;
 
-        // 🔄 /me는 "시도만" 한다 (성공하면 좋고, 아니어도 OK)
-        try {
-          await refetchMe();
-        } catch (e: any) {
-          if (e.response?.status === 401) {
-            await new Promise((r) => setTimeout(r, 150));
-            try {
-              await refetchMe();
-            } catch {
-              // 🔕 여기서는 아무 것도 안 함
-              // 로그인 실패 아님
+        queryClient.setQueryData(["auth", "kakao"], res.data);
+
+        // 2) 신규 회원 → 약관 동의 필요
+        if (res.data.status === "NEED_AGREEMENT") {
+          navigate("/auth/terms", {
+            replace: true,
+            state: {
+              kakaoId: res.data.kakaoId,
+              nickname: res.data.nickname,
+            },
+          });
+          return;
+        }
+
+        // 3) 기존 회원 → 로그인 성공
+        if (data.status === "LOGIN_OK") {
+          try {
+            await refetchMe();
+          } catch (e: any) {
+            if (e.response?.status === 401) {
+              await new Promise((r) => setTimeout(r, 150));
+              try {
+                await refetchMe();
+              } catch {
+                // 🔕 여기서는 아무 것도 안 함
+                // 로그인 실패 아님
+              }
             }
           }
         }

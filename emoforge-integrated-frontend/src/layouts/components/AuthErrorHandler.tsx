@@ -32,6 +32,14 @@ export function AuthErrorHandler() {
       toast.error("로그인이 필요합니다.");
     }
 
+    if (error === "invalid_access") {
+      toast.error("잘못된 접근입니다. 다시 로그인해주세요.");
+    }
+
+    if (error === "signup_failed") {
+      toast.error("회원가입 중 문제가 발생했습니다.");
+    }
+
     /**
      * 한 번 처리한 에러는 URL에서 제거
      * (뒤로가기 / 새로고침 시 중복 토스트 방지)

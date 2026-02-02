@@ -1,23 +1,8 @@
 import { http } from "@/shared/api/httpClient";
 import { API } from "@/shared/api/endpoints";
+import type { AuthMeResponse, LoginRequest, KakaoLoginResponse, KakaoSignupRequest } from "./auth.types";
 
-/**
- * 서버에서 내려주는 최소 사용자 정보
- * (FE에서 신뢰 가능한 인증 기준)
- */
-export interface AuthMeResponse {
-  uuid: string;
-  username: string;
-  role: "USER" | "ADMIN";
-}
 
-/**
- * 로그인 요청 payload
- */
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
 
 /**
  * Auth API – "백엔드와의 계약서"
@@ -25,7 +10,7 @@ export interface LoginRequest {
 export const authApi = {
 
    kakaoLogin: (code: string) =>
-    http.post<void>(`${API.AUTH}/kakao`,{code}),
+    http.post<KakaoLoginResponse>(`${API.AUTH}/kakao`,{code}),
 
   /**
    * 로그인
@@ -35,6 +20,15 @@ export const authApi = {
   login: (payload: LoginRequest) =>
     http.post<void>(`${API.AUTH}/login`, payload),
 
+  /**
+   * 카카오 id 로 회원가입
+   * -
+   */
+  kakaoSignup: ({ kakaoId, nickname }: KakaoSignupRequest) =>
+  http.post<void>(`${API.AUTH}/kakao/signup`, {
+    kakaoId: Number(kakaoId), // 🔥 경계에서 단 1회 변환
+    nickname,
+  }),
   /**
    * 로그아웃
    * - refresh_token 쿠키 제거
