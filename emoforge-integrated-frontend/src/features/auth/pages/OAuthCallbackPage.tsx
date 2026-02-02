@@ -5,7 +5,7 @@ import { authApi } from "@/features/auth/api/authApi";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { OAuthFlow } from "../api/authFlow";
 
-export function OAuthCallbackPage() {
+export default function OAuthCallbackPage() {
   const navigate = useNavigate();
   const { refetchMe } = useAuth();
   const ranRef = useRef(false);
@@ -64,7 +64,7 @@ export function OAuthCallbackPage() {
         }
 
         // ✅ 무조건 홈 이동
-        navigate("/", { replace: true });
+        navigate("/user", { replace: true });
       } catch {
         // ❌ kakaoLogin 자체가 실패한 경우만
         navigate("/login?status=unauthorized", { replace: true });

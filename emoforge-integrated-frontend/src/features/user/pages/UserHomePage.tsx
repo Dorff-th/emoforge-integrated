@@ -1,4 +1,4 @@
-export function HomePage() {
+export default function UserHomePage() {
   return (
     <div className="rounded-lg bg-white p-6 shadow-sm">
       <h1 className="text-xl font-semibold text-slate-900">로그인 성공 🎉</h1>

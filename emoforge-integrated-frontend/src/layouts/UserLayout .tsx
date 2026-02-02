@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
-export function AppLayout() {
+export function UserLayout() {
   const { user, logout } = useAuth();
 
   return (

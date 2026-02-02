@@ -1,7 +1,7 @@
 // src/features/auth/pages/LoginPage.tsx
 import { redirectToKakaoLogin } from "@/shared/utils/redirectToKakaoLogin";
 
-export function LoginPage() {
+export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fdfcfb] to-[#e2ebf0] flex items-center justify-center">
       <div className="text-center px-6">
