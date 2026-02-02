@@ -2,6 +2,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { UserLayout } from "@/layouts/UserLayout ";
 import { RequireAuth } from "@/guards/RequireAuth";
+import { RequireAdmin } from "@/guards/RequireAdmin";
+import { AdminLayout } from "@/layouts/AdminLayout";
 import LoginPage from "@/features/auth/pages/LoginPage";
 import OAuthCallbackPage from "@/features/auth/pages/OAuthCallbackPage";
 import UserHomePage from "@/features/user/pages/UserHomePage";
@@ -16,6 +18,9 @@ import DiaryInsightsPage from "@/features/diary/pages/DiaryInsightsPage";
 import DiarySearchPage from "@/features/diary/pages/DiarySearchPage";
 import PostListPage from "@/features/post/pages/PostListPage";
 import PostDetailPage from "@/features/post/pages/PostDetailPage";
+import AdminDashboardPage from "@/features/admin/pages/AdminDashboardPage";
+import AdminMembersPage from "@/features/admin/pages/AdminMembersPage";
+import AdminPostCategoryPage from "@/features/admin/pages/AdminDashboardPage";
 
 export const router = createBrowserRouter([
   {
@@ -55,21 +60,21 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  // {
-  //   path: "/admin",
-  //   element: <RequireAdmin />,
-  //   children: [
-  //     {
-  //       element: <AdminLayout />,
-  //       children: [
-  //         { index: true, element: <Navigate to="/admin/dashboard" replace /> },
-  //         { path: "dashboard", element: <AdminDashboardPage /> },
-  //         { path: "members", element: <AdminMembersPage /> },
-  //         { path: "posts/categories", element: <AdminPostCategoryPage /> },
-  //       ],
-  //     },
-  //   ],
-  // },
+  {
+    path: "/admin",
+    element: <RequireAdmin />,
+    children: [
+      {
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <Navigate to="/admin/dashboard" replace /> },
+          { path: "dashboard", element: <AdminDashboardPage /> },
+          { path: "members", element: <AdminMembersPage /> },
+          { path: "posts/categories", element: <AdminPostCategoryPage /> },
+        ],
+      },
+    ],
+  },
   {
     path: "*",
     element: <Navigate to="/login" replace />,
