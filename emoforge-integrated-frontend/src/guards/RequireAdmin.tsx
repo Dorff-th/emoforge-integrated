@@ -1,12 +1,13 @@
 import { type ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { useAdminAuth } from "@/features/admin/hooks/useAdminAuth";
+import { AdminAuthLoading } from "@/features/admin/components/AdminAuthLoading";
 
 export function RequireAdmin({ children }: { children: ReactNode }) {
   const { isAuthorized, isLoading } = useAdminAuth();
 
   if (isLoading) {
-    return <div>Loading...</div>; // TODO: Admin 전용 로딩 UI
+    return <AdminAuthLoading />;
   }
 
   if (!isAuthorized) {
@@ -15,3 +16,4 @@ export function RequireAdmin({ children }: { children: ReactNode }) {
 
   return children;
 }
+
