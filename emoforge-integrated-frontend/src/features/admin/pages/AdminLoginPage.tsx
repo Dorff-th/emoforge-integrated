@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
       });
 
       // 2️⃣ 성공 시 (access_token 쿠키 생성됨)
-      //toast.success("로그인에 성공했습니다.");
+      toast.success("로그인에 성공했습니다.");
       navigate("/admin/dashboard");
     } catch (err: any) {
       toast.error(err.response?.data?.message ?? "로그인에 실패했습니다.");

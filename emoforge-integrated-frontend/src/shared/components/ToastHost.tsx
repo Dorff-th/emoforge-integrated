@@ -1,26 +1,13 @@
 import { useToastStore } from "@/shared/stores/toastStore";
+import { ToastItem } from "./ToastItem";
 
 export function ToastHost() {
-  const { toasts, remove } = useToastStore();
+  const toasts = useToastStore((s) => s.toasts);
 
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
+    <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">
       {toasts.map((toast) => (
-        <div
-          key={toast.id}
-          className={`rounded px-4 py-3 shadow-md text-sm
-            ${
-              toast.type === "error"
-                ? "bg-red-500 text-white"
-                : toast.type === "success"
-                  ? "bg-green-500 text-white"
-                  : "bg-slate-800 text-white"
-            }
-          `}
-          onClick={() => remove(toast.id)}
-        >
-          {toast.message}
-        </div>
+        <ToastItem key={toast.id} toast={toast} />
       ))}
     </div>
   );
