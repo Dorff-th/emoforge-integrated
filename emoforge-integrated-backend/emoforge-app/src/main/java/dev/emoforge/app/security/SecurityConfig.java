@@ -60,6 +60,7 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // 🔐 관리자 API
+                        .requestMatchers("/api/auth/admin/login").permitAll()
                         .requestMatchers("/api/auth/admin/**").hasRole("ADMIN")
 
                         // 🔐 나머지 Auth API

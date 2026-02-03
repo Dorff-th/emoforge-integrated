@@ -3,4 +3,5 @@ export const API = {
   POST: "/api/posts",
   DIARY: "/api/diary",
   ATTACH: "/api/attach",
+  ADMIN : "/api/auth/admin",
 } as const;

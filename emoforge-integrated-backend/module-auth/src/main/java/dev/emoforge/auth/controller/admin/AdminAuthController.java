@@ -50,21 +50,6 @@ public class AdminAuthController {
     private final LoginTokenService loginTokenService;
     private final CookieProvider cookieProvider;
 
-/*    @Value("${security.cookie.domain}")
-    private String adminCookieDomain;
-
-    @Value("${security.cookie.secure}")
-    private boolean secure;
-
-    @Value("${security.cookie.http-only}")
-    private boolean httpOnly;
-
-    @Value("${security.cookie.same-site}")
-    private String sameSite;
-
-    @Value("${security.cookie.max-age-seconds}")
-    private long maxAgeSeconds;*/
-
     // ---------------------------------------------------------
     // 🔹 관리자 로그인
     // ---------------------------------------------------------

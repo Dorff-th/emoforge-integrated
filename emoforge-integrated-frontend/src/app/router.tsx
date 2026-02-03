@@ -21,6 +21,7 @@ import PostDetailPage from "@/features/post/pages/PostDetailPage";
 import AdminDashboardPage from "@/features/admin/pages/AdminDashboardPage";
 import AdminMembersPage from "@/features/admin/pages/AdminMembersPage";
 import AdminPostCategoryPage from "@/features/admin/pages/AdminDashboardPage";
+import AdminLoginPage from "@/features/admin/pages/AdminLoginPage";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
       { path: "/login", element: <LoginPage /> },
       { path: "/auth/terms", element: <TermsAgreementPage /> },
       { path: "/kakao/callback", element: <OAuthCallbackPage /> },
+      { path: "/admin/login", element: <AdminLoginPage /> },
 
       // ✅ 게시글 공개 영역
       { path: "/posts", element: <PostListPage /> },
