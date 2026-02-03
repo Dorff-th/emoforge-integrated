@@ -44,31 +44,7 @@ public class DefaultCookieProvider implements CookieProvider {
                 .build();
     }
 
-    @Override
-    @Deprecated
-    public ResponseCookie createAdminTokenCookie(String token) {
-        return ResponseCookie.from(props.getAdmin().getName(), token)
-                .domain(props.getCommon().getDomain())
-                .secure(props.getCommon().isSecure())
-                .httpOnly(props.getAdmin().isHttpOnly())
-                .sameSite(props.getCommon().getSameSite())
-                .path("/")
-                .maxAge(props.getAdmin().getMaxAgeSeconds())
-                .build();
-    }
 
-    @Override
-    @Deprecated
-    public ResponseCookie deleteAdminTokenCookie() {
-        return ResponseCookie.from(props.getAdmin().getName(), "")
-                .domain(props.getCommon().getDomain())
-                .path("/")
-                .secure(props.getCommon().isSecure())
-                .httpOnly(props.getAdmin().isHttpOnly())
-                .sameSite(props.getCommon().getSameSite())
-                .maxAge(0)
-                .build();
-    }
 
     @Override
     public List<ResponseCookie> deleteAllUserCookies() {
@@ -131,6 +107,8 @@ public class DefaultCookieProvider implements CookieProvider {
                 .maxAge(0)
                 .build();
     }
+
+
 
 
 }

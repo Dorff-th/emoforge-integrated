@@ -33,19 +33,15 @@ export default function AdminLoginPage() {
     try {
       setLoading(true);
 
-      const res = await adminApi.adminLogin({
+      await adminApi.adminLogin({
         username,
         password,
         captchaToken,
       });
 
-      console.log(res);
-
       // 2️⃣ 성공 시 (access_token 쿠키 생성됨)
-      if (res.status === 200) {
-        toast.success("로그인에 성공했습니다.");
-        navigate("/admin/dashboard");
-      }
+      //toast.success("로그인에 성공했습니다.");
+      navigate("/admin/dashboard");
     } catch (err: any) {
       toast.error(err.response?.data?.message ?? "로그인에 실패했습니다.");
     } finally {

@@ -52,13 +52,7 @@ public class LoginTokenService {
 
     public void handleLogout(HttpServletResponse response, LoginType loginType) {
 
-        if (loginType == LoginType.ADMIN) {
-            response.addHeader(
-                    HttpHeaders.SET_COOKIE,
-                    cookieProvider.deleteAdminTokenCookie().toString()
-            );
-            return;
-        }
+     
 
         cookieProvider.deleteAllUserCookies()
                 .forEach(cookie ->

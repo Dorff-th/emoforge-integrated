@@ -15,11 +15,7 @@ public interface CookieProvider {
     ResponseCookie deleteAccessTokenCookie();
     ResponseCookie deleteRefreshTokenCookie();
 
-    @Deprecated
-    ResponseCookie createAdminTokenCookie(String token);
 
-    @Deprecated
-    ResponseCookie deleteAdminTokenCookie();
 
     // ✅ 추가: 변형까지 포함한 삭제 세트
     List<ResponseCookie> deleteAllUserCookies();

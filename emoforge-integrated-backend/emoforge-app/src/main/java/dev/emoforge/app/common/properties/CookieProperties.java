@@ -4,17 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+
+@ConfigurationProperties(prefix = "security.cookie")
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "security.cookie")
 public class CookieProperties {
 
     private Common common;
     private Token access;
     private Token refresh;
-
-    @Deprecated
-    private Admin admin;
 
     @Getter @Setter
     public static class Common {
@@ -27,16 +25,8 @@ public class CookieProperties {
     public static class Token {
         private String name;
         private boolean httpOnly;
-        private Integer expirationHours;   // access
-        private Integer expirationDays;    // refresh
-    }
-
-    @Getter
-    @Setter
-    @Deprecated
-    public static class Admin {
-        private String name;
-        private boolean httpOnly;
-        private long maxAgeSeconds;
+        private Integer expirationHours; // access
+        private Integer expirationDays;  // refresh
     }
 }
+

@@ -23,7 +23,7 @@ public class CustomUserPrincipal implements UserDetails {
     @Override
     public String getUsername() {
         //return username;
-        return null;
+        return uuid;
     }
 
     @Override

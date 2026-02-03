@@ -2,8 +2,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { UserLayout } from "@/layouts/UserLayout ";
 import { RequireAuth } from "@/guards/RequireAuth";
-import { RequireAdmin } from "@/guards/RequireAdmin";
 import { AdminLayout } from "@/layouts/AdminLayout";
+import { AdminProtectedLayout } from "@/layouts/AdminProtectedLayout";
 import LoginPage from "@/features/auth/pages/LoginPage";
 import OAuthCallbackPage from "@/features/auth/pages/OAuthCallbackPage";
 import UserHomePage from "@/features/user/pages/UserHomePage";
@@ -64,17 +64,12 @@ export const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <RequireAdmin />,
+    element: <AdminProtectedLayout />,
     children: [
-      {
-        element: <AdminLayout />,
-        children: [
-          { index: true, element: <Navigate to="/admin/dashboard" replace /> },
-          { path: "dashboard", element: <AdminDashboardPage /> },
-          { path: "members", element: <AdminMembersPage /> },
-          { path: "posts/categories", element: <AdminPostCategoryPage /> },
-        ],
-      },
+      { index: true, element: <Navigate to="dashboard" replace /> },
+      { path: "dashboard", element: <AdminDashboardPage /> },
+      { path: "members", element: <AdminMembersPage /> },
+      { path: "posts/categories", element: <AdminPostCategoryPage /> },
     ],
   },
   {

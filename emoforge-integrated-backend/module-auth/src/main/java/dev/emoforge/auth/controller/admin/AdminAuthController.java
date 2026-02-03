@@ -4,6 +4,7 @@ import dev.emoforge.auth.dto.admin.AdminLoginRequest;
 import dev.emoforge.auth.dto.admin.AdminLoginResponse;
 import dev.emoforge.auth.entity.Member;
 import dev.emoforge.auth.enums.LoginType;
+import dev.emoforge.auth.repository.MemberRepository;
 import dev.emoforge.auth.service.LoginTokenService;
 import dev.emoforge.core.properties.CookieProvider;
 import dev.emoforge.auth.service.admin.AdminAuthService;
@@ -48,7 +49,8 @@ public class AdminAuthController {
     private final AdminAuthService adminAuthService;
     private final RecaptchaService recaptchaService;
     private final LoginTokenService loginTokenService;
-    private final CookieProvider cookieProvider;
+    //private final CookieProvider cookieProvider;
+    private final MemberRepository memberRepository;
 
     // ---------------------------------------------------------
     // 🔹 관리자 로그인
@@ -120,13 +122,16 @@ public class AdminAuthController {
             return ResponseEntity.status(401).body(Map.of("message", "인증되지 않았습니다."));
         }
 
-        String username = authentication.getName();
+        String memberUuid = authentication.getName();   // CustomUserPrincipal에셔 getUsername() return 을 uuid로 함
+        Member member = memberRepository.findByUuid(memberUuid)
+                .orElseThrow(() -> new RuntimeException("회원 정보 없음"));
 
+        String nickname = member.getNickname();
         String role = authentication.getAuthorities().iterator().next().getAuthority();
 
 
         return ResponseEntity.ok(Map.of(
-                "username", username,
+                "nickname", nickname,
                 "role", role,
                 "message", "관리자 인증 성공"
         ));

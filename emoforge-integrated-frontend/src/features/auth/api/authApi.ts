@@ -31,6 +31,7 @@ export const authApi = {
   }),
   /**
    * 로그아웃
+   * - access_token
    * - refresh_token 쿠키 제거
    */
   logout: () =>
