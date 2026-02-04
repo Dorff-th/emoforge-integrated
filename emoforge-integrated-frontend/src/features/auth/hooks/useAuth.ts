@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "../api/authApi";
+import { useToast } from "@/shared/stores/useToast";
 
 export function useAuth() {
   const {
@@ -18,13 +19,15 @@ export function useAuth() {
 
   const navigate = useNavigate();
 
+  const toast = useToast();
 
   const logout = async () => {
     try {
       await authApi.logout();
     } finally {
       queryClient.clear();
-      navigate("/login");
+      toast.success('로그아웃 되었습니다');
+       navigate('/login', { replace: true });
     }
   };
 

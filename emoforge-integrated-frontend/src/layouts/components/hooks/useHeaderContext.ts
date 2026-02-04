@@ -4,13 +4,13 @@ export type HeaderContext =
   | "PUBLIC"
   | "POST"
   | "USER"
-  | "DIARY"
-  | "ADMIN";
+  | "DIARY";
+
 
 export function useHeaderContext(): HeaderContext {
   const { pathname } = useLocation();
 
-  if (pathname.startsWith("/admin")) return "ADMIN";
+  //if (pathname.startsWith("/admin")) return "ADMIN";
   if (pathname.startsWith("/user/diary")) return "DIARY";
   if (pathname.startsWith("/user")) return "USER";
   if (pathname.startsWith("/posts")) return "POST";

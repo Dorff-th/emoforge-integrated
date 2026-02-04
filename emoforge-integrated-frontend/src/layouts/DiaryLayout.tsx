@@ -2,9 +2,9 @@ import { Outlet } from "react-router-dom";
 import { AppHeader } from "@/layouts/components/header/AppHeader";
 import { HeaderContextProvider } from "@/layouts/components/header/context/headerContext";
 
-export function UserLayout() {
+export function PostLayout() {
   return (
-    <HeaderContextProvider value="USER">
+    <HeaderContextProvider value="DIARY">
       <div className="min-h-screen bg-white">
         <AppHeader />
 
