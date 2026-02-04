@@ -1,3 +1,4 @@
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { AppHeader } from "./AppHeader";
 //import { useAuth } from "@/features/auth/hooks/useAuth";
 
@@ -6,15 +7,26 @@ export const PostHeader = ({
 }: {
   isAuthenticated: boolean;
 }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate("/login", {
+      state: { from: location.pathname },
+    });
+  };
+
   return (
     <AppHeader
       left={<div>EmoForge</div>}
       center={<a href="/posts">Posts</a>}
       right={
         isAuthenticated ? (
-          <a href="/user/home">My</a>
+          <Link to="/user/home">My</Link>
         ) : (
-          <a href="/login">Login</a>
+          <div>
+            <button onClick={handleLogin}>Login</button>
+          </div>
         )
       }
     />
