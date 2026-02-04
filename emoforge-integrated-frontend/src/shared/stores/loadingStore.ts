@@ -18,7 +18,7 @@ export const useLoadingStore = create<LoadingState>((set, get) => ({
   scopes: {},
 
   start: (scope) => {
-     console.log("[UI LOADING START]", scope);
+     
     set((s) => {
       if (!scope) return { globalCount: s.globalCount + 1 };
       const next = (s.scopes[scope] ?? 0) + 1;
@@ -27,7 +27,7 @@ export const useLoadingStore = create<LoadingState>((set, get) => ({
   },
 
   end: (scope) => {
-    console.log("[UI LOADING END]", scope);
+    
     set((s) => {
       if (!scope) return { globalCount: Math.max(0, s.globalCount - 1) };
 
