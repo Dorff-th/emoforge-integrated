@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { UserLayout } from "@/layouts/UserLayout ";
 import { RequireAuth } from "@/guards/RequireAuth";
-import { AdminLayout } from "@/layouts/AdminLayout";
+//import { AdminLayout } from "@/layouts/AdminLayout";
 import { AdminProtectedLayout } from "@/layouts/AdminProtectedLayout";
 import LoginPage from "@/features/auth/pages/LoginPage";
 import OAuthCallbackPage from "@/features/auth/pages/OAuthCallbackPage";
@@ -22,6 +22,7 @@ import AdminDashboardPage from "@/features/admin/pages/AdminDashboardPage";
 import AdminMembersPage from "@/features/admin/pages/AdminMembersPage";
 import AdminPostCategoryPage from "@/features/admin/pages/AdminDashboardPage";
 import AdminLoginPage from "@/features/admin/pages/AdminLoginPage";
+import { PostLayout } from "@/layouts/PostLayout";
 
 export const router = createBrowserRouter([
   {
@@ -31,12 +32,18 @@ export const router = createBrowserRouter([
       { path: "/auth/terms", element: <TermsAgreementPage /> },
       { path: "/kakao/callback", element: <OAuthCallbackPage /> },
       { path: "/admin/login", element: <AdminLoginPage /> },
-
-      // ✅ 게시글 공개 영역
-      { path: "/posts", element: <PostListPage /> },
-      { path: "/posts/:id", element: <PostDetailPage /> },
     ],
   },
+  {
+    path: "/posts",
+    element: <PostLayout />,
+    children: [
+      { index: true, element: <PostListPage /> },
+      { path: "new", element: <Navigate to="/user/posts/new" replace /> },
+      { path: ":id", element: <PostDetailPage /> },
+    ],
+  },
+
   {
     path: "/user",
     element: <RequireAuth />,
@@ -73,7 +80,8 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "*",
-    element: <Navigate to="/login" replace />,
+    path: "/",
+    element: <Navigate to="/posts" replace />,
   },
+  { path: "*", element: <div>404 NOT FOUND</div> },
 ]);
