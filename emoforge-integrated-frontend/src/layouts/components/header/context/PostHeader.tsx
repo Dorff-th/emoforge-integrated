@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Pencil, Search, FileText } from "lucide-react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { cn } from "@/shared/utils/cn";
+import { NAV_ITEM_BASE } from "@/layouts/components/header/header.constants";
 
 export function PostHeader() {
   const { isAuthenticated } = useAuth();
@@ -22,7 +23,8 @@ export function PostHeader() {
         to="/posts"
         className={({ isActive }) =>
           cn(
-            "text-sm transition-colors flex items-center gap-1.5",
+            NAV_ITEM_BASE,
+            "text-[var(--text)]",
             isActive
               ? "font-medium text-[var(--text)]"
               : "text-[var(--text)] hover:text-[var(--text)]",

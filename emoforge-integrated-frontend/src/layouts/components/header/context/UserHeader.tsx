@@ -3,6 +3,11 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/shared/utils/cn";
 import { User, FileText } from "lucide-react";
+import {
+  NAV_ITEM_BASE,
+  HEADER_ICON_SIZE,
+  HEADER_ICON_SIZE_MOBILE,
+} from "@/layouts/components/header/header.constants";
 
 const menus = [
   { label: "Profile", to: "/user/profile", icon: User },
@@ -26,12 +31,13 @@ export function UserHeader() {
             to={to}
             className={({ isActive }) =>
               cn(
-                "text-sm transition-colors text-[var(--text)]",
+                NAV_ITEM_BASE,
+                "text-foreground",
                 isActive ? "font-medium" : "opacity-80 hover:opacity-100",
               )
             }
           >
-            <Icon size={18} />
+            <Icon size={HEADER_ICON_SIZE} />
             {label}
           </NavLink>
         ))}
@@ -56,14 +62,15 @@ export function UserHeader() {
       {/* Mobile Menu */}
       {open && (
         <div className="absolute left-0 top-full z-50 w-full border-t bg-white shadow-md md:hidden">
-          {menus.map((menu) => (
+          {menus.map(({ label, to, icon: Icon }) => (
             <NavLink
-              key={menu.to}
-              to={menu.to}
+              key={to}
+              to={to}
               onClick={() => setOpen(false)}
-              className="block px-4 py-3 text-sm hover:bg-neutral-100"
+              className="px-4 py-3 text-sm hover:bg-neutral-100 flex items-center gap-1.5"
             >
-              {menu.label}
+              <Icon size={HEADER_ICON_SIZE_MOBILE} />
+              {label}
             </NavLink>
           ))}
         </div>

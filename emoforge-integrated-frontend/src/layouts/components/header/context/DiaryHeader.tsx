@@ -13,6 +13,11 @@ import { DiarySearchInput } from "@/features/diary/components/DiarySearchInput";
 import { useDiarySearch } from "@/features/diary/search/useDiarySearch";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/shared/utils/cn";
+import {
+  NAV_ITEM_BASE,
+  HEADER_ICON_SIZE,
+  HEADER_ICON_SIZE_MOBILE,
+} from "@/layouts/components/header/header.constants";
 
 const menus = [
   { label: "Write", to: "/user/diary/write", icon: PenLine },
@@ -40,12 +45,13 @@ export function DiaryHeader() {
             to={to}
             className={({ isActive }) =>
               cn(
-                "text-sm transition-colors text-[var(--text)] flex items-center gap-1.5",
+                NAV_ITEM_BASE,
+                "px-2 gap-1 text-xs",
                 isActive ? "font-medium" : "opacity-80 hover:opacity-100",
               )
             }
           >
-            <Icon size={16} />
+            <Icon size={HEADER_ICON_SIZE} />
             {label}
           </NavLink>
         ))}
@@ -55,9 +61,9 @@ export function DiaryHeader() {
           to={boardLink.to}
           className="ml-2 flex items-center gap-1 text-neutral-500 hover:text-black"
         >
-          <FileText size={15} />
+          <FileText size={HEADER_ICON_SIZE} />
           {boardLink.label}
-          <ExternalLink size={14} />
+          <ExternalLink size={HEADER_ICON_SIZE_MOBILE} />
         </NavLink>
       </nav>
 
@@ -85,7 +91,7 @@ export function DiaryHeader() {
               onClick={() => setOpen(false)}
               className="px-4 py-3 text-sm hover:bg-neutral-100 flex items-center gap-1.5"
             >
-              <Icon size={14} />
+              <Icon size={HEADER_ICON_SIZE_MOBILE} />
               {label}
             </NavLink>
           ))}
@@ -98,9 +104,9 @@ export function DiaryHeader() {
             onClick={() => setOpen(false)}
             className="flex items-center gap-2 px-4 py-3 text-sm text-neutral-600 hover:bg-neutral-100"
           >
-            <FileText size={14} />
+            <FileText size={HEADER_ICON_SIZE_MOBILE} />
             {boardLink.label}
-            <ExternalLink size={14} />
+            <ExternalLink size={HEADER_ICON_SIZE_MOBILE} />
           </NavLink>
         </div>
       )}

@@ -2,6 +2,11 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X, FileText, Layers } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import {
+  NAV_ITEM_BASE,
+  HEADER_ICON_SIZE,
+  HEADER_ICON_SIZE_MOBILE,
+} from "@/layouts/components/header/header.constants";
 
 export function PublicHeader() {
   const [open, setOpen] = useState(false);
@@ -14,12 +19,13 @@ export function PublicHeader() {
           to="/about"
           className={({ isActive }) =>
             cn(
-              "text-sm transition-colors text-[var(--text)] flex items-center gap-1.5",
+              NAV_ITEM_BASE,
+              "text-[var(--text)]",
               isActive ? "font-medium" : "opacity-80 hover:opacity-100",
             )
           }
         >
-          <Layers size={16} />
+          <Layers size={HEADER_ICON_SIZE} />
           About
           {/* <ChevronDown size={14} /> */}
         </NavLink>
@@ -28,12 +34,13 @@ export function PublicHeader() {
           to="/posts"
           className={({ isActive }) =>
             cn(
-              "text-sm transition-colors text-[var(--text)] flex items-center gap-1.5",
+              NAV_ITEM_BASE,
+              "text-[var(--text)]",
               isActive ? "font-medium" : "opacity-80 hover:opacity-100",
             )
           }
         >
-          <FileText size={16} />
+          <FileText size={HEADER_ICON_SIZE} />
           Posts
         </NavLink>
       </div>
@@ -57,7 +64,7 @@ export function PublicHeader() {
             onClick={() => setOpen(false)}
             className="px-4 py-2 text-sm hover:bg-neutral-100 flex items-center gap-1.5"
           >
-            <Layers size={14} />
+            <Layers size={HEADER_ICON_SIZE_MOBILE} />
             About
           </NavLink>
 
