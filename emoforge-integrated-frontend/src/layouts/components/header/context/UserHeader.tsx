@@ -3,7 +3,6 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const menus = [
-  { label: "Home", to: "/user/home" },
   { label: "Profile", to: "/user/profile" },
   { label: "Posts", to: "/posts" },
 ];

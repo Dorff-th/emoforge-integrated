@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, X, ExternalLink } from "lucide-react";
 import { DiarySearchInput } from "@/features/diary/components/DiarySearchInput";
 import { useDiarySearch } from "@/features/diary/search/useDiarySearch";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 const menus = [
   { label: "Write", to: "/user/diary/write" },

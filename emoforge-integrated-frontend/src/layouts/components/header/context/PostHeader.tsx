@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import { Pencil, Search } from "lucide-react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
@@ -11,7 +11,7 @@ export function PostHeader() {
       navigate("/login");
       return;
     }
-    navigate("/posts/write");
+    navigate("/posts/new");
   };
 
   return (
