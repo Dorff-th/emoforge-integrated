@@ -4,10 +4,12 @@ import { useState } from "react";
 import { cn } from "@/shared/utils/cn";
 import { User, FileText } from "lucide-react";
 import {
-  NAV_ITEM_BASE,
-  HEADER_ICON_SIZE,
+  HEADER_MENU_ITEM_BASE,
   HEADER_ICON_SIZE_MOBILE,
+  HEADER_HOVER_TRANSITION,
+  HEADER_HOVER_BG,
 } from "@/layouts/components/header/header.constants";
+import { HeaderNavItem } from "../elements/HeaderNavItem";
 
 const menus = [
   { label: "Profile", to: "/user/profile", icon: User },
@@ -25,21 +27,10 @@ export function UserHeader() {
     <div className="relative flex w-full items-center justify-between">
       {/* Desktop */}
       <nav className="hidden md:flex items-center gap-6 text-sm text-[var(--text)]">
-        {menus.map(({ label, to, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              cn(
-                NAV_ITEM_BASE,
-                "text-foreground",
-                isActive ? "font-medium" : "opacity-80 hover:opacity-100",
-              )
-            }
-          >
-            <Icon size={HEADER_ICON_SIZE} />
+        {menus.map(({ label, to, icon }) => (
+          <HeaderNavItem key={to} to={to} icon={icon}>
             {label}
-          </NavLink>
+          </HeaderNavItem>
         ))}
       </nav>
 
@@ -67,7 +58,11 @@ export function UserHeader() {
               key={to}
               to={to}
               onClick={() => setOpen(false)}
-              className="px-4 py-3 text-sm hover:bg-neutral-100 flex items-center gap-1.5"
+              className={cn(
+                HEADER_MENU_ITEM_BASE,
+                HEADER_HOVER_TRANSITION,
+                HEADER_HOVER_BG,
+              )}
             >
               <Icon size={HEADER_ICON_SIZE_MOBILE} />
               {label}

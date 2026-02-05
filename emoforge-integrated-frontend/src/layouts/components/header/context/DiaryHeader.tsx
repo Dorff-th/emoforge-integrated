@@ -14,11 +14,13 @@ import { useDiarySearch } from "@/features/diary/search/useDiarySearch";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/shared/utils/cn";
 import {
-  NAV_ITEM_BASE,
+  HEADER_MENU_ITEM_BASE,
   HEADER_ICON_SIZE,
   HEADER_ICON_SIZE_MOBILE,
+  HEADER_HOVER_TRANSITION,
+  HEADER_HOVER_BG,
 } from "@/layouts/components/header/header.constants";
-
+import { HeaderNavItem } from "../elements/HeaderNavItem";
 const menus = [
   { label: "Write", to: "/user/diary/write", icon: PenLine },
   { label: "Calendar", to: "/user/diary/calendar", icon: CalendarDays },
@@ -39,21 +41,10 @@ export function DiaryHeader() {
 
       {/* Desktop Nav */}
       <nav className="hidden md:flex items-center gap-4 text-sm">
-        {menus.map(({ label, to, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              cn(
-                NAV_ITEM_BASE,
-                "px-2 gap-1 text-xs",
-                isActive ? "font-medium" : "opacity-80 hover:opacity-100",
-              )
-            }
-          >
-            <Icon size={HEADER_ICON_SIZE} />
+        {menus.map(({ label, to, icon }) => (
+          <HeaderNavItem key={to} to={to} icon={icon}>
             {label}
-          </NavLink>
+          </HeaderNavItem>
         ))}
 
         {/* Board link */}
@@ -89,7 +80,11 @@ export function DiaryHeader() {
               key={to}
               to={to}
               onClick={() => setOpen(false)}
-              className="px-4 py-3 text-sm hover:bg-neutral-100 flex items-center gap-1.5"
+              className={cn(
+                HEADER_MENU_ITEM_BASE,
+                HEADER_HOVER_TRANSITION,
+                HEADER_HOVER_BG,
+              )}
             >
               <Icon size={HEADER_ICON_SIZE_MOBILE} />
               {label}
@@ -102,7 +97,11 @@ export function DiaryHeader() {
           <NavLink
             to={boardLink.to}
             onClick={() => setOpen(false)}
-            className="flex items-center gap-2 px-4 py-3 text-sm text-neutral-600 hover:bg-neutral-100"
+            className={cn(
+              HEADER_MENU_ITEM_BASE,
+              HEADER_HOVER_TRANSITION,
+              HEADER_HOVER_BG,
+            )}
           >
             <FileText size={HEADER_ICON_SIZE_MOBILE} />
             {boardLink.label}

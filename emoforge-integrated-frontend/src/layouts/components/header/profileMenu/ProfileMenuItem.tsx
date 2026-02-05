@@ -1,4 +1,11 @@
 import type { LucideIcon } from "lucide-react";
+import {
+  HEADER_MENU_ITEM_BASE,
+  HEADER_ICON_SIZE,
+  HEADER_HOVER_TRANSITION,
+  HEADER_HOVER_BG,
+} from "@/layouts/components/header/header.constants";
+import { cn } from "@/shared/utils/cn";
 
 interface Props {
   label: string;
@@ -16,10 +23,14 @@ export function ProfileMenuItem({
   return (
     <button
       onClick={onClick}
-      className={`w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 flex items-center gap-1.5
-        ${variant === "danger" ? "text-red-600" : ""}`}
+      className={cn(
+        HEADER_MENU_ITEM_BASE,
+        HEADER_HOVER_TRANSITION,
+        HEADER_HOVER_BG,
+        variant === "danger" ? "text-red-600" : "",
+      )}
     >
-      <Icon size={16} />
+      <Icon size={HEADER_ICON_SIZE} />
       {label}
     </button>
   );

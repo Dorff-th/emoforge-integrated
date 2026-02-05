@@ -1,8 +1,7 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Pencil, Search, FileText } from "lucide-react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { cn } from "@/shared/utils/cn";
-import { NAV_ITEM_BASE } from "@/layouts/components/header/header.constants";
+import { HeaderNavItem } from "../elements/HeaderNavItem";
 
 export function PostHeader() {
   const { isAuthenticated } = useAuth();
@@ -19,20 +18,9 @@ export function PostHeader() {
   return (
     <div className="flex w-full items-center justify-between text-[var(--text)]">
       {/* Left */}
-      <NavLink
-        to="/posts"
-        className={({ isActive }) =>
-          cn(
-            NAV_ITEM_BASE,
-            "text-[var(--text)]",
-            isActive
-              ? "font-medium text-[var(--text)]"
-              : "text-[var(--text)] hover:text-[var(--text)]",
-          )
-        }
-      >
-        <FileText size={16} /> Posts
-      </NavLink>
+      <HeaderNavItem to="/posts" icon={FileText}>
+        Posts
+      </HeaderNavItem>
 
       {/* Center (Desktop only - Search placeholder) */}
       <div className="hidden md:flex flex-1 justify-center">
