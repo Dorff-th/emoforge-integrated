@@ -7,7 +7,7 @@ import { AdminProtectedLayout } from "@/layouts/AdminProtectedLayout";
 import LoginPage from "@/features/auth/pages/LoginPage";
 import OAuthCallbackPage from "@/features/auth/pages/OAuthCallbackPage";
 import UserHomePage from "@/features/user/pages/UserHomePage";
-import UserProfilePage from "@/features/user/pages/UserProfilePage";
+import ProfilePage from "@/features/user/pages/ProfilePage";
 import PostWritePage from "@/features/post/pages/PostWritePage";
 import PostEditPage from "@/features/post/pages/PostEditPage";
 import DiaryWritePage from "@/features/diary/pages/DiaryWritePage";
@@ -53,7 +53,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="/user/home" replace /> },
           { path: "home", element: <UserHomePage /> },
-          { path: "profile", element: <UserProfilePage /> },
+          { path: "profile", element: <ProfilePage /> },
 
           // 🔒 게시글 작성/수정
           { path: "posts/new", element: <PostWritePage /> },
