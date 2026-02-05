@@ -17,7 +17,6 @@ export type AuthErrorCode =
  */
 export interface AuthMeResponse {
   uuid: string;
-  username: string;
   nickname: string;
   email: string | null;
   role: "USER" | "ADMIN";

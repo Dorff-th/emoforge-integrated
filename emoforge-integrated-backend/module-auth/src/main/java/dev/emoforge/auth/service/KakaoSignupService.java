@@ -36,12 +36,13 @@ public class KakaoSignupService {
 
         String uuid = UUID.randomUUID().toString();
         String username = UUID.randomUUID().toString();
+        String email = "kakao_" + UUID.randomUUID().toString().substring(0, 8) + "@dummy.local"; // 카카오 프로필로 직업 이메일 정보를 수집하지 않기에 랜덤 생성
         String encodedPassword = passwordEncoder.encode(UUID.randomUUID().toString());
 
         Member member = Member.builder()
                 .uuid(uuid)
                 .username(username)
-                .email(username)
+                .email(email)
                 .nickname(req.getNickname())
                 .kakaoId(req.getKakaoId())
                 .password(encodedPassword)
