@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Pencil, Search } from "lucide-react";
+import { Pencil, Search, FileText } from "lucide-react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { cn } from "@/shared/utils/cn";
 
@@ -22,14 +22,14 @@ export function PostHeader() {
         to="/posts"
         className={({ isActive }) =>
           cn(
-            "text-sm transition-colors",
+            "text-sm transition-colors flex items-center gap-1.5",
             isActive
               ? "font-medium text-[var(--text)]"
               : "text-[var(--text)] hover:text-[var(--text)]",
           )
         }
       >
-        Posts
+        <FileText size={16} /> Posts
       </NavLink>
 
       {/* Center (Desktop only - Search placeholder) */}
@@ -56,7 +56,7 @@ export function PostHeader() {
           className="flex items-center gap-1 rounded-md border border-[var(--border)] px-3 py-1.5 md:px-4 text-sm text-[var(--text)] bg-[var(--surface)] hover:bg-[var(--border)]"
         >
           <Pencil size={16} />
-          <span className="hidden md:inline">글쓰기</span>
+          <span className="hidden md:inline">Write</span>
         </button>
       </div>
     </div>

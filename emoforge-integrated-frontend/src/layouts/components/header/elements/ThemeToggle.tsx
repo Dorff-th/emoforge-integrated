@@ -1,5 +1,6 @@
 // components/ThemeToggle.tsx
 import { useThemeStore } from "@/shared/stores/themeStore";
+import { Sun, Moon } from "lucide-react";
 
 export function ThemeToggle() {
   const { theme, toggle } = useThemeStore();
@@ -15,9 +16,14 @@ export function ThemeToggle() {
         text-[var(--text)]
         hover:bg-[var(--border)]
         transition
+        flex items-center gap-1.5
       "
     >
-      {theme === "dark" ? "☀️" : "🌙"}
+      {theme === "dark" ? (
+        <Sun size={18} strokeWidth={1.75} />
+      ) : (
+        <Moon size={18} strokeWidth={1.75} />
+      )}
     </button>
   );
 }

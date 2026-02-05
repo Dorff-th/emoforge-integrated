@@ -2,6 +2,7 @@ import { ProfileSummary } from "./ProfileSummary";
 import { ProfileMenuItem } from "./ProfileMenuItem";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { Settings, LogOut, BookOpen, LayoutDashboard } from "lucide-react";
 
 interface Props {
   onClose: () => void;
@@ -22,21 +23,28 @@ export function ProfileDropdown({ onClose }: Props) {
 
       <div className="py-1">
         <ProfileMenuItem
-          label="프로필 설정"
+          label="Profile Setting"
           onClick={() => navigate("/user/profile")}
+          icon={Settings}
         />
         <ProfileMenuItem
-          label="내 글 / 회고"
+          label="Emotion & Diary"
           onClick={() => navigate("/user/diary/list")}
+          icon={BookOpen}
         />
-        <ProfileMenuItem label="대시보드" onClick={() => navigate("/user")} />
+        <ProfileMenuItem
+          label="DashBoard"
+          onClick={() => navigate("/user")}
+          icon={LayoutDashboard}
+        />
       </div>
 
       <div className="border-t py-1">
         <ProfileMenuItem
-          label="로그아웃"
+          label="Logout"
           variant="danger"
           onClick={handleLogout}
+          icon={LogOut}
         />
       </div>
     </div>

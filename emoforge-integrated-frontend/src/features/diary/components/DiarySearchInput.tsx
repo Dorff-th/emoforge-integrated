@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Search } from "lucide-react";
 
 type DiarySearchInputProps = {
   value: string;
@@ -27,7 +28,9 @@ export function DiarySearchInput({
   return (
     <div className="relative flex w-full max-w-sm items-center">
       {/* 🔍 Icon */}
-      <span className="absolute left-3 text-gray-400">🔍</span>
+      <span className="absolute left-3 text-gray-400">
+        <Search size={16} />
+      </span>
 
       <input
         ref={inputRef}

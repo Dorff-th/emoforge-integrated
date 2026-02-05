@@ -2,10 +2,11 @@ import { NavLink, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/shared/utils/cn";
+import { User, FileText } from "lucide-react";
 
 const menus = [
-  { label: "Profile", to: "/user/profile" },
-  { label: "Posts", to: "/posts" },
+  { label: "Profile", to: "/user/profile", icon: User },
+  { label: "Posts", to: "/posts", icon: FileText },
 ];
 
 export function UserHeader() {
@@ -19,10 +20,10 @@ export function UserHeader() {
     <div className="relative flex w-full items-center justify-between">
       {/* Desktop */}
       <nav className="hidden md:flex items-center gap-6 text-sm text-[var(--text)]">
-        {menus.map((menu) => (
+        {menus.map(({ label, to, icon: Icon }) => (
           <NavLink
-            key={menu.to}
-            to={menu.to}
+            key={to}
+            to={to}
             className={({ isActive }) =>
               cn(
                 "text-sm transition-colors text-[var(--text)]",
@@ -30,7 +31,8 @@ export function UserHeader() {
               )
             }
           >
-            {menu.label}
+            <Icon size={18} />
+            {label}
           </NavLink>
         ))}
       </nav>
