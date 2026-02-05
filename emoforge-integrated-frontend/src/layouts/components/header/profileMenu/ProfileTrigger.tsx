@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { cn } from "@/shared/utils/cn";
 
 interface Props {
   open: boolean;
@@ -12,19 +13,39 @@ export function ProfileTrigger({ open, onToggle }: Props) {
   return (
     <button
       onClick={onToggle}
-      className="flex items-center gap-2 rounded-full px-2 py-1 hover:bg-neutral-100"
+      className="
+      flex items-center gap-2
+      rounded-full
+      px-2 py-1
+      bg-[var(--surface)]
+      text-[var(--text)]
+      border border-[var(--border)]
+      hover:bg-[var(--border)]
+      transition
+    "
     >
-      <div className="h-8 w-8 rounded-full bg-neutral-300 flex items-center justify-center text-sm font-semibold">
+      {/* Avatar */}
+      <div
+        className="
+        flex h-8 w-8 items-center justify-center
+        rounded-full
+        bg-[var(--border)]
+        text-sm font-semibold
+        text-[var(--text)]
+      "
+      >
         {user?.data.nickname?.[0] ?? "?"}
       </div>
 
+      {/* Nickname */}
       <span className="max-w-[100px] truncate text-sm">
         {user?.data.nickname}
       </span>
 
+      {/* Chevron */}
       <ChevronDown
         size={16}
-        className={`transition-transform ${open ? "rotate-180" : ""}`}
+        className={cn("transition-transform", open && "rotate-180")}
       />
     </button>
   );

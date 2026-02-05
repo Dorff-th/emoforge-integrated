@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { cn } from "@/shared/utils/cn";
 
 const menus = [
   { label: "Profile", to: "/user/profile" },
@@ -17,15 +18,16 @@ export function UserHeader() {
   return (
     <div className="relative flex w-full items-center justify-between">
       {/* Desktop */}
-      <nav className="hidden md:flex items-center gap-6 text-sm">
+      <nav className="hidden md:flex items-center gap-6 text-sm text-[var(--text)]">
         {menus.map((menu) => (
           <NavLink
             key={menu.to}
             to={menu.to}
             className={({ isActive }) =>
-              `transition-colors hover:text-black ${
-                isActive ? "text-black font-medium" : "text-neutral-600"
-              }`
+              cn(
+                "text-sm transition-colors text-[var(--text)]",
+                isActive ? "font-medium" : "opacity-80 hover:opacity-100",
+              )
             }
           >
             {menu.label}

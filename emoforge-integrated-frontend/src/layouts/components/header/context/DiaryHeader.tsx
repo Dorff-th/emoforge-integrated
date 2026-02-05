@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Menu, X, ExternalLink } from "lucide-react";
 import { DiarySearchInput } from "@/features/diary/components/DiarySearchInput";
 import { useDiarySearch } from "@/features/diary/search/useDiarySearch";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { cn } from "@/shared/utils/cn";
 
 const menus = [
   { label: "Write", to: "/user/diary/write" },
@@ -29,9 +30,10 @@ export function DiaryHeader() {
             key={menu.to}
             to={menu.to}
             className={({ isActive }) =>
-              `transition-colors hover:text-black ${
-                isActive ? "font-medium text-black" : "text-neutral-600"
-              }`
+              cn(
+                "text-sm transition-colors text-[var(--text)]",
+                isActive ? "font-medium" : "opacity-80 hover:opacity-100",
+              )
             }
           >
             {menu.label}

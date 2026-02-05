@@ -1,20 +1,22 @@
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { cn } from "@/shared/utils/cn";
 
 export function PublicHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="relative flex items-center">
+    <nav className="flex items-center gap-6 text-[var(--text)]">
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center gap-6 text-sm">
         <NavLink
           to="/about"
           className={({ isActive }) =>
-            `transition-colors hover:text-black ${
-              isActive ? "text-black font-medium" : "text-neutral-600"
-            }`
+            cn(
+              "text-sm transition-colors text-[var(--text)]",
+              isActive ? "font-medium" : "opacity-80 hover:opacity-100",
+            )
           }
         >
           About
@@ -23,9 +25,10 @@ export function PublicHeader() {
         <NavLink
           to="/posts"
           className={({ isActive }) =>
-            `transition-colors hover:text-black ${
-              isActive ? "text-black font-medium" : "text-neutral-600"
-            }`
+            cn(
+              "text-sm transition-colors text-[var(--text)]",
+              isActive ? "font-medium" : "opacity-80 hover:opacity-100",
+            )
           }
         >
           Posts

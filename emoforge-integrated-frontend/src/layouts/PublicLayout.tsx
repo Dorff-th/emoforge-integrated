@@ -6,9 +6,9 @@ import { HeaderContextProvider } from "@/layouts/components/header/context/heade
 export function PublicLayout() {
   return (
     <HeaderContextProvider value="PUBLIC">
-      <div className="min-h-screen bg-neutral-50">
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors">
         <AppHeader />
-        <main className="mx-auto max-w-7xl px-4 py-8">
+        <main className="mx-auto max-w-7xl px-4 py-8 bg-[var(--surface)]">
           <Outlet />
         </main>
       </div>

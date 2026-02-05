@@ -7,7 +7,7 @@ export function Logo() {
   return (
     <Link
       to={isAuthenticated ? "/user/home" : "/posts"}
-      className="text-lg font-bold"
+      className="font-semibold text-[var(--text)]"
     >
       EmoForge
     </Link>

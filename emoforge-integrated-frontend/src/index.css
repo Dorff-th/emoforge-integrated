@@ -1,3 +1,42 @@
+:root {
+  --bg: #ffffff;
+  --surface: #f9fafb;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+
+  --danger: #ef4444;
+  --danger-foreground: #ffffff;
+}
+
+.dark {
+  /* 앱 전체 배경 (심연) */
+  --bg: #0a1020;          /* abyss core */
+
+  /* 헤더 / 카드 / 떠 있는 UI */
+  --surface: #0f172a;     /* deep navy */
+
+  /* 기본 텍스트 */
+  --text: #e6e8ee;        /* 거의 흰색이지만 차갑게 */
+
+  /* 보조 텍스트 */
+  --muted: #9aa4b2;       /* 푸른 회색 */
+
+  /* 경계선 */
+  --border: #1e293b;      /* navy border */
+
+  /* 메인 포인트 */
+  --primary: #7c83ff;     /* 차가운 퍼플 블루 */
+  --primary-foreground: #0a1020;
+
+  /* 위험 */
+  --danger: #f87171;
+  --danger-foreground: #0a1020;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

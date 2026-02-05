@@ -12,7 +12,7 @@ export function AppHeader() {
   const context = useHeaderContext();
 
   return (
-    <header className="border-b bg-white">
+    <header className="sticky top-0 z-50 bg-[var(--surface)] border-b border-[var(--border)]">
       <div className="mx-auto flex h-14 max-w-7xl items-center px-4">
         {/* Left */}
         <div className="flex items-center gap-4">
