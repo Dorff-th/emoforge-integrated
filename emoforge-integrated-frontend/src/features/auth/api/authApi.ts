@@ -1,25 +1,50 @@
 import { http } from "@/shared/api/httpClient";
 import { API } from "@/shared/api/endpoints";
-import type { AuthMeResponse, LoginRequest, KakaoLoginResponse, KakaoSignupRequest } from "./auth.types";
+import type { AuthMeResponse, KakaoLoginResponse, KakaoSignupRequest } from "./auth.types";
 
 
+/**
+ * BE Controller
+ * 
+ * [Controller #1]
+ * - KakaoAuthController
+ * - Base: /api/auth
+ * Endpoints
+ * - POST  /kakao
+ * 
+ * [Controller #2]
+ * - KakaoSignupController
+ * - Base: /api/auth/kakao
+ * Endpoints
+ * - POST  /signup
+ * 
+ * [Controller #3]
+ * - KakaoSignupController
+ * - Base: /api/auth/kakao
+ * Endpoints
+ * - POST  /signup
+ * 
+ * [Controller #3]
+ * - AuthController
+ * - Base: /api/auth
+ * Endpoints
+ * - GET  /me
+ * - POST /logut
+ */
 
 /**
  * Auth API – "백엔드와의 계약서"
  */
 export const authApi = {
 
+  /**
+   * 카카오 id 로 로그인
+   * -
+   */
    kakaoLogin: (code: string) =>
     http.post<KakaoLoginResponse>(`${API.AUTH}/kakao`,{code}),
 
-  /**
-   * 로그인
-   * - 성공: refresh_token 쿠키 설정
-   * - 실패: 401 throw
-   */
-  login: (payload: LoginRequest) =>
-    http.post<void>(`${API.AUTH}/login`, payload),
-
+  
   /**
    * 카카오 id 로 회원가입
    * -

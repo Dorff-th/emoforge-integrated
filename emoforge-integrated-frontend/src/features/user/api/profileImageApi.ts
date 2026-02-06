@@ -1,5 +1,18 @@
 // features/user/api/profileImageApi.ts
 import { http } from "@/shared/api/httpClient";
+import { API } from "@/shared/api/endpoints";
+
+/**
+ * BE Controller
+ * - AttachmentController
+ * - Base: /api/attach
+ *
+ * Endpoints
+ * - POST
+ * - DELETE /{id}
+ * - GET  /profile/{memberUuid}
+ * 
+ */
 
 export interface ProfileImageResponse {
   publicUrl: string | null;
@@ -7,7 +20,7 @@ export interface ProfileImageResponse {
 
 export const fetchProfileImage = async (uuid: string) => {
   const { data } = await http.get<ProfileImageResponse>(
-    `/api/attach/profile/${uuid}`
+    `${API.ATTACH}/profile/${uuid}`
   );
   
   return data;
@@ -29,7 +42,7 @@ export const uploadProfileImage = async (
   if (postId) formData.append("postId", postId.toString());
 
   const { data } = await http.post<ProfileImageResponse>(
-    `/api/attach`,
+    `${API.ATTACH}`,
     formData,
     {
       headers: { "Content-Type": "multipart/form-data" },

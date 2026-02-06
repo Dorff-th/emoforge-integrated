@@ -20,15 +20,14 @@ export interface AuthMeResponse {
   nickname: string;
   email: string | null;
   role: "USER" | "ADMIN";
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deleted?: boolean;
+  deletedAt?: string | null;
 }
 
-/**
- * 로그인 요청 payload
- */
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
+
 
 /**
  * 카카오 로그인 응답 Response Type
