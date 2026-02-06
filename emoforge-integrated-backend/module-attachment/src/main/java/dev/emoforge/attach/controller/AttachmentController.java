@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Optional;
 
 /**
  * 첨부파일 업로드/조회/삭제 및 게시글·프로필 이미지 관리를 담당하는 Controller.
@@ -110,7 +112,15 @@ public class AttachmentController {
     )
     @GetMapping("/profile/{memberUuid}")
     public ResponseEntity<AttachmentResponse> getProfileImage(@PathVariable("memberUuid") String memberUuid) {
-        return attachmentService.getProfileImage(memberUuid)
+
+
+
+
+        Optional<Attachment> profileImage = attachmentService.getProfileImage(memberUuid);
+
+         log.debug("🌟🌟🌟🌟profileImage : " + profileImage);
+
+        return profileImage
                 .map(AttachmentMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

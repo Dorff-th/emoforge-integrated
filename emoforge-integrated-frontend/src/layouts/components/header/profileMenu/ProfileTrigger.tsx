@@ -1,6 +1,8 @@
 import { ChevronDown } from "lucide-react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { cn } from "@/shared/utils/cn";
+import { useProfileImage } from "@/features/user/hooks/useProfileImage";
+import { Avatar } from "@/shared/components/Avatar";
 
 interface Props {
   open: boolean;
@@ -9,6 +11,7 @@ interface Props {
 
 export function ProfileTrigger({ open, onToggle }: Props) {
   const { user } = useAuth();
+  const { publicUrl } = useProfileImage(user?.data.uuid);
 
   return (
     <button
@@ -24,18 +27,12 @@ export function ProfileTrigger({ open, onToggle }: Props) {
       transition
     "
     >
-      {/* Avatar */}
-      <div
-        className="
-        flex h-8 w-8 items-center justify-center
-        rounded-full
-        bg-[var(--border)]
-        text-sm font-semibold
-        text-[var(--text)]
-      "
-      >
-        {user?.data.nickname?.[0] ?? "?"}
-      </div>
+      <Avatar
+        publicUrl={publicUrl}
+        name={user?.data.nickname}
+        size={32}
+        className="text-sm"
+      />
 
       {/* Nickname */}
       <span className="max-w-[100px] truncate text-sm">
