@@ -28,4 +28,4 @@ export const HEADER_HOVER_TEXT =
     after:ease-out
   `;
 
-export const HEADER_HEIGHT = 64; // px
+export const HEADER_HEIGHT = 40; // px

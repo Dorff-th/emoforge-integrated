@@ -11,42 +11,49 @@ export default function ProfileInfoSection() {
 
   return (
     <section className="space-y-4">
-      {/* 닉네임 */}
-      <div className="flex items-center gap-2">
-        <h2 className="text-2xl font-semibold">{user?.data.nickname}</h2>
-        <button
-          className="text-sm text-blue-500 hover:underline"
-          onClick={() => setOpenNicknameModal(true)}
-        >
-          <Pencil size={16} />
-        </button>
-      </div>
-
-      {/* 이메일 */}
-      <div className="flex items-center gap-2 text-gray-600">
-        <Mail size={16} className="text-gray-600" />
-        <span className="leading-none">{user?.data.email}</span>
-
-        <button
-          className="text-sm text-blue-500 hover:underline"
-          onClick={() => setOpenEmailModal(true)}
-        >
-          <Pencil size={16} />
-        </button>
-      </div>
-
-      {/* 가입일 / 정보 변경일 */}
-      <div className="mt-6 space-y-2 text-xs text-gray-500">
+      <div className="flex flex-col items-center gap-4">
+        {/* 닉네임 */}
         <div className="flex items-center gap-2">
-          <UserPlus size={14} className="text-gray-400" />
-          <span>Joined on</span>
-          <span className="ml-auto text-gray-400">{user?.data.createdAt}</span>
+          <h2 className="text-2xl font-semibold">{user?.data.nickname}</h2>
+          <button
+            className="text-sm text-blue-500 hover:underline"
+            onClick={() => setOpenNicknameModal(true)}
+          >
+            <Pencil size={16} />
+          </button>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Edit3 size={14} className="text-gray-400" />
-          <span>Last updated</span>
-          <span className="ml-auto text-gray-400">{user?.data.updatedAt}</span>
+        {/* 이메일 */}
+
+        <div className="flex items-center gap-2 text-gray-600">
+          <Mail size={16} className="text-gray-600" />
+          <span className="leading-none">{user?.data.email}</span>
+
+          <button
+            className="text-sm text-blue-500 hover:underline"
+            onClick={() => setOpenEmailModal(true)}
+          >
+            <Pencil size={16} />
+          </button>
+        </div>
+
+        {/* 가입일 / 정보 변경일 */}
+        <div className="mt-6 space-y-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2">
+            <UserPlus size={14} className="text-gray-400" />
+            <span>Joined on</span>
+            <span className="ml-auto text-gray-400">
+              {user?.data.createdAt}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Edit3 size={14} className="text-gray-400" />
+            <span>Last updated</span>
+            <span className="ml-auto text-gray-400">
+              {user?.data.updatedAt}
+            </span>
+          </div>
         </div>
       </div>
       {/* ============================= */}

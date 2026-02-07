@@ -5,14 +5,16 @@ import ProfileStatsSection from "@/features/user/components/profile/ProfileStats
 
 export default function ProfilePage() {
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-6 space-y-8">
-      <ProfileHeader />
+    <div className="w-full max-w-lg rounded-xl mx-auto bg-white p-8 shadow-lg">
+      <div className="bg-white rounded-2xl shadow-sm p-6">
+        <ProfileHeader />
 
-      <ProfileImageSection />
+        <ProfileImageSection />
 
-      <ProfileInfoSection />
+        <ProfileInfoSection />
 
-      <ProfileStatsSection />
+        <ProfileStatsSection />
+      </div>
     </div>
   );
 }
