@@ -7,7 +7,7 @@ import { API } from "@/shared/api/endpoints";
  *  - Base: /api/auth/me
  * Endpoints
  *  - POST /withdrawal
- *  - POST /withdrawal/cancle
+ *  - POST /withdrawal/cancel
  */
 
 const MEMBER_WITHDRAWAL = `${API.AUTH}/me/withdrawal`;
@@ -20,5 +20,5 @@ export const requestWithdrawal = () => http.post(`${MEMBER_WITHDRAWAL}`);
 /**
  * 회원 탈퇴 취소
  */
-export const requestWithdrawalCancle = () => http.post(`${MEMBER_WITHDRAWAL}/cancle`);
+export const requestWithdrawalCancle = () => http.post(`${MEMBER_WITHDRAWAL}/cancel`);
 

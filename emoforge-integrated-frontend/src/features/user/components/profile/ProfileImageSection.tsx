@@ -7,7 +7,7 @@ import { Settings } from "lucide-react";
 
 const ProfileImageSection = () => {
   const { user } = useAuth();
-  const { publicUrl, upload, isUploading } = useProfileImage(user?.data.uuid);
+  const { publicUrl, upload, isUploading } = useProfileImage(user?.uuid);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (!user) return null;
@@ -26,7 +26,7 @@ const ProfileImageSection = () => {
   return (
     <section className="flex flex-col items-center gap-3">
       <div className="relative">
-        <Avatar publicUrl={publicUrl} name={user.data.nickname} size={96} />
+        <Avatar publicUrl={publicUrl} name={user.nickname} size={96} />
 
         {/* Gear Button */}
         <button

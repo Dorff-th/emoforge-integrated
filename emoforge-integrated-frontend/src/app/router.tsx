@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { PublicLayout } from "@/layouts/PublicLayout";
+import { PostLayout } from "@/layouts/PostLayout";
 import { UserLayout } from "@/layouts/UserLayout ";
 import { RequireAuth } from "@/guards/RequireAuth";
 //import { AdminLayout } from "@/layouts/AdminLayout";
@@ -22,7 +23,7 @@ import AdminDashboardPage from "@/features/admin/pages/AdminDashboardPage";
 import AdminMembersPage from "@/features/admin/pages/AdminMembersPage";
 import AdminPostCategoryPage from "@/features/admin/pages/AdminDashboardPage";
 import AdminLoginPage from "@/features/admin/pages/AdminLoginPage";
-import { PostLayout } from "@/layouts/PostLayout";
+import WithdrawalPendingPage from "@/features/user/pages/WithdrawalPendingPage";
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
       { path: "/auth/terms", element: <TermsAgreementPage /> },
       { path: "/kakao/callback", element: <OAuthCallbackPage /> },
       { path: "/admin/login", element: <AdminLoginPage /> },
+      { path: "/withdraw/pending", element: <WithdrawalPendingPage /> },
     ],
   },
   {

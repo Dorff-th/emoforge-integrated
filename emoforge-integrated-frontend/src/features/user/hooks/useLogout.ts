@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient} from "@tanstack/react-query";
 import { authApi } from "@/features/auth/api/authApi";
-import { useAuthStore } from "./useAuthStore";
+import { useAuthStore } from "@/shared/stores/useAuthStore";
 
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient();

@@ -11,7 +11,7 @@ interface Props {
 
 export function ProfileTrigger({ open, onToggle }: Props) {
   const { user } = useAuth();
-  const { publicUrl } = useProfileImage(user?.data.uuid);
+  const { publicUrl } = useProfileImage(user?.uuid);
 
   return (
     <button
@@ -29,15 +29,13 @@ export function ProfileTrigger({ open, onToggle }: Props) {
     >
       <Avatar
         publicUrl={publicUrl}
-        name={user?.data.nickname}
+        name={user?.nickname}
         size={32}
         className="text-sm"
       />
 
       {/* Nickname */}
-      <span className="max-w-[100px] truncate text-sm">
-        {user?.data.nickname}
-      </span>
+      <span className="max-w-[100px] truncate text-sm">{user?.nickname}</span>
 
       {/* Chevron */}
       <ChevronDown

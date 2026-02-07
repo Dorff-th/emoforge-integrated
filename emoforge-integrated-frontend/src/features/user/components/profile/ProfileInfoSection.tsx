@@ -14,7 +14,7 @@ export default function ProfileInfoSection() {
       <div className="flex flex-col items-center gap-4">
         {/* 닉네임 */}
         <div className="flex items-center gap-2">
-          <h2 className="text-2xl font-semibold">{user?.data.nickname}</h2>
+          <h2 className="text-2xl font-semibold">{user?.nickname}</h2>
           <button
             className="text-sm text-blue-500 hover:underline"
             onClick={() => setOpenNicknameModal(true)}
@@ -27,7 +27,7 @@ export default function ProfileInfoSection() {
 
         <div className="flex items-center gap-2 text-gray-600">
           <Mail size={16} className="text-gray-600" />
-          <span className="leading-none">{user?.data.email}</span>
+          <span className="leading-none">{user?.email}</span>
 
           <button
             className="text-sm text-blue-500 hover:underline"
@@ -42,17 +42,13 @@ export default function ProfileInfoSection() {
           <div className="flex items-center gap-2">
             <UserPlus size={14} className="text-gray-400" />
             <span>Joined on</span>
-            <span className="ml-auto text-gray-400">
-              {user?.data.createdAt}
-            </span>
+            <span className="ml-auto text-gray-400">{user?.createdAt}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <Edit3 size={14} className="text-gray-400" />
             <span>Last updated</span>
-            <span className="ml-auto text-gray-400">
-              {user?.data.updatedAt}
-            </span>
+            <span className="ml-auto text-gray-400">{user?.updatedAt}</span>
           </div>
         </div>
       </div>
@@ -62,14 +58,14 @@ export default function ProfileInfoSection() {
       {openNicknameModal && (
         <NickNameEditModal
           isOpen={openNicknameModal}
-          initialNickname={user?.data.nickname || ""}
+          initialNickname={user?.nickname || ""}
           onClose={() => setOpenNicknameModal(false)}
         />
       )}
       {openEmailModal && (
         <EmailEditModal
           isOpen={openEmailModal}
-          initialEmail={user?.data.email || ""}
+          initialEmail={user?.email || ""}
           onClose={() => setOpenEmailModal(false)}
         />
       )}

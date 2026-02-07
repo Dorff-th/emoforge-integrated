@@ -67,6 +67,9 @@ export const authApi = {
    * - 인증 실패 시 401
    * - refresh 실패 이후에도 여기서 401 발생
    */
+  // me: () =>
+  //   http.get<AuthMeResponse>(`${API.AUTH}/me`),
   me: () =>
-    http.get<AuthMeResponse>(`${API.AUTH}/me`),
+    http.get<AuthMeResponse>(`${API.AUTH}/me`).then(res => res.data),
+
 };
