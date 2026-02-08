@@ -33,15 +33,15 @@ const ProfileImageSection = () => {
           type="button"
           onClick={() => setIsModalOpen(true)}
           className="
-            absolute bottom-0 right-0
-            flex h-8 w-8 items-center justify-center
-            rounded-full
-            bg-[var(--surface)]
-            border border-[var(--border)]
-            shadow-sm
-            hover:bg-[var(--border)]
-            transition
-          "
+    absolute bottom-0 right-0
+    flex h-8 w-8 items-center justify-center
+    rounded-full
+    bg-[var(--surface)]
+    border border-[var(--border-muted)]
+    shadow-sm
+    hover:bg-[var(--surface-hover)]
+    transition
+  "
         >
           <Settings size={16} />
         </button>

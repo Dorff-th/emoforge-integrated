@@ -82,10 +82,9 @@ export default function ProfileImageUploadModal({
             onClick={handleUpload}
             disabled={!file || isUploading}
             className="
-              rounded-md px-4 py-2 text-sm font-medium
-              bg-[var(--primary)]
-              text-white
-              disabled:opacity-50
+               rounded-md px-4 py-2 text-sm font-medium
+    bg-primary text-primary-foreground
+    disabled:opacity-50
             "
           >
             {isUploading ? "업로드 중..." : "업로드"}

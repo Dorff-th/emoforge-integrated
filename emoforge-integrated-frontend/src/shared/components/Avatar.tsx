@@ -31,11 +31,11 @@ export function Avatar({ publicUrl, name, size = 32 }: AvatarProps) {
     <div
       style={{ width: size, height: size }}
       className="
-        flex items-center justify-center
-        rounded-full
-        bg-[var(--border)]
-        text-[var(--text)]
-        font-semibold
+         flex items-center justify-center
+  rounded-full
+  bg-[var(--avatar-bg)]
+  text-[var(--text)]
+  font-semibold
       "
     >
       {char}

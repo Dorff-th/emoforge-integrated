@@ -10,6 +10,11 @@
 
   --danger: #ef4444;
   --danger-foreground: #ffffff;
+
+   --border-muted: hsl(var(--border) / 0.4);
+  --surface-hover: hsl(var(--foreground) / 0.05);
+
+   --avatar-bg: hsl(var(--foreground) / 0.1);
 }
 
 .dark {
@@ -35,6 +40,10 @@
   /* 위험 */
   --danger: #f87171;
   --danger-foreground: #0a1020;
+
+  --avatar-bg: hsl(var(--foreground) / 0.15);
+  --surface-hover: hsl(var(--foreground) / 0.05);
+  --border-muted: hsl(var(--border) / 0.4);
 }
 
 @keyframes fadeIn {
