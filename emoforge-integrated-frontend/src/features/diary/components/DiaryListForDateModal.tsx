@@ -21,6 +21,7 @@ interface DiaryListForDateModalProps {
   summary: string;
   onSummaryDeleted?: (date: string) => void; // ✅ 수정
   onSummaryGenerated?: (newSummary: string | null) => void; // ✅ 수정!
+  onDiaryEntryDeleted?: (date: string, entryId: number) => void;
 }
 
 const DiaryListForDateModal = ({
@@ -30,6 +31,7 @@ const DiaryListForDateModal = ({
   summary,
   onSummaryDeleted,
   onSummaryGenerated,
+  onDiaryEntryDeleted,
 }: DiaryListForDateModalProps) => {
   const [openEntryId, setOpenEntryId] = useState<number | null>(null);
   const [gptSummary, setGptSummary] = useState<string | null>(summary || null);
@@ -73,6 +75,7 @@ const DiaryListForDateModal = ({
     try {
       await deleteDiaryEntry(entryId, false);
       setEntries((prev) => prev.filter((e) => e.id !== entryId));
+      onDiaryEntryDeleted?.(date, entryId); // ⭐ 핵심
       toast?.success("회고가 삭제되었습니다.");
     } catch (error) {
       toast?.error("회고 삭제 중 오류 발생");

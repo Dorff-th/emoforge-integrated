@@ -91,6 +91,18 @@ const Calendar = () => {
     );
   };
 
+  const handleDiaryEntryDeleted = (date: string, entryId: number) => {
+    setMonthlyData((prev) =>
+      prev.map((item) => {
+        if (item.date !== date) return item;
+        return {
+          ...item,
+          entries: item.entries.filter((e) => e.id !== entryId),
+        };
+      }),
+    );
+  };
+
   return (
     <div className="w-full">
       {/* 월 이동 헤더 */}
@@ -187,6 +199,7 @@ const Calendar = () => {
                 ),
               );
             }}
+            onDiaryEntryDeleted={handleDiaryEntryDeleted}
           />
         )}
       </div>
