@@ -42,4 +42,8 @@ public interface DiaryEntryRepository extends JpaRepository<DiaryEntry, Long> {
 
     //특정 사용자(memberUuid)의 감정&회고 입력 개수 조회(auth-frontend의 프로필 화면에서 조회 용도)
     int countByMemberUuid(@Param("memberUuid") String memberUuid);
+
+    // Emoforge 통합 작업에 의한 신규 쿼리 메서드
+    List<DiaryEntry> findTop5ByMemberUuidAndDiaryDateOrderByCreatedAtDesc(String memberUuid, LocalDate diaryDate);
+
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { emotionList } from "@/features/diary/types/emotionMap";
+import { emotionList } from "@/shared/constants/emotionMap";
 
 interface EmotionSelectorProps {
   selected: number;

@@ -1,9 +1,12 @@
 package dev.emoforge.diary.controller;
 
 
+import dev.emoforge.diary.dto.response.DailyDiaryResponse;
+import dev.emoforge.diary.dto.response.DiaryEntryDTO;
 import dev.emoforge.diary.dto.response.GPTSummaryResponseDTO;
 import dev.emoforge.diary.dto.response.SummaryResponseDTO;
 import dev.emoforge.core.security.principal.CustomUserPrincipal;
+import dev.emoforge.diary.global.exception.DataNotFoundException;
 import dev.emoforge.diary.service.SummaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,6 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * SummaryController
@@ -112,5 +118,34 @@ public class SummaryController {
         String memberUuid = principal.getUuid();
         var result = summaryService.getTodayGPTSummary(memberUuid);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/today/home")
+    ResponseEntity<DailyDiaryResponse> getTodayHome(Authentication authentication) {
+
+        log.info("🔥 summary today home called");
+
+        CustomUserPrincipal principal =
+                (CustomUserPrincipal) authentication.getPrincipal();
+
+        String memberUuid = principal.getUuid();
+
+        var fiveEntries = summaryService.getTodayHomeEntries(memberUuid);
+
+        fiveEntries.forEach(x->{log.debug("🔥 " + x.getCreatedAt());});
+
+        String gptSummary = "";
+        try {
+            gptSummary = summaryService.getTodayGPTSummary(memberUuid).getSummary();
+        } catch (DataNotFoundException e) {
+            gptSummary = e.getMessage();
+        }
+
+        var today = LocalDate.now();
+
+        return ResponseEntity.ok(new DailyDiaryResponse(
+                today.toString(), // yyyy-MM-dd 고정
+                fiveEntries,
+                gptSummary));
     }
 }

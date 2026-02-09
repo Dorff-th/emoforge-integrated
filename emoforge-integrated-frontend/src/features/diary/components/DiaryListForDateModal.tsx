@@ -2,9 +2,9 @@ import { useState } from "react";
 import {
   emotionEmojiMap,
   type EmotionLevel,
-} from "@/features/diary/types/emotionMap";
+} from "@/shared/constants/emotionMap";
 import { X, Trash2 } from "lucide-react";
-import { type DiaryEntry } from "@/features/calendar/api/calendarApi";
+import { type DiaryEntry } from "@/shared/types/diary";
 import { generateGptSummary } from "@/features/gpt/api/gptSummaryApi";
 import {
   deleteDiaryEntry,

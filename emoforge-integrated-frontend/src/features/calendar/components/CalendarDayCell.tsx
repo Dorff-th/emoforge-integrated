@@ -2,8 +2,8 @@ import clsx from "clsx";
 import {
   emotionEmojiMap,
   type EmotionLevel,
-} from "@/features/diary/types/emotionMap";
-import { type DiaryEntry } from "@/features/calendar/api/calendarApi";
+} from "@/shared/constants/emotionMap";
+import { type DiaryEntry } from "@/shared/types/diary";
 
 interface CalendarDayCellProps {
   date: string; // '13' 또는 '01'

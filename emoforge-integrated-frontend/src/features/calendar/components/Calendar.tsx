@@ -6,10 +6,8 @@ import clsx from "clsx";
 import { useState } from "react";
 import CalendarSelector from "./CalendarSelector";
 import DiaryListForDateModal from "@/features/diary/components/DiaryListForDateModal";
-import {
-  type DailyDiaryData,
-  fetchMonthDiaryList,
-} from "@/features/calendar/api/calendarApi";
+import { fetchMonthDiaryList } from "@/features/calendar/api/calendarApi";
+import { type DailyDiaryData } from "@/shared/types/diary";
 
 const Calendar = () => {
   // 1. 현재 날짜 상태 - 초기값은 현재 날짜  (용도 : 현재날짜 기준의 캘린더를 보여주기 위함)

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function UserHomeHero() {
   return (
     <section className="space-y-2">
@@ -9,7 +11,7 @@ export default function UserHomeHero() {
 
       <div className="pt-4">
         <button className="px-4 py-2 rounded-lg bg-black text-white text-sm">
-          오늘의 회고 쓰기
+          <Link to="/user/diary/write">오늘의 회고 쓰기</Link>
         </button>
       </div>
     </section>

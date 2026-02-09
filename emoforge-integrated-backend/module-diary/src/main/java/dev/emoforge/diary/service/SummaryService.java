@@ -3,6 +3,7 @@ package dev.emoforge.diary.service;
 
 import dev.emoforge.diary.domain.DiaryEntry;
 import dev.emoforge.diary.domain.GptSummary;
+import dev.emoforge.diary.dto.response.DiaryEntryDTO;
 import dev.emoforge.diary.dto.response.GPTSummaryResponseDTO;
 import dev.emoforge.diary.dto.response.SummaryResponseDTO;
 import dev.emoforge.diary.global.exception.DataNotFoundException;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +51,21 @@ public class SummaryService {
 
         return new GPTSummaryResponseDTO(todayGptSummary.getSummary());
 
+    }
+
+    public List<DiaryEntryDTO> getTodayHomeEntries(String memberUuid) {
+        LocalDate today = LocalDate.now();
+
+        List<DiaryEntry>  findTop5Entries = diaryEntryRepository
+                .findTop5ByMemberUuidAndDiaryDateOrderByCreatedAtDesc(memberUuid, today);
+
+        List<DiaryEntryDTO> result = findTop5Entries
+                .stream()
+                .map(DiaryEntryDTO::fromEntity)
+                .toList();
+
+
+        return result;
     }
 }
 

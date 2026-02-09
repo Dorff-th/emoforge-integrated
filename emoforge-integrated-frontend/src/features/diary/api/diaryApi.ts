@@ -1,5 +1,6 @@
 import { http } from "@/shared/api/httpClient";
 import { API } from "@/shared/api/endpoints";
+import { type DailyDiaryData } from "@/shared/types/diary";
 
 export interface DiaryItemType {
   id: number;
@@ -62,3 +63,11 @@ export const deleteDiarySummaryByDate = async (date: string) => {
   await http.delete(`${API.DIARY}/all?date=${date}`);
 };
 
+/** 
+ * SummaryController 
+ * Base /api/diary/summary
+ * - EndPoints /today/home
+ */
+ export async function fetchTodayDiary(): Promise<DailyDiaryData> {
+  return http.get(`${API.DIARY}/summary/today/home`).then(res => res.data);
+}

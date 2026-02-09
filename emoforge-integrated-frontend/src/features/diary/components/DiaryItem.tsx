@@ -1,7 +1,11 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { DiaryEntry } from '@/features/diary/api/diaryApi'; // 변경됨
-import DiaryDetail from './DiaryDetail';
-import { emotionEmojiMap, emotionLabelMap, EmotionLevel } from '@/features/diary/types/emotionMap';
+import { motion, AnimatePresence } from "framer-motion";
+import { DiaryEntry } from "@/features/diary/api/diaryApi"; // 변경됨
+import DiaryDetail from "./DiaryDetail";
+import {
+  emotionEmojiMap,
+  emotionLabelMap,
+  type EmotionLevel,
+} from "@/shared/constants/emotionMap";
 
 interface DiaryItemProps {
   diary: DiaryEntry;
@@ -11,8 +15,8 @@ interface DiaryItemProps {
 
 export default function DiaryItem({ diary, isOpen, onToggle }: DiaryItemProps) {
   const emotionValue = Number(diary.emotion);
-  const emotionEmoji = emotionEmojiMap[emotionValue as EmotionLevel] ?? '😶';
-  const emotionLabel = emotionLabelMap[emotionValue as EmotionLevel] ?? '';
+  const emotionEmoji = emotionEmojiMap[emotionValue as EmotionLevel] ?? "😶";
+  const emotionLabel = emotionLabelMap[emotionValue as EmotionLevel] ?? "";
 
   return (
     <div
@@ -38,7 +42,7 @@ export default function DiaryItem({ diary, isOpen, onToggle }: DiaryItemProps) {
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
