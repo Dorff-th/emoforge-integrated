@@ -12,7 +12,7 @@ import ProfilePage from "@/features/user/pages/ProfilePage";
 import PostWritePage from "@/features/post/pages/PostWritePage";
 import PostEditPage from "@/features/post/pages/PostEditPage";
 import DiaryWritePage from "@/features/diary/pages/DiaryWritePage";
-import DiaryCalendarPage from "@/features/diary/pages/DiaryCalendarPage";
+import CalendarPage from "@/features/calendar/pages/CalendarPage";
 import TermsAgreementPage from "@/features/auth/pages/TermsAgreementPage";
 import DiaryListPage from "@/features/diary/pages/DiaryListPage";
 import DiaryInsightsPage from "@/features/diary/pages/DiaryInsightsPage";
@@ -63,7 +63,7 @@ export const router = createBrowserRouter([
 
           // 🔒 다이어리 전부
           { path: "diary/write", element: <DiaryWritePage /> },
-          { path: "diary/calendar", element: <DiaryCalendarPage /> },
+          { path: "diary/calendar", element: <CalendarPage /> },
           { path: "diary/list", element: <DiaryListPage /> },
           { path: "diary/insights", element: <DiaryInsightsPage /> },
           { path: "diary/search", element: <DiarySearchPage /> },

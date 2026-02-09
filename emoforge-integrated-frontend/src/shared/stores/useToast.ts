@@ -25,6 +25,12 @@ export function useToast() {
         message,
         duration,
       }),
+    warn: (message: string, duration?: number) =>
+      add({
+        type: "warn",
+        message,
+        duration,
+      }),  
 
     remove: (id: string) => remove(id),
     clear,

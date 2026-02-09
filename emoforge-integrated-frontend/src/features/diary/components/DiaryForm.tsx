@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EmotionSelector from "./EmotionSelector";
 import HabitChecklist from "./HabitChecklist";

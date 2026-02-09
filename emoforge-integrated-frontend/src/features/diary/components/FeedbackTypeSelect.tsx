@@ -18,7 +18,7 @@ const FeedbackTypeSelect: React.FC<FeedbackTypeSelectProps> = ({
   onChange,
 }) => {
   return (
-    <div className="bg-gradient-to-b from-blue-100 to-blue-50 dark:from-gray-800 dark:to-gray-700 shadow-lg transition-colors duration-500 rounded-2xl p-4 mb-6 border border-gray-200 dark:border-gray-700">
+    <div className="bg-gradient-to-b from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700 shadow-lg transition-colors duration-500 rounded-2xl p-4 mb-6 border border-gray-200 dark:border-gray-700">
       <h3 className="text-lg font-semibold mb-2">GPT 피드백 스타일 선택</h3>
       <select
         value={value}
