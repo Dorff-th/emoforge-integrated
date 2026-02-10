@@ -3,10 +3,10 @@ import { useUILoading } from "@/shared/stores/useUILoading";
 import Calendar from "../components/Calendar";
 
 export default function CalendarPage() {
-  useUILoading("user:calendar", { duration: 150 });
+  useUILoading("user:diary:calendar", { duration: 150 });
 
   return (
-    <SectionLoading scope="user:calendar">
+    <SectionLoading scope="user:diary:calendar">
       <div className="w-full max-w-[60rem] rounded-xl mx-auto bg-white p-2 shadow-lg">
         <div className="bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg shadow-lg p-8 min-h-[650px]">
           <h2 className="text-2xl font-bold mb-4">📅 캘린더 페이지</h2>

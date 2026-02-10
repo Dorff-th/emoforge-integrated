@@ -1,8 +1,10 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { PostLayout } from "@/layouts/PostLayout";
 import { UserLayout } from "@/layouts/UserLayout ";
 import { RequireAuth } from "@/guards/RequireAuth";
+import { SectionLoading } from "@/shared/components/SectionLoading";
 //import { AdminLayout } from "@/layouts/AdminLayout";
 import { AdminProtectedLayout } from "@/layouts/AdminProtectedLayout";
 import LoginPage from "@/features/auth/pages/LoginPage";
@@ -12,11 +14,10 @@ import ProfilePage from "@/features/user/pages/ProfilePage";
 import PostWritePage from "@/features/post/pages/PostWritePage";
 import PostEditPage from "@/features/post/pages/PostEditPage";
 import DiaryWritePage from "@/features/diary/pages/DiaryWritePage";
-import CalendarPage from "@/features/calendar/pages/CalendarPage";
+
 import TermsAgreementPage from "@/features/auth/pages/TermsAgreementPage";
 import DiaryListPage from "@/features/diary/pages/DiaryListPage";
-import DiaryInsightsPage from "@/features/diary/pages/DiaryInsightsPage";
-import DiarySearchPage from "@/features/diary/pages/DiarySearchPage";
+
 import PostListPage from "@/features/post/pages/PostListPage";
 import PostDetailPage from "@/features/post/pages/PostDetailPage";
 import AdminDashboardPage from "@/features/admin/pages/AdminDashboardPage";
@@ -24,6 +25,18 @@ import AdminMembersPage from "@/features/admin/pages/AdminMembersPage";
 import AdminPostCategoryPage from "@/features/admin/pages/AdminDashboardPage";
 import AdminLoginPage from "@/features/admin/pages/AdminLoginPage";
 import WithdrawalPendingPage from "@/features/user/pages/WithdrawalPendingPage";
+
+const CalendarPage = lazy(
+  () => import("@/features/calendar/pages/CalendarPage"),
+);
+
+const DiaryInsightsPage = lazy(
+  () => import("@/features/diary/pages/DiaryInsightsPage"),
+);
+
+const DiarySearchPage = lazy(
+  () => import("@/features/diary/pages/DiarySearchPage"),
+);
 
 export const router = createBrowserRouter([
   {
@@ -63,10 +76,20 @@ export const router = createBrowserRouter([
 
           // 🔒 다이어리 전부
           { path: "diary/write", element: <DiaryWritePage /> },
-          { path: "diary/calendar", element: <CalendarPage /> },
           { path: "diary/list", element: <DiaryListPage /> },
-          { path: "diary/insights", element: <DiaryInsightsPage /> },
-          { path: "diary/search", element: <DiarySearchPage /> },
+          // 🔒 다이어리 - lazy 묶음
+          {
+            element: (
+              <Suspense fallback={<SectionLoading scope="route:diary" />}>
+                <Outlet />
+              </Suspense>
+            ),
+            children: [
+              { path: "diary/calendar", element: <CalendarPage /> },
+              { path: "diary/insights", element: <DiaryInsightsPage /> },
+              { path: "diary/search", element: <DiarySearchPage /> },
+            ],
+          },
         ],
       },
     ],

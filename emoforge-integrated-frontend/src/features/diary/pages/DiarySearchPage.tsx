@@ -6,6 +6,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { ko } from "date-fns/locale";
+import { SectionLoading } from "@/shared/components/SectionLoading";
+import { useUILoading } from "@/shared/stores/useUILoading";
 
 const defaultFields = ["feelingKo", "feelingEn", "content", "feedback"];
 
@@ -85,127 +87,131 @@ export default function DiarySearchPage() {
     );
   };
 
+  useUILoading("user:diary:search", { duration: 150 });
+
   return (
-    <div className="w-full max-w-4xl rounded-xl mx-auto bg-white p-2 shadow-lg">
-      <div className="min-h-screen rounded-xl bg-gradient-to-b from-blue-100 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-500">
-        <div className="p-4">
-          <h2 className="text-lg font-bold mb-2">🔍 ‘{query}’ 검색 결과</h2>
-          {query && (
-            <p className="text-sm text-gray-500 mb-4">
-              총 <strong>{results.length}</strong>건의 결과가 검색되었습니다.
-            </p>
-          )}
-
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg border border-blue-200 mb-8">
-            {/* 체크박스 영역 */}
-            <div className="flex gap-3 flex-wrap mb-4">
-              {defaultFields.map((field) => (
-                <label
-                  key={field}
-                  className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedFields.includes(field)}
-                    onChange={() => toggleField(field)}
-                    className="accent-blue-600 w-4 h-4"
-                  />
-                  {fieldLabels[field]}
-                </label>
-              ))}
-            </div>
-
-            {/* 감정 슬라이더 */}
-            <div className="w-full max-w-[400px] px-4 mb-6">
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                감정 점수 (범위 설정)
+    <SectionLoading scope="user:diary:search">
+      <div className="w-full max-w-4xl rounded-xl mx-auto bg-white p-2 shadow-lg">
+        <div className="min-h-screen rounded-xl bg-gradient-to-b from-blue-100 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-500">
+          <div className="p-4">
+            <h2 className="text-lg font-bold mb-2">🔍 ‘{query}’ 검색 결과</h2>
+            {query && (
+              <p className="text-sm text-gray-500 mb-4">
+                총 <strong>{results.length}</strong>건의 결과가 검색되었습니다.
               </p>
-              <EmotionRangeSlider
-                value={emotionRange}
-                onChange={setEmotionRange}
-              />
-            </div>
+            )}
 
-            {/* 날짜 선택 */}
-            <LocalizationProvider
-              dateAdapter={AdapterDateFns}
-              adapterLocale={ko}
-            >
-              <div className="flex flex-wrap items-center gap-4 mb-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-inner border border-gray-200 dark:border-gray-700">
-                <DatePicker
-                  label="시작일"
-                  value={startDate}
-                  onChange={(newValue) => setStartDate(newValue)}
-                />
-                <span className="text-gray-500">~</span>
-                <DatePicker
-                  label="종료일"
-                  value={endDate}
-                  onChange={(newValue) => setEndDate(newValue)}
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg border border-blue-200 mb-8">
+              {/* 체크박스 영역 */}
+              <div className="flex gap-3 flex-wrap mb-4">
+                {defaultFields.map((field) => (
+                  <label
+                    key={field}
+                    className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedFields.includes(field)}
+                      onChange={() => toggleField(field)}
+                      className="accent-blue-600 w-4 h-4"
+                    />
+                    {fieldLabels[field]}
+                  </label>
+                ))}
+              </div>
+
+              {/* 감정 슬라이더 */}
+              <div className="w-full max-w-[400px] px-4 mb-6">
+                <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                  감정 점수 (범위 설정)
+                </p>
+                <EmotionRangeSlider
+                  value={emotionRange}
+                  onChange={setEmotionRange}
                 />
               </div>
-            </LocalizationProvider>
 
-            {/* 검색 버튼 */}
-            <div className="flex justify-end">
-              <button
-                onClick={fetchResults}
-                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition duration-200"
+              {/* 날짜 선택 */}
+              <LocalizationProvider
+                dateAdapter={AdapterDateFns}
+                adapterLocale={ko}
               >
-                🔍 검색
+                <div className="flex flex-wrap items-center gap-4 mb-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-inner border border-gray-200 dark:border-gray-700">
+                  <DatePicker
+                    label="시작일"
+                    value={startDate}
+                    onChange={(newValue) => setStartDate(newValue)}
+                  />
+                  <span className="text-gray-500">~</span>
+                  <DatePicker
+                    label="종료일"
+                    value={endDate}
+                    onChange={(newValue) => setEndDate(newValue)}
+                  />
+                </div>
+              </LocalizationProvider>
+
+              {/* 검색 버튼 */}
+              <div className="flex justify-end">
+                <button
+                  onClick={fetchResults}
+                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition duration-200"
+                >
+                  🔍 검색
+                </button>
+              </div>
+            </div>
+
+            <ul className="space-y-4">
+              {results.map((entry: any) => (
+                <li
+                  key={entry.id}
+                  className="p-4 rounded-xl shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                >
+                  <div className="text-sm text-gray-500">
+                    📅 {entry.diaryDate}
+                  </div>
+                  <div
+                    className="text-xl mt-1"
+                    dangerouslySetInnerHTML={{
+                      __html: highlightKeyword(entry.content, query),
+                    }}
+                  />
+                  <div
+                    className="mt-1 text-sm text-gray-600 dark:text-gray-300"
+                    dangerouslySetInnerHTML={{
+                      __html: highlightKeyword(
+                        `감정: ${entry.feelingKo} / ${entry.feelingEn} | 😶 감정 점수: ${entry.emotion}`,
+                        query,
+                      ),
+                    }}
+                  />
+                </li>
+              ))}
+            </ul>
+            {/* ✅ 페이징 UI */}
+            <div className="flex justify-center gap-3 mt-6">
+              <button
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page <= 1}
+                className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+              >
+                ◀ 이전
+              </button>
+              <span className="text-sm text-gray-700">
+                {page} / {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page >= totalPages}
+                className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+              >
+                다음 ▶
               </button>
             </div>
           </div>
-
-          <ul className="space-y-4">
-            {results.map((entry: any) => (
-              <li
-                key={entry.id}
-                className="p-4 rounded-xl shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
-              >
-                <div className="text-sm text-gray-500">
-                  📅 {entry.diaryDate}
-                </div>
-                <div
-                  className="text-xl mt-1"
-                  dangerouslySetInnerHTML={{
-                    __html: highlightKeyword(entry.content, query),
-                  }}
-                />
-                <div
-                  className="mt-1 text-sm text-gray-600 dark:text-gray-300"
-                  dangerouslySetInnerHTML={{
-                    __html: highlightKeyword(
-                      `감정: ${entry.feelingKo} / ${entry.feelingEn} | 😶 감정 점수: ${entry.emotion}`,
-                      query,
-                    ),
-                  }}
-                />
-              </li>
-            ))}
-          </ul>
-          {/* ✅ 페이징 UI */}
-          <div className="flex justify-center gap-3 mt-6">
-            <button
-              onClick={() => handlePageChange(page - 1)}
-              disabled={page <= 1}
-              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
-            >
-              ◀ 이전
-            </button>
-            <span className="text-sm text-gray-700">
-              {page} / {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(page + 1)}
-              disabled={page >= totalPages}
-              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
-            >
-              다음 ▶
-            </button>
-          </div>
         </div>
       </div>
-    </div>
+    </SectionLoading>
   );
 }
