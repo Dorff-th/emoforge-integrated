@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 
 type DiarySearchInputProps = {
@@ -7,19 +8,27 @@ type DiarySearchInputProps = {
   onSubmit?: () => void;
 };
 
-export function DiarySearchInput({
-  value,
-  onChange,
-  onSubmit,
-}: DiarySearchInputProps) {
+export function DiarySearchInput({ value, onChange }: DiarySearchInputProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const navigate = useNavigate();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      onSubmit?.(); // Enter 키 누르면 submit 실행
+      e.preventDefault();
+      if (searchQuery.trim()) {
+        navigate(
+          `/user/diary/search/?query=${encodeURIComponent(
+            searchQuery,
+          )}&page=1&size=10`,
+        );
+      }
     }
 
     if (e.key === "Escape") {
+      e.preventDefault();
       onChange("");
       inputRef.current?.blur(); // Esc 키 누르면 input 에 포커스가 빠져나감
     }
@@ -35,8 +44,8 @@ export function DiarySearchInput({
       <input
         ref={inputRef}
         type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="내 회고 검색…"
         className="
