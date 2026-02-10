@@ -39,16 +39,6 @@ export function DiaryEntryCard({
       {/* Content */}
       <p className="whitespace-pre-line">{entry.content}</p>
 
-      {/* Habit Tags */}
-      {/* {entry.habitTags && (
-        <div className="mt-2 flex flex-wrap gap-1">
-          {entry.habitTags.split(",").map((tag) => (
-            <span key={tag} className="rounded bg-muted px-2 py-0.5 text-xs">
-              #{tag.trim()}
-            </span>
-          ))}
-        </div>
-      )} */}
       <div className="mt-2 flex flex-wrap gap-1">
         {parsedHabits(entry.habitTags).join(",") || "없음"}
       </div>

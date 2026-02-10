@@ -54,7 +54,7 @@ function DiaryEntryList({ entries }: { entries: DiaryEntry[] }) {
   return (
     <div className="space-y-4">
       {entries.map((entry) => (
-        <DiaryEntryCard entry={entry} variant="compact" />
+        <DiaryEntryCard entry={entry} variant="default" />
       ))}
     </div>
   );
