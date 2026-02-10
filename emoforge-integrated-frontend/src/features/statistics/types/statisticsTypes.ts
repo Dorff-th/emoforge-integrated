@@ -1,0 +1,1 @@
+export type PeriodOption = 'this-week' | 'this-month' | 'last-7-days' | 'custom'
