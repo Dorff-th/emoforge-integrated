@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { DiaryEntry } from "@/features/diary/api/diaryApi"; // 변경됨
+import { type DiaryEntry } from "@/shared/types/diary";
 import DiaryDetail from "./DiaryDetail";
 import {
   emotionEmojiMap,
