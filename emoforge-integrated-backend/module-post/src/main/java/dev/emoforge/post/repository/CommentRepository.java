@@ -53,7 +53,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                           )
                           ) pi
                   ON pi.member_uuid = m.uuid
-                  WHERE c.post_id = 1
+                  WHERE c.post_id = :postId
                   ORDER BY c.created_at ASC
             """, nativeQuery = true)
     List<CommentViewProjection> findCommentsByPostId(@Param("postId") Long postId);

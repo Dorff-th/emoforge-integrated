@@ -113,12 +113,7 @@ public class AttachmentController {
     @GetMapping("/profile/{memberUuid}")
     public ResponseEntity<AttachmentResponse> getProfileImage(@PathVariable("memberUuid") String memberUuid) {
 
-
-
-
         Optional<Attachment> profileImage = attachmentService.getProfileImage(memberUuid);
-
-         log.debug("🌟🌟🌟🌟profileImage : " + profileImage);
 
         return profileImage
                 .map(AttachmentMapper::toResponse)

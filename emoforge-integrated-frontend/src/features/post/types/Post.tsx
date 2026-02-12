@@ -33,3 +33,8 @@ export interface PostDetailDTO {
 
   attachments: Attachment[]; // ✅ 추가
 }
+
+export interface Tag {
+  id: number;
+  name: string;
+}
