@@ -129,7 +129,7 @@ const PostDetailPage = () => {
               <span
                 key={tag.id}
                 className="tag cursor-pointer"
-                onClick={() => navigate(`/tags/${tag.name}`)}
+                onClick={() => navigate(`/posts/tags/${tag.name}`)}
               >
                 #{tag.name}
               </span>

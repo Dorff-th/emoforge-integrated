@@ -1,29 +1,36 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { fetchPosts } from "@/features/post/api/postApi";
-import type { PostDTO } from "../types/Post";
-import type { PageResponse } from "../types/Common";
+import { fetchPostsByTag } from "@/features/post/api/postApi";
+import type { PostDTO } from "@/features/post/types/Post";
+import type { PageResponse } from "@/features/post/types/Common";
 import Pagination from "@/features/post/components/Pagination";
 import { useToast } from "@/shared/stores/useToast";
 import NewPostButton from "@/shared/components/NewPostButton";
-import { LayoutList, MessageCircle, Paperclip } from "lucide-react";
+import { LayoutList, MessageCircle, Paperclip, Tag } from "lucide-react";
 import { SectionLoading } from "@/shared/components/SectionLoading";
 import { useUILoading } from "@/shared/stores/useUILoading";
 
-export default function PostListPage() {
+export default function TagPostListPage() {
   const [posts, setPosts] = useState<PostDTO[]>([]);
   const [pageInfo, setPageInfo] = useState<PageResponse<PostDTO> | null>(null);
   const [page, setPage] = useState(1);
 
   const navigate = useNavigate();
+  const { tagName } = useParams<{ tagName?: string }>();
 
   const { isAuthenticated } = useAuth();
   const toast = useToast();
 
   const loadPosts = async (pageNum: number) => {
     try {
-      const data = await fetchPosts(pageNum, 10, "createdAt", "DESC");
+      const data = await fetchPostsByTag(
+        tagName || "",
+        pageNum,
+        10,
+        "createdAt",
+        "DESC",
+      );
 
       if (data) {
         setPosts(data.dtoList);
@@ -37,17 +44,31 @@ export default function PostListPage() {
 
   useEffect(() => {
     loadPosts(1);
-  }, []);
+  }, [tagName]);
 
-  useUILoading("user:posts:list", { duration: 150 });
+  useUILoading("user:posts:tag-list", { duration: 150 });
 
   return (
-    <SectionLoading scope="user:posts:list">
+    <SectionLoading scope="user:posts:tag-list">
       <div className="mx-auto max-w-6xl px-5 bg-gray-100 rounded-xl p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <LayoutList size={20} />
-          <h1 className="text-lg font-semibold">Posts</h1>
-        </div>
+        <h2 className="text-2xl font-bold mb-4">
+          {tagName ? (
+            <>
+              <div className="flex items-center gap-2">
+                <Tag size={18} className="text-gray-500" />
+                <h1 className="text-base font-medium text-gray-800">
+                  Tag:
+                  <span className="ml-1 text-blue-600">{tagName}</span>
+                </h1>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center gap-2 mb-4">
+              <LayoutList size={20} />
+              <h1 className="text-lg font-semibold">Posts</h1>
+            </div>
+          )}
+        </h2>
 
         {isAuthenticated && (
           <div className="mb-4 flex">
@@ -65,7 +86,7 @@ export default function PostListPage() {
                 className="post-card bg-white rounded-lg shadow-md p-4
                          hover:shadow-lg hover:-translate-y-1 hover:scale-[1.01]
                          transform transition duration-300 cursor-pointer"
-                onClick={() => navigate(`${post.postId}`)}
+                onClick={() => navigate(`/posts/${post.postId}`)}
               >
                 {/* 제목 */}
                 <h3 className="text-base font-semibold text-gray-900 mb-2">

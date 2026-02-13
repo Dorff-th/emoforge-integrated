@@ -14,11 +14,10 @@ import ProfilePage from "@/features/user/pages/ProfilePage";
 import PostWritePage from "@/features/post/pages/PostWritePage";
 import PostEditPage from "@/features/post/pages/PostEditPage";
 import DiaryWritePage from "@/features/diary/pages/DiaryWritePage";
-
 import TermsAgreementPage from "@/features/auth/pages/TermsAgreementPage";
 import DiaryListPage from "@/features/diary/pages/DiaryListPage";
-
 import PostListPage from "@/features/post/pages/PostListPage";
+import TagPostListPage from "@/features/post/pages/TagPostListPage";
 import PostDetailPage from "@/features/post/pages/PostDetailPage";
 import AdminDashboardPage from "@/features/admin/pages/AdminDashboardPage";
 import AdminMembersPage from "@/features/admin/pages/AdminMembersPage";
@@ -54,6 +53,7 @@ export const router = createBrowserRouter([
     element: <PostLayout />,
     children: [
       { index: true, element: <PostListPage /> },
+      { path: "tags/:tagName", element: <TagPostListPage /> },
       { path: "new", element: <Navigate to="/user/posts/new" replace /> },
       { path: ":id", element: <PostDetailPage /> },
     ],

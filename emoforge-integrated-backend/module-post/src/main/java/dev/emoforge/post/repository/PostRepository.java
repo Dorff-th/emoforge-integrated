@@ -167,7 +167,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             c.id               AS categoryId,
             COALESCE(c.name, 'unknown') AS categoryName
         FROM post p
-        JOIN member m ON p.member_uuid = m.uuid
+        LEFT JOIN member m ON p.member_uuid = m.uuid
         LEFT JOIN category c ON p.category_id = c.id
         WHERE p.id = :postId
       """, nativeQuery = true)

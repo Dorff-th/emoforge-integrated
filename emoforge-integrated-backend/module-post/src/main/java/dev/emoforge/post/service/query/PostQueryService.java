@@ -5,6 +5,7 @@ import dev.emoforge.post.dto.internal.PageRequestDTO;
 import dev.emoforge.post.dto.internal.PostDetailResponse;
 import dev.emoforge.post.dto.legacy.external.AttachmentResponse;
 import dev.emoforge.post.dto.query.PostDetailViewProjection;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class PostQueryService {
 
     private final PostRepository postRepository;
@@ -62,8 +64,10 @@ public class PostQueryService {
     @Transactional(readOnly = true)
     public PostDetailResponse getPostDetail(Long postId) throws NotFoundException {
 
+        log.debug("🤯🤯🤯🤯🤯🤯 postId " + postId);
+
         // 1️⃣ 게시글 조회
-        PostDetailViewProjection view = postRepository.findPostDetailViewById(postId).orElseThrow(() -> new NotFoundException("게시글 없음"));;
+        PostDetailViewProjection view = postRepository.findPostDetailViewById(postId).orElseThrow(() -> new NotFoundException("게시글 없읍니다!"));
 
         // 2️⃣ 첨부파일 조회
         List<AttachmentResponse> attachments =

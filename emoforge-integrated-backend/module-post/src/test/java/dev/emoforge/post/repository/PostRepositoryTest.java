@@ -1,7 +1,9 @@
 package dev.emoforge.post.repository;
 
+import dev.emoforge.post.dto.query.PostDetailViewProjection;
 import dev.emoforge.post.dto.query.PostListItemProjection;
 import jakarta.transaction.Transactional;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,5 +54,16 @@ class PostRepositoryTest {
         page.getContent().forEach(p ->
                 System.out.println("id=" + p.getPostId() + ", title=" + p.getTitle())
         );
+    }
+
+    @Test
+    void findPost() throws NotFoundException {
+
+        Long postId = 1L;
+
+        PostDetailViewProjection view = postRepository.findPostDetailViewById(postId).orElseThrow(() -> new NotFoundException("게시글 없읍니다!"));
+
+        System.out.println(view);
+
     }
 }
