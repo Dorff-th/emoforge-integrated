@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '/api': {
           //target: 'http://auth.127.0.0.1.nip.io:8081',
-          target: env.VITE_API_AUTH_BASE_URL,
+          target: env.VITE_API_BASE_URL,
           changeOrigin: true,
           rewrite: path => path.replace(/^\/api/, ''),
         },

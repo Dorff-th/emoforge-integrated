@@ -133,7 +133,7 @@ export default function PostForm({
       if (mode === "write") toast.success("게시글이 등록되었습니다.");
       if (mode === "edit") toast.success("게시글이 수정되었습니다.");
 
-      navigate(`/${postId}`);
+      navigate(`/posts/${postId}`);
     } catch (error) {
       console.error("게시글 저장 실패", error);
       if (mode === "write") toast.error("게시글 등록 실패");

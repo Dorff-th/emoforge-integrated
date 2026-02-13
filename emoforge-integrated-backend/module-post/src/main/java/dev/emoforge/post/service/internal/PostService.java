@@ -30,8 +30,8 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final TagService tagService;
     private final PostTagRepository postTagRepository;
-    private CommentRepository commentRepository;
-    private AttachmentRepository attachmentRepository;
+    private final CommentRepository commentRepository;
+    private final AttachmentRepository attachmentRepository;
 
 
 

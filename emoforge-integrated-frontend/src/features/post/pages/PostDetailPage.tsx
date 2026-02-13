@@ -97,29 +97,7 @@ const PostDetailPage = () => {
 
         {/* 본문 */}
         <div className="border rounded-lg p-4 bg-white shadow mb-6">
-          <Viewer
-            initialValue={content}
-            customHTMLRenderer={{
-              image(node: any, { entering }: { entering: boolean }) {
-                if (!entering) return;
-
-                const alt =
-                  node.altText && node.altText.trim().length > 0
-                    ? node.altText
-                    : "";
-
-                return {
-                  type: "openTag",
-                  tagName: "img",
-                  attributes: {
-                    src: node.destination,
-                    alt: alt,
-                    onerror: "this.style.display='none'",
-                  },
-                };
-              },
-            }}
-          />
+          <Viewer initialValue={content} />
         </div>
 
         {/* ✅ 태그 리스트 */}
@@ -175,7 +153,7 @@ const PostDetailPage = () => {
           {isAuthor && (
             <div className="flex gap-2">
               <button
-                onClick={() => navigate(`/${post?.id}/edit`)}
+                onClick={() => navigate(`/user/posts/${post?.id}/edit`)}
                 className="icon-btn"
                 title="Edit"
               >

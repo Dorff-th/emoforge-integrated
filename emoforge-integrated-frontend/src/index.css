@@ -154,3 +154,117 @@
          dark:from-slate-900 dark:to-slate-800
          shadow-md;
 }
+
+
+.post-title {
+  @apply text-2xl font-semibold leading-tight;
+}
+
+.post-meta {
+  @apply text-sm text-gray-500;
+}
+
+.tag {
+  @apply inline-flex items-center 
+         rounded-full 
+         border border-gray-300
+         bg-white
+         px-3 py-1
+         text-sm text-gray-700;
+}
+
+.tag-section {
+  @apply mt-6;
+}
+
+.attachment-section {
+  @apply mt-4;
+}
+
+.attachment-title {
+  @apply flex items-center gap-1.5
+         text-xs text-gray-500
+         uppercase tracking-wide
+         mb-1;
+}
+
+.attachment-icon {
+  @apply w-3.5 h-3.5 text-gray-400;
+}
+
+.attachment-link {
+  @apply text-sm text-blue-600 hover:underline;
+}
+
+.attachment-size {
+  @apply ml-1 text-xs text-gray-400;
+}
+
+.icon-btn {
+  @apply inline-flex items-center gap-1.5
+         px-2.5 h-9
+         rounded-md
+         border border-gray-300
+         text-gray-600
+         hover:bg-gray-100
+         transition;
+}
+
+.icon-btn.danger {
+  @apply border-red-300 text-red-500 hover:bg-red-50;
+}
+
+.icon-label {
+  @apply text-xs font-medium text-gray-500;
+}
+
+.icon-btn.danger .icon-label {
+  @apply text-red-400;
+}
+
+.comment-submit {
+  @apply inline-flex items-center gap-1.5
+         px-3 h-9
+         rounded-md
+         bg-gray-900 text-white
+         text-sm
+         hover:bg-gray-800
+         transition;
+}
+
+.comment-post-btn {
+  @apply flex flex-col items-center justify-center
+         w-14 h-14
+         rounded-md
+         border border-gray-300
+         text-gray-700
+         hover:bg-gray-50
+         transition;
+}
+
+.comment-post-btn svg {
+  @apply mb-0.5;
+}
+
+.comment-post-label {
+  @apply text-[10px] text-gray-500;
+}
+
+
+.comment-delete {
+  @apply absolute top-3 right-3
+         opacity-0
+         text-red-400
+         group-hover:opacity-100
+         transition
+         duration-150
+         ease-out;
+}
+
+.comment-delete svg {
+  @apply transition-transform duration-150 ease-out;
+}
+
+.comment-delete:hover svg {
+  @apply scale-125;
+}
