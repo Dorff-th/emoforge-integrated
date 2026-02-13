@@ -1,4 +1,5 @@
 import {http} from "@/shared/api/httpClient";
+import { API } from "@/shared/api/endpoints";
 
 export interface EmotionStatisticsResponse {
   averageEmotion: number;
@@ -14,7 +15,7 @@ export const fetchEmotionStatistics = async (
   startDate: string,
   endDate: string
 ): Promise<EmotionStatisticsResponse> => {
-  const res = await http.get('/api/diary/statistics/emotion', {
+  const res = await http.get(`${API.DIARY}/statistics/emotion`, {
     params: { startDate, endDate },
   });
   return res.data;

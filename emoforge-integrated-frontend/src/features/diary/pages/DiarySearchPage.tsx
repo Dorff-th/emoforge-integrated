@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { http } from "@/shared/api/httpClient";
+import { API } from "@/shared/api/endpoints";
 import EmotionRangeSlider from "@/features/diary/ui/EmotionRangeSlider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -46,7 +47,7 @@ export default function DiarySearchPage() {
   const fetchResults = async () => {
     try {
       const response = await http.post(
-        `/api/diary/diaries/search?page=${page - 1}&size=${size}`,
+        `${API.DIARY}/diaries/search?page=${page - 1}&size=${size}`,
         {
           query,
           fields: effectiveFields,

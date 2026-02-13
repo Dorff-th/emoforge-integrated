@@ -10,6 +10,7 @@ import GPTFeedbackModal from "@/features/gpt/components/GPTFeedbackModal";
 import { type FeedbackType } from "@/features/gpt/types/feedbackTypes";
 import { format } from "date-fns";
 import { http } from "@/shared/api/httpClient";
+import { API } from "@/shared/api/endpoints";
 import { langHttp } from "@/shared/api/langHttpClient";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
@@ -100,7 +101,7 @@ const DiaryForm = () => {
         feedback: gptFeedback,
       };
 
-      await http.post("/api/diary/diaries", payload);
+      await http.post(`${API.DIARY}/diaries`, payload);
       setIsSaveSuccess(true);
     } catch (e) {
       console.error("저장 중 오류 발생:", e);

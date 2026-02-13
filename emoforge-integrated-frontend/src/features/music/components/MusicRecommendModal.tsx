@@ -68,8 +68,6 @@ export const MusicRecommendModal = ({
         setHistory(res.songs);
         toast?.info("음악 추천 완료!");
 
-        console.log("✅ 추천된 노래:", res.songs);
-
         // ✅ 링크 클릭 안되는 문제 방지용 - 렌더 이후 pointer-events 복구
         setTimeout(() => {
           const links =

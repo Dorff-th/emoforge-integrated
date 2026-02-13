@@ -32,7 +32,7 @@ export async function getPostTags(postId: number): Promise<Tag[]> {
 // 게시글에 달린 댓글 목록 조회
 export async function fetchCommentsByPostId(postId: number): Promise<CommentResponse[]> {
   const res = await http.get<CommentResponse[]>(`${API.POST}/${postId}/comments`);
-  console.log(res.data);
+ 
   return res.data;
 }
 
@@ -66,3 +66,4 @@ export const deletePost = async (postId: number) => {
   const res = await http.delete(`${API.POST}/${postId}`);
   return res.data;
 };
+

@@ -10,17 +10,17 @@ export interface Attachment {
   fileSize: number;         // ✅ 숫자 그대로
 }
 
-export interface AttachmentItem {
-  id: number;
-  fileName?: string;
-  originFileName?: string;
-  publicUrl?: string;
-  uploadType: "EDITOR_IMAGE" | "ATTACHMENT";
-  status: "TEMP" | "CONFIRMED";
-  fileSize?: number;
-  isNew?: boolean;            // 신규 첨부 여부
-  markedForDelete?: boolean;  // 삭제 예정 표시
-}
+// export interface AttachmentItem {
+//   id: number;
+//   fileName?: string;
+//   originFileName?: string;
+//   publicUrl?: string;
+//   uploadType: "EDITOR_IMAGE" | "ATTACHMENT";
+//   status: "TEMP" | "CONFIRMED";
+//   fileSize?: number;
+//   isNew?: boolean;            // 신규 첨부 여부
+//   markedForDelete?: boolean;  // 삭제 예정 표시
+// }
 
 // src/types/Attachment.ts
 
