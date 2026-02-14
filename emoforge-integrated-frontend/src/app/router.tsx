@@ -5,7 +5,6 @@ import { PostLayout } from "@/layouts/PostLayout";
 import { UserLayout } from "@/layouts/UserLayout ";
 import { RequireAuth } from "@/guards/RequireAuth";
 import { SectionLoading } from "@/shared/components/SectionLoading";
-//import { AdminLayout } from "@/layouts/AdminLayout";
 import { AdminProtectedLayout } from "@/layouts/AdminProtectedLayout";
 import LoginPage from "@/features/auth/pages/LoginPage";
 import OAuthCallbackPage from "@/features/auth/pages/OAuthCallbackPage";
@@ -21,7 +20,7 @@ import TagPostListPage from "@/features/post/pages/TagPostListPage";
 import PostDetailPage from "@/features/post/pages/PostDetailPage";
 import AdminDashboardPage from "@/features/admin/pages/AdminDashboardPage";
 import AdminMembersPage from "@/features/admin/pages/AdminMembersPage";
-import AdminPostCategoryPage from "@/features/admin/pages/AdminDashboardPage";
+import AdminPostCategoryPage from "@/features/admin/pages/AdminPostCategoryPage";
 import AdminLoginPage from "@/features/admin/pages/AdminLoginPage";
 import WithdrawalPendingPage from "@/features/user/pages/WithdrawalPendingPage";
 
@@ -44,7 +43,6 @@ export const router = createBrowserRouter([
       { path: "/login", element: <LoginPage /> },
       { path: "/auth/terms", element: <TermsAgreementPage /> },
       { path: "/kakao/callback", element: <OAuthCallbackPage /> },
-      { path: "/admin/login", element: <AdminLoginPage /> },
       { path: "/withdraw/pending", element: <WithdrawalPendingPage /> },
     ],
   },
@@ -94,6 +92,9 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
+  { path: "/admin/login", element: <AdminLoginPage /> },
+
   {
     path: "/admin",
     element: <AdminProtectedLayout />,

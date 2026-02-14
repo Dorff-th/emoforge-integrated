@@ -13,7 +13,7 @@ export const adminApi = {
    * - 실패: 401 throw
    */
   adminLogin: async (payload: AdminLoginRequest): Promise<void> => {
-    await http.post(`${API.ADMIN}/login`, payload);
+    await http.post(`${API.ADMIN.AUTH}/login`, payload);
   },
 
   /**
@@ -22,7 +22,7 @@ export const adminApi = {
    * - refresh_token 쿠키 제거
    */
   adminLogout: async (): Promise<void> => {
-    await http.post(`${API.ADMIN}/logout`);
+    await http.post(`${API.ADMIN.AUTH}/logout`);
   },
 
   /**
@@ -31,7 +31,7 @@ export const adminApi = {
    * - refresh 실패 이후에도 여기서 401 발생
    */
   adminMe: async (): Promise<AdminInfo> => {
-    const res = await http.get<AdminInfo>(`${API.ADMIN}/me`);
+    const res = await http.get<AdminInfo>(`${API.ADMIN.AUTH}/me`);
     return res.data; // 🔥 핵심
   },
 };

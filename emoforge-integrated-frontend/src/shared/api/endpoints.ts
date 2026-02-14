@@ -3,5 +3,10 @@ export const API = {
   POST: "/api/posts",
   DIARY: "/api/diary",
   ATTACH: "/api/attach",
-  ADMIN : "/api/auth/admin",
+
+  ADMIN: {
+    AUTH: "/api/auth/admin",
+    POST: "/api/posts/admin",
+    DIARY: "/api/diary/admin",
+  },
 } as const;

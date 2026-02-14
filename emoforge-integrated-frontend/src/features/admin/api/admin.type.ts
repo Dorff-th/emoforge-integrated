@@ -14,3 +14,8 @@ export interface AdminInfo {
 export const adminAuthKeys = {
   me: ['admin', 'me'] as const,
 };
+
+export interface Category {
+  id: number;
+  name: string;
+}
