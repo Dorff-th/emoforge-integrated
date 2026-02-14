@@ -21,10 +21,10 @@ public class LangGraphClient {
 
     private final RestTemplate restTemplate;
 
-    @Value("${langgraph.base-url}")
+    @Value("${llm.base-url}")
     private String baseUrl;
 
-    @Value("${langgraph.api-key:local-dev-key}")
+    @Value("${llm.api-key:local-dev-key}")
     private String apiKey;
 
     private HttpHeaders createHeaders() {
