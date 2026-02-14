@@ -8,6 +8,9 @@ export const langHttp: AxiosInstance = axios.create({
   baseURL: LANG_BASE_URL,
   withCredentials: true,
   timeout: 10_000,
+  headers: {
+    "X-Source": "FE"
+  }
 });
 
 /**

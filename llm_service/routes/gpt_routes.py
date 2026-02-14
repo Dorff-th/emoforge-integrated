@@ -1,3 +1,4 @@
+from fastapi import Request
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -14,8 +15,9 @@ class FeelingRequest(BaseModel):
     feelingKo: str
 
 @router.post("/feeling")
-async def get_feeling(req: FeelingRequest):
-    return await translate_feeling(req)
+async def get_feeling(req: FeelingRequest, request: Request):
+    source = request.headers.get("X-Source", "UNKNOWN")
+    return await translate_feeling(req, source)
 
 # NOTE:
 # - This endpoint is intentionally NOT protected by JWT.
@@ -39,8 +41,9 @@ class FeedbackRequest(BaseModel):
 #     return await generate_feedback(req, user)
 
 @router.post("/feedback")
-async def get_feedback(req: FeedbackRequest):
-    return await generate_feedback(req)
+async def get_feedback(req: FeedbackRequest, request: Request):
+    source = request.headers.get("X-Source", "UNKNOWN")
+    return await generate_feedback(req, source)
 
 
 # ✅ 회고 요약
@@ -49,7 +52,8 @@ class SummaryRequest(BaseModel):
     content: str
 
 @router.post("/summary")
-async def get_summary(req: SummaryRequest):
-    return await summarize_diary(req)
+async def get_summary(req: SummaryRequest, request: Request):
+    source = request.headers.get("X-Source", "UNKNOWN")
+    return await summarize_diary(req, source)
 
 
