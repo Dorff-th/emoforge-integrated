@@ -22,6 +22,12 @@ const toastStyleMap: Record<
     text: "text-white",
     progress: "bg-rose-200",
   },
+  warn: {
+    bg: "bg-orange-500/90",
+    border: "border-rose-600",
+    text: "text-white",
+    progress: "bg-rose-200",
+  },
   info: {
     bg: "bg-sky-500/90",
     border: "border-sky-600",

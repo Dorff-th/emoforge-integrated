@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { Trash2, Pencil, Mail, UserPlus, Edit3 } from "lucide-react";
+import { Pencil, Mail, UserPlus, Edit3 } from "lucide-react";
 import NickNameEditModal from "./modals/NicknameEditModal";
 import EmailEditModal from "./modals/EmailEditModal";
 export default function ProfileInfoSection() {

@@ -26,6 +26,9 @@ function onRefreshed() {
   refreshQueue = [];
 }
 
+console.log('httpClient : ' + BASE_URL);
+
+
 /**
  * Request Interceptor
  * - 기본적으로 전역 로딩 ON

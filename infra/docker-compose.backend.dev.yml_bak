@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  backend:
+    env_file:
+      - .env.dev
+    build:
+      context: ../emoforge-integrated-backend
+      dockerfile: Dockerfile
+    container_name: emoforge-backend
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+
+      SPRING_DATASOURCE_URL: jdbc:mariadb://host.docker.internal:3306/emoforge_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KAKAO_REDIRECT_URI: ${KAKAO_REDIRECT_URI}
+
+      RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY}
+      RECAPTCHA_SECRET_KEY: ${RECAPTCHA_SECRET_KEY}
+      RECAPTCHA_ENABLED: "false"
+
+      LOGGING_LEVEL_ROOT: INFO
+      LOGGING_LEVEL_DEV_EMOFORGE_AUTH: DEBUG
+
+      FILE_UPLOAD_PATH_EDITOR_IMAGES_BASE_DIR: /uploads/editor_images/
+      FILE_UPLOAD_PATH_EDITOR_IMAGES_PUBLIC_URL: /uploads/images/
+      FILE_UPLOAD_PATH_ATTACHMENTS: /uploads/attachment/
+      FILE_UPLOAD_PATH_PROFILE_IMAGE_BASE_DIR: /uploads/profile_image/
+      FILE_UPLOAD_PATH_PROFILE_IMAGE_PUBLIC_URL: /uploads/profile_image/
+
+      MYBATIS_CONFIGURATION_MAP_UNDERSCORE_TO_CAMEL_CASE: "true"
+      MYBATIS_MAPPER_LOCATIONS: classpath:mapper/**/*.xml
+      MYBATIS_TYPE_ALIASES_PACKAGE: dev.emoforge.post.dto.bff,dev.emoforge.post.dto.internal
+
+    volumes:
+      - C:/devtools/zmylong/EMOFORGE_INTEG/upload:/uploads
+
+    networks:
+      - emoforge-net
+
+networks:
+  emoforge-net:
+    driver: bridge

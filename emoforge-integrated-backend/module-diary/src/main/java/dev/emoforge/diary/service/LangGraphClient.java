@@ -26,16 +26,6 @@ public class LangGraphClient {
     @Value("${llm.base-url}")
     private String baseUrl;
 
-    @Value("${llm.api-key:local-dev-key}")
-    private String apiKey;
-
-    private HttpHeaders createHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + apiKey);
-        return headers;
-    }
-
     /**
      * LangGraph-Service에 회고 요약 요청
      */

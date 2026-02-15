@@ -1,5 +1,4 @@
 // src/config.ts
-const protocol = window.location.protocol;
 export const backendApiAttachUrl = import.meta.env.VITE_API_BASE_URL + "/api/attach";
 // ex: http://localhost:8080/api
 

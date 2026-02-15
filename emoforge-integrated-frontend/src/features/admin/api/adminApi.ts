@@ -13,6 +13,7 @@ export const adminApi = {
    * - 실패: 401 throw
    */
   adminLogin: async (payload: AdminLoginRequest): Promise<void> => {
+    console.log(`adminLogin : ${API.ADMIN.AUTH}/login`);
     await http.post(`${API.ADMIN.AUTH}/login`, payload);
   },
 

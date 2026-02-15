@@ -25,7 +25,7 @@ export function DiaryEntryCard({
       {/* Header */}
       <div className="mb-2 flex items-center gap-2">
         <EmotionEmojiDisplay emotion={entry.emotion} size="sm" />
-        <span className="text-xs text-muted-foreground">{entry.date}</span>
+        <span className="text-xs text-muted-foreground">{entry.createdAt}</span>
       </div>
 
       {/* Feeling */}

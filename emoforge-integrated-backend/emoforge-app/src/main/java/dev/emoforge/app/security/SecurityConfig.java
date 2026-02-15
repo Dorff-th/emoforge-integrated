@@ -72,6 +72,8 @@ public class SecurityConfig {
                         // ==== Diary ====
                         .requestMatchers(DIARY_PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(DIARY_AUTHENTICATED_ENDPOINTS).authenticated()
+                        //=== debug ====
+                        .requestMatchers("/api/debug/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

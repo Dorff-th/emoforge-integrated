@@ -18,7 +18,7 @@ const EmotionRangeSlider: React.FC<Props> = ({ value, onChange }) => {
     <div className="px-4 py-2 w-full">
       <Slider
         value={value}
-        onChange={(e, newValue) => onChange(newValue as [number, number])}
+        onChange={(_, newValue) => onChange(newValue as [number, number])}
         valueLabelDisplay="auto"
         min={1}
         max={5}
