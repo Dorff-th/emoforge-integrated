@@ -33,13 +33,19 @@ public class WebConfigDev implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        // ▶ dev에서만 /api/attach/uploads/** → /uploads/** 동일하게 제공
-        // 🧱 에디터 이미지 (예: /uploads/editor_images/**)
-        registry.addResourceHandler("api/attach/uploads/images/**")
+
+        /*registry.addResourceHandler("api/attach/uploads/images/**")
                 .addResourceLocations("file:" + ensureTrailingSlash(imageBaseDir));
 
-        // 🧱 프로필 이미지 (예: /uploads/profile_image/**)
+
         registry.addResourceHandler("api/attach/uploads/profile_image/**")
+                .addResourceLocations("file:" + ensureTrailingSlash(profileImageBaseDir));*/
+
+        registry.addResourceHandler("/uploads/images/**")
+                .addResourceLocations("file:" + ensureTrailingSlash(imageBaseDir));
+
+
+        registry.addResourceHandler("/uploads/profile_image/**")
                 .addResourceLocations("file:" + ensureTrailingSlash(profileImageBaseDir));
     }
 

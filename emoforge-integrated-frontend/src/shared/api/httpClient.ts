@@ -26,7 +26,7 @@ function onRefreshed() {
   refreshQueue = [];
 }
 
-console.log('httpClient : ' + BASE_URL);
+
 
 
 /**

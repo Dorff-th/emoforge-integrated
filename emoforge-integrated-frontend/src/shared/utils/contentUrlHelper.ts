@@ -1,5 +1,6 @@
 ﻿// src/utils/contentUrlHelper.ts
-import { backendBaseUrl } from '@/shared/config/config';
+//import { backendBaseUrl } from '@/shared/config/config';
+import { serverBaseUrl } from '@/shared/config/config';
 
 
 function escapeRegExp(value: string): string {
@@ -15,7 +16,7 @@ export function fixContentForEditor(content: string): string {
   const relativeImageRegex = /!\[(.*?)\]\((\/(?!\/)[^)]*)\)/g;
 
   return content.replace(relativeImageRegex, (_match, alt, path) => {
-    return `![${alt}](${backendBaseUrl}${path})`;
+    return `![${alt}](${serverBaseUrl}${path})`;
   });
 }
 
@@ -25,7 +26,7 @@ export function fixContentForEditor(content: string): string {
 export function fixContentForSave(content: string): string {
   if (!content) return content;
 
-  const escapedBase = escapeRegExp(backendBaseUrl);
+  const escapedBase = escapeRegExp(serverBaseUrl);
   const absoluteImageRegex = new RegExp(`!\\[(.*?)\\]\\(${escapedBase}(\\/(?!\\/)[^)]*)\\)`, 'g');
 
   return content.replace(absoluteImageRegex, (_match, alt, path) => {

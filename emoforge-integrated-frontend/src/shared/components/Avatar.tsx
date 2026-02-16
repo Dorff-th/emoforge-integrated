@@ -1,5 +1,5 @@
 // shared/components/Avatar.tsx
-import { resolveAttachmentUrl } from "../utils/resolveAttachmentUrl";
+import { serverBaseUrl } from "@/shared/config/config";
 
 interface AvatarProps {
   publicUrl?: string | null;
@@ -14,7 +14,9 @@ export function Avatar({ publicUrl, name, size = 32 }: AvatarProps) {
   // 🔥 blob URL은 그대로 사용
   const resolvedUrl = publicUrl?.startsWith("blob:")
     ? publicUrl
-    : resolveAttachmentUrl(publicUrl);
+    : publicUrl
+      ? `${serverBaseUrl}${publicUrl}`
+      : undefined;
 
   if (resolvedUrl) {
     return (

@@ -11,7 +11,7 @@ import { Viewer } from "@toast-ui/react-editor";
 import ConfirmModal from "@/shared/components/ConfirmModal";
 import { useToast } from "@/shared/stores/useToast";
 import UserComment from "@/features/post/components/UserComment";
-import { backendBaseUrl } from "@/shared/config/config";
+import { backendBaseUrl, serverBaseUrl } from "@/shared/config/config";
 import { PaperclipIcon, ArrowLeft, Pencil, Trash2 } from "lucide-react";
 import { SectionLoading } from "@/shared/components/SectionLoading";
 import { useUILoading } from "@/shared/stores/useUILoading";
@@ -75,7 +75,7 @@ const PostDetailPage = () => {
 
   const content = post?.content.replace(
     /\/uploads\//g,
-    `${backendBaseUrl}/uploads/`,
+    `${serverBaseUrl}/uploads/`,
   );
 
   useUILoading("user:post:detail", { duration: 150 });
