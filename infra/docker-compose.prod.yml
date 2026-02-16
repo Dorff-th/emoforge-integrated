@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+
+  nginx:
+    image: nginx:stable
+    container_name: emoforge-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /nginx/default.prod.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - backend
+      - frontend
+      - llm
+    networks:
+      - emoforge-net
+
+
+  backend:
+    image: emoforge-backend:latest
+    container_name: emoforge-backend
+    restart: always
+    env_file:
+      - .env.prod
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx512m"
+    volumes:
+      - /home/ec2-user/emoforge/upload:/uploads
+    mem_limit: 700m
+    expose:
+      - "8081"
+    networks:
+      - emoforge-net
+
+
+  llm:
+    image: emoforge-llm:latest
+    container_name: emoforge-llm
+    restart: always
+    env_file:
+      - .env.prod
+    mem_limit: 300m
+    expose:
+      - "8000"
+    networks:
+      - emoforge-net
+
+
+  frontend:
+    image: emoforge-frontend:latest
+    container_name: emoforge-frontend
+    restart: always
+    mem_limit: 150m
+    expose:
+      - "80"
+    networks:
+      - emoforge-net
+
+
+networks:
+  emoforge-net:
+    driver: bridge
