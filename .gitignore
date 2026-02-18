@@ -57,3 +57,6 @@ admin-frontend/nul
 # Claude / AI artifacts
 admin-frontend/.claude/
 admin-frontend/claude_history/
+
+# allow frontend production env
+!emoforge-integrated-frontend/.env.production
