@@ -37,7 +37,7 @@ jobs:
 
       - name: Build & Push Frontend
         run: |
-          docker build -t dorff2026/emoforge-frontend:prod ./emoforge-integrated-backend
+          docker build -t dorff2026/emoforge-frontend:prod ./emoforge-integrated-frontend
           docker push dorff2026/emoforge-frontend:prod
 
       - name: Deploy to EC2
