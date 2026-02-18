@@ -1,0 +1,122 @@
+# NOTE:
+# All sensitive values are injected via environment variables.
+# This file is safe for public repository exposure.
+
+#공통 core 영역
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: validate   # dev: update, prod: validate 추천
+    properties:
+      hibernate:
+        '[format_sql]': true
+    show-sql: true
+
+server:
+  port: 8081
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: WARN
+    org.springframework.transaction: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql: WARN
+    dev.emoforge: INFO
+
+#Swagger-ui에서 Try it out 버튼 비활성화
+springdoc:
+  swagger-ui:
+    supported-submit-methods: []
+
+#보안인증 영역 (공통 + auth 성격)
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: 3600000      # 1시간 (밀리초)
+  refresh-token-expiration: 604800000   # 7일 (밀리초)
+
+# 기존 내용에 추가 (local-docker용)
+security:
+  cors:
+    allowed-origin-patterns:
+      - https://www.emoforge.dev
+      - http://localhost:*
+
+  cookie:
+    common:
+      domain: ""
+      secure: false
+      same-site: Lax
+
+    access:
+      name: access_token
+      expiration-hours: 1
+
+    refresh:
+      name: refresh_token
+      expiration-days: 7
+
+
+#auth 전용
+kakao:
+  client-id: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KAKAO_CLIENT_ID}   # REST API 키
+  client-secret: ""                             # 거의 사용 안함
+  redirect-uri: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KAKAO_REDIRECT_URI}
+
+recaptcha:
+  site-key: ${RECAPTCHA_SITE_KEY}
+  secret-key: ${RECAPTCHA_SECRET_KEY}
+  enabled: true  # 기본값 true
+
+service:
+  attach:
+    url: https://www.emoforge.dev
+
+
+#attachment 전용
+file:
+  upload:
+    path:
+      # ✅ EC2 경로로 수정 (권한: ec2-user)
+      editor-images:
+        base-dir: /home/ec2-user/emoforge-mono/uploads/editor_images/
+        public-url: /uploads/images/
+      attachments: /home/ec2-user/emoforge-mono/uploads/attachment/
+      profile-image:
+        base-dir: /home/ec2-user/emoforge-mono/uploads/profile_image/
+        public-url: /uploads/profile_image/
+
+
+#post 전용
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package:
+    dev.emoforge.post.dto.bff,dev.emoforge.post.dto.internal
+
+
+#diary 전용
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+
+llm:
+  base-url: ${LLM_BASE_URL}
+
+debug:
+  endpoints:
+    enabled: true
+
+
+
