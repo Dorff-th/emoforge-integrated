@@ -26,22 +26,18 @@ jobs:
 
       - name: Build Spring Boot (bootJar)
         run: |
+          cd emoforge-integrated-backend
           chmod +x ./gradlew
           ./gradlew :emoforge-app:bootJar -x test
 
       - name: Build & Push Backend
         run: |
-          docker build -t dorff2026/emoforge-backend:prod .
-          docker push dorff2026/emoforge-backend:prod
-
-      - name: Build & Push Backend
-        run: |
-          docker build -t dorff2026/emoforge-backend:prod ./backend
+          docker build -t dorff2026/emoforge-backend:prod ./emoforge-integrated-backend
           docker push dorff2026/emoforge-backend:prod
 
       - name: Build & Push Frontend
         run: |
-          docker build -t dorff2026/emoforge-frontend:prod ./frontend
+          docker build -t dorff2026/emoforge-frontend:prod ./emoforge-integrated-backend
           docker push dorff2026/emoforge-frontend:prod
 
       - name: Deploy to EC2
