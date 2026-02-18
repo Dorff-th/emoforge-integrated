@@ -22,6 +22,8 @@ Thumbs.db
 ### Spring Boot Config ###
 */src/main/resources/application.yml
 */src/main/resources/application-*.yml
+# allow production config (no secrets inside)
+!*/src/main/resources/application-prod.yml
 
 application*.yml
 application*.yaml

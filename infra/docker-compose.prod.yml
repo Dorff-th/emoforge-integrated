@@ -24,7 +24,7 @@ services:
       - .env.prod
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      JAVA_OPTS: "-Xms128m -Xmx384m"
+      JAVA_OPTS: "-Xms128m -Xmx256m"
     volumes:
       - /home/ec2-user/emoforge-mono/uploads:/home/ec2-user/emoforge-mono/uploads
     networks:
