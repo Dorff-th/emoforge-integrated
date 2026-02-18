@@ -50,14 +50,14 @@ jobs:
             cd /home/ec2-user/emoforge-mono
 
             docker pull dorff2026/emoforge-backend:prod
-            docker-compose stop backend
-            docker-compose rm -f backend
-            docker-compose up -d backend
+            docker-compose -f docker-compose.prod.yml stop backend
+            docker-compose -f docker-compose.prod.yml rm -f backend
+            docker-compose -f docker-compose.prod.yml up -d backend
 
             sleep 20
 
             docker pull dorff2026/emoforge-frontend:prod
-            docker-compose stop frontend
-            docker-compose rm -f frontend
-            docker-compose up -d frontend
+            docker-compose -f docker-compose.prod.yml stop frontend
+            docker-compose -f docker-compose.prod.yml rm -f frontend
+            docker-compose -f docker-compose.prod.yml up -d frontend
 
