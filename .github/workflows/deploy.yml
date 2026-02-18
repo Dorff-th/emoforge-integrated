@@ -49,14 +49,15 @@ jobs:
           script: |
             cd /home/ec2-user/emoforge-mono
 
-            docker compose pull backend
-            docker compose stop backend
-            docker compose rm -f backend
-            docker compose up -d backend
+            docker pull dorff2026/emoforge-backend:prod
+            docker-compose stop backend
+            docker-compose rm -f backend
+            docker-compose up -d backend
 
             sleep 20
 
-            docker compose pull frontend
-            docker compose stop frontend
-            docker compose rm -f frontend
-            docker compose up -d frontend
+            docker pull dorff2026/emoforge-frontend:prod
+            docker-compose stop frontend
+            docker-compose rm -f frontend
+            docker-compose up -d frontend
+
