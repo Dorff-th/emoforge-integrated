@@ -25,6 +25,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       JAVA_OPTS: "-Xms128m -Xmx256m"
+      TZ: Asia/Seoul
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Seoul"
     volumes:
       - /home/ec2-user/emoforge-mono/uploads:/home/ec2-user/emoforge-mono/uploads
     networks:
