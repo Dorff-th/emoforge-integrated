@@ -9,7 +9,8 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
 COPY . .
-RUN npm run build
+ARG VITE_MODE=prod
+RUN npm run build:${VITE_MODE}
 
 # ----------------------
 # 2️⃣ Nginx Stage

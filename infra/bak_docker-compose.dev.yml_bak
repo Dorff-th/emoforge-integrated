@@ -65,7 +65,7 @@ services:
       context: ../emoforge-integrated-frontend
       dockerfile: Dockerfile
       args:
-        VITE_MODE: local-docker
+        VITE_MODE: dev
     container_name: emoforge-frontend
     volumes:
     - ./nginx/frontend.dev.conf:/etc/nginx/conf.d/default.conf
