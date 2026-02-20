@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import EmotionSelector from "./EmotionSelector";
 import HabitChecklist from "./HabitChecklist";
 import FeelingInput from "./FeelingInput";
+import { SKIP_LOADING_HEADER } from "@/shared/api/httpClient";
 import DiaryTextarea from "./DiaryTextarea";
 import FeedbackTypeSelect from "./FeedbackTypeSelect";
 import SubmitButton from "./SubmitButton";
@@ -47,15 +48,23 @@ const DiaryForm = () => {
 
     // ⚙️ 실제 LangGraph FastAPI 호출
     const requestPromise = langHttp
-      .post("/diary/gpt/feedback", {
-        emotionScore: emotion,
-        habitTags: habits,
-        feelingKo: feelingText,
-        feelingEn: feelingEnglish,
-        diaryContent: diary,
-        feedbackStyle: feedbackType, // ✅ 이름 변경 주의
-        uuid: user?.uuid,
-      })
+      .post(
+        "/diary/gpt/feedback",
+        {
+          emotionScore: emotion,
+          habitTags: habits,
+          feelingKo: feelingText,
+          feelingEn: feelingEnglish,
+          diaryContent: diary,
+          feedbackStyle: feedbackType, // ✅ 이름 변경 주의
+          uuid: user?.uuid,
+        },
+        {
+          headers: {
+            [SKIP_LOADING_HEADER]: "1", // 전역 loading skip
+          },
+        },
+      )
       .then((res) => {
         // LangGraph-Service에서 feedback 구조가 { summary, encouragement, next_tip }
         const feedback = res.data.feedback;

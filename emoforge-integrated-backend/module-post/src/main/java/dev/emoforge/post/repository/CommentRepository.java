@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
@@ -26,6 +27,15 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * 특정 회원(member_uuid)이 작성한 comment 개수를 조회한다.
      */
     int countByMemberUuid(@Param("memberUuid") String memberUuid);
+
+    /**
+     * 특정 회원(member_uuid)이 작성한 오늘 작성한 comment 개수를 조회한다.
+     */
+    int countByMemberUuidAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+            @Param("memberUuid") String memberUuid,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 
     /* ========================== Emoforge 통합 작업에 필요한 신규 쿼리 메서드 */
     @Query(value = """

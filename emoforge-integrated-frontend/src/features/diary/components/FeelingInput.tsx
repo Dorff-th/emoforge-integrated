@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import { useToast } from "@/shared/stores/useToast";
 import { langHttp } from "@/shared/api/langHttpClient";
+import { SKIP_LOADING_HEADER } from "@/shared/api/httpClient";
 import GptFeelingLoadingModal from "@/features/diary/ui/GptFeelingLoadingModal";
 
 interface FeelingInputProps {
@@ -29,7 +30,11 @@ const FeelingInput: React.FC<FeelingInputProps> = ({
       const response = await langHttp.post(
         "/diary/gpt/feeling",
         { feelingKo },
-        { meta: { skipGlobalLoading: true } } as any, // 요게 핵심! 👈
+        {
+          headers: {
+            [SKIP_LOADING_HEADER]: "1", // 전역 loading skip
+          },
+        },
       );
       setSuggestions(response.data.suggestions || []);
     } catch (error) {

@@ -15,6 +15,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,6 +92,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * 특정 회원(member_uuid)이 작성한 post 개수를 조회한다.
      */
     int countByMemberUuid(@Param("memberUuid") String memberUuid);
+
+    /**
+     * 특정 회원(member_uuid)이 작성한 오늘 작성한 post 개수를 조회한다.
+     */
+    int countByMemberUuidAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+            @Param("memberUuid") String memberUuid,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 
 
     /* ====================================== Emoforge 통합에 필요한 신규 쿼리   ========================================== */

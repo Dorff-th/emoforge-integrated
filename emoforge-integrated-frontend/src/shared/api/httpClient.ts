@@ -3,7 +3,7 @@ import { OAuthFlow } from "@/features/auth/api/authFlow";
 import { useLoadingStore } from "@/shared/stores/loadingStore";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const SKIP_LOADING_HEADER = "X-Skip-Loading";
+export const SKIP_LOADING_HEADER = "X-Skip-Loading";
 
 export const http: AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -25,8 +25,6 @@ function onRefreshed() {
   refreshQueue.forEach(cb => cb());
   refreshQueue = [];
 }
-
-
 
 
 /**

@@ -66,4 +66,31 @@ public class PostStatisticsController {
 
         return ResponseEntity.ok(response);
     }
+
+    @Operation(
+            summary = "내가 오늘 작성한 게시글/댓글 통계 조회",
+            description = """
+                    로그인한 사용자가 작성한 게시글 수와 댓글 수를 조회합니다.
+
+                    ✔ Authentication 기반 사용자 식별
+                    ✔ 게시글 수 + 댓글 수 2가지 지표 반환
+                    ✔ 마이페이지·프로필 화면에서 사용
+
+                    반환 예:
+                    {
+                      "postCount": 12,
+                      "commentCount": 34
+                    }
+                    """
+    )
+    @GetMapping("/me/statistics/today")
+    public ResponseEntity<PostStatsResponse> memberTodayPostStatistics(Authentication authentication) {
+
+        CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
+        String memberUuid = principal.getUuid();
+
+        PostStatsResponse response = postStatisticsService.getTodayPostStatistics(memberUuid);
+
+        return ResponseEntity.ok(response);
+    }
 }

@@ -1,3 +1,9 @@
+import { useState, useEffect } from "react";
+import {
+  fetchMemberAttachmentStats,
+  fetchMemberPostStats,
+  fetchMemberDiaryStats,
+} from "@/features/user/api/userStatApi";
 import {
   Image,
   Paperclip,
@@ -10,6 +16,44 @@ import {
 } from "lucide-react";
 
 export default function ProfileStatsSection() {
+  const [_loading, setLoading] = useState(true);
+  const [_error, setError] = useState<string | null>(null);
+
+  const [stats, setStats] = useState<{
+    attach?: any;
+    posts?: any;
+    diary?: any;
+  }>({});
+
+  //사용자 통계 불러오기
+  const loadAllMemberStats = async () => {
+    const [attach, posts, diary] = await Promise.all([
+      fetchMemberAttachmentStats(),
+      fetchMemberPostStats(),
+      fetchMemberDiaryStats(),
+    ]);
+
+    return { attach, posts, diary };
+  };
+
+  // 📌 ProfilePage 최초 로드 시 통계 조회
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await loadAllMemberStats();
+        setStats(data);
+      } catch (err: any) {
+        console.error("🔴 통계 조회 실패:", err);
+        setError("통계를 불러오지 못했어요 🥲");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <section className="space-y-3">
       <div className="my-2 border-t border-gray-200/60" />
@@ -22,25 +66,25 @@ export default function ProfileStatsSection() {
         <div className="mt-4 grid grid-cols-2 gap-2">
           <StatCard
             label="Images"
-            value={22}
+            value={stats.attach?.editorImageCount}
             icon={<Image />}
             title="Images uploaded through the editor"
           />
           <StatCard
             label="Files"
-            value={6}
+            value={stats.attach?.attachmentCount}
             icon={<Paperclip />}
             title="Total files attached to your posts"
           />
           <StatCard
             label="Posts"
-            value={5}
+            value={stats.posts?.postCount}
             icon={<FileText />}
             title="Posts you have created"
           />
           <StatCard
             label="Comments"
-            value={5}
+            value={stats.posts?.commentCount}
             icon={<MessageCircle />}
             title="Comments you have written"
           />
@@ -52,19 +96,19 @@ export default function ProfileStatsSection() {
           <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
             <StatCard
               label="Records"
-              value={22}
+              value={stats.diary?.diaryEntryCount}
               icon={<BookOpen />}
               title="Your emotion and reflection records"
             />
             <StatCard
               label="GPT Summary"
-              value={6}
+              value={stats.diary?.gptSummaryCount}
               icon={<Sparkles />}
               title="AI-generated summaries of your records"
             />
             <StatCard
               label="Music Recs"
-              value={5}
+              value={stats.diary?.musicRecommendHistoryCount}
               icon={<Music />}
               title="Music recommendations based on your emotions"
             />
