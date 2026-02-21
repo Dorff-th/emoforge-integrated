@@ -1,8 +1,9 @@
 package dev.emoforge.post.mapper;
 
 import dev.emoforge.post.dto.internal.PageRequestDTO;
-import dev.emoforge.post.dto.internal.PostSearchResultDTO;
-import dev.emoforge.post.dto.internal.SearchFilterDTO;
+import dev.emoforge.post.dto.internal.PostSearchFilter;
+import dev.emoforge.post.dto.internal.PostSearchRequest;
+import dev.emoforge.post.dto.query.PostSearchResultDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,7 +17,7 @@ import java.util.List;
  *
  * 설계 원칙:
  * - Context 중립적 (Admin/User 구분 없음)
- * - 검색 조건(SearchFilterDTO)과 페이징(PageRequestDTO)만 전달받음
+ * - 검색 조건(PostSearchFilter)과 페이징(PageRequestDTO)만 전달받음
  * - Facade 계층에서 해석된 조건만 사용
  */
 @Mapper
@@ -30,8 +31,8 @@ public interface SearchMapper {
      * @return 게시글 목록
      */
     List<PostSearchResultDTO> searchPostsByFilter(
-        @Param("filter") SearchFilterDTO filter,
-        @Param("page") PageRequestDTO page
+            @Param("filter") PostSearchFilter filter,
+            @Param("page") PageRequestDTO page
     );
 
     /**
@@ -40,5 +41,5 @@ public interface SearchMapper {
      * @param filter 검색 조건
      * @return 전체 개수
      */
-    int countPostsByFilter(@Param("filter") SearchFilterDTO filter);
+    int countPostsByFilter(@Param("filter") PostSearchFilter filter);
 }

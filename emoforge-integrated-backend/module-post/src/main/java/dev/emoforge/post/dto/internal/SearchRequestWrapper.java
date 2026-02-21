@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchRequestWrapper {
-    private SearchFilterDTO searchFilterDTO;
+    private PostSearchFilter postSearchFilter;
     private PageRequestDTO pageRequestDTO;
 }

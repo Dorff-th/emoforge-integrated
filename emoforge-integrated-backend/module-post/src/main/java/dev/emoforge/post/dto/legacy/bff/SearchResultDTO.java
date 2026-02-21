@@ -8,16 +8,19 @@ import java.time.LocalDateTime;
 @Hidden
 @Builder
 public record SearchResultDTO(
-        Long postId,
+        Long id,
         String title,
         String content,
         LocalDateTime createdAt,
-        String writerName,
+        String authorNickname,
+        Long categoryId,
         String categoryName,
         String commentContent,
-        String commentWriter,
+        Long commentCount
+
+        /*String commentWriter,
         String summary,
         MatchedField matchedField,
-        String highlightedTitle
+        String highlightedTitle*/
 ) {
 }

@@ -6,85 +6,109 @@
 <mapper namespace="dev.emoforge.post.mapper.SearchMapper">
 
     <!-- ========================================================
-         공용 게시글 검색 (Context 중립)
+         공용 게시글 검색 (통합검색 + 필터 구조)
          ======================================================== -->
 
-    <!-- 검색 결과 매핑 -->
-    <resultMap id="PostSearchResultMap" type="dev.emoforge.post.dto.internal.PostSearchResultDTO">
-        <constructor>
-            <idArg column="id"           javaType="Long"             name="id"/>
-            <arg   column="title"        javaType="String"           name="title"/>
-            <arg   column="content"      javaType="String"           name="content"/>
-            <arg   column="created_at"   javaType="java.time.LocalDateTime" name="createdAt"/>
-            <arg   column="member_uuid"  javaType="String"           name="memberUuid"/>
-            <arg   column="category_id"  javaType="Long"             name="categoryId"/>
-            <arg   column="category_name"   javaType="String"           name="categoryName"/>
-            <arg   column="comment_count"   javaType="Long"             name="commentCount"/>
-        </constructor>
+    <!-- ========================================================
+         검색 결과 매핑
+         ======================================================== -->
+    <resultMap id="PostSearchResultMap" type="dev.emoforge.post.dto.query.PostSearchResultDTO">
+        <id column="id"              property="id"/>
+        <result   column="title"           property="title"/>
+        <result   column="content"         property="content"/>
+        <result   column="created_at"      property="createdAt"/>
+        <result   column="member_uuid"     property="memberUuid"/>
+        <result   column="category_id"     property="categoryId"/>
+        <result   column="category_name"   property="categoryName"/>
+        <result   column="comment_count"   property="commentCount"/>
+        <result   column="author_nickname"   property="authorNickname"/>
+        <result   column="commentCount"   property="commentCount"/>
     </resultMap>
 
-    <!-- 공용 WHERE 조건 (list/count 쿼리 동일하게 사용) -->
+
+    <!-- ========================================================
+         공용 WHERE 조건 (목록/카운트 공통 사용)
+         ======================================================== -->
     <sql id="searchWhereConditions">
-        <!-- 카테고리 필터 -->
+
+        <!-- 카테고리 ID 필터 -->
         <if test="filter.categoryId != null and filter.categoryId > 0">
             AND p.category_id = #{filter.categoryId}
-        </if>
-
-        <!-- 키워드 검색 -->
-        <if test="filter.keyword != null and filter.keyword != ''">
-            <choose>
-                <!-- 제목 + 내용 OR 검색 (둘 다 체크된 경우) -->
-                <when test="filter.titleChecked == true and filter.contentChecked == true">
-                    AND (
-                        p.title LIKE CONCAT('%', #{filter.keyword}, '%')
-                        OR p.content LIKE CONCAT('%', #{filter.keyword}, '%')
-                    )
-                </when>
-                <!-- 제목만 검색 -->
-                <when test="filter.titleChecked == true">
-                    AND p.title LIKE CONCAT('%', #{filter.keyword}, '%')
-                </when>
-                <!-- 내용만 검색 -->
-                <when test="filter.contentChecked == true">
-                    AND p.content LIKE CONCAT('%', #{filter.keyword}, '%')
-                </when>
-                <!-- 댓글 내용 검색 (확장용) -->
-                <when test="filter.commentChecked == true">
-                    AND EXISTS (
-                        SELECT 1 FROM comment cm
-                        WHERE cm.post_id = p.id
-                        AND cm.content LIKE CONCAT('%', #{filter.keyword}, '%')
-                    )
-                </when>
-                <!-- 기본: 제목 + 내용 OR 검색 -->
-                <otherwise>
-                    AND (
-                        p.title LIKE CONCAT('%', #{filter.keyword}, '%')
-                        OR p.content LIKE CONCAT('%', #{filter.keyword}, '%')
-                    )
-                </otherwise>
-            </choose>
         </if>
 
         <!-- 기간 필터 -->
         <if test="filter.startDate != null and filter.endDate != null">
             AND p.created_at BETWEEN #{filter.startDate} AND #{filter.endDate}
         </if>
+
+        <!-- 통합 키워드 검색 -->
+        <if test="filter.keyword != null and filter.keyword != ''">
+
+            AND (
+            <trim prefixOverrides="OR">
+
+                <!-- 제목 -->
+                <if test="filter.titleChecked">
+                    OR p.title LIKE CONCAT('%', #{filter.keyword}, '%')
+                </if>
+
+                <!-- 내용 -->
+                <if test="filter.contentChecked">
+                    OR p.content LIKE CONCAT('%', #{filter.keyword}, '%')
+                </if>
+
+                <!-- 댓글 -->
+                <if test="filter.commentChecked">
+                    OR EXISTS (
+                    SELECT 1
+                    FROM comment cm
+                    WHERE cm.post_id = p.id
+                    AND cm.content LIKE CONCAT('%', #{filter.keyword}, '%')
+                    )
+                </if>
+
+                <!-- 카테고리명 -->
+                <if test="filter.categoryChecked">
+                    OR c.name LIKE CONCAT('%', #{filter.keyword}, '%')
+                </if>
+
+                <!-- 작성자 -->
+                <if test="filter.authorChecked">
+                    OR m.username LIKE CONCAT('%', #{filter.keyword}, '%')
+                </if>
+
+            </trim>
+            )
+
+        </if>
+
     </sql>
 
-    <!-- 조건 기반 게시글 목록 검색 (페이징 포함) -->
+
+    <!-- ========================================================
+         조건 기반 게시글 목록 검색 (페이징 포함)
+         ======================================================== -->
     <select id="searchPostsByFilter" resultMap="PostSearchResultMap">
+
         SELECT
-            p.id,
-            p.title,
-            p.content,
-            p.created_at,
-            p.member_uuid,
-            p.category_id,
-            c.name AS category_name,
-            (SELECT COUNT(*) FROM comment cm WHERE cm.post_id = p.id) AS comment_count
+        p.id,
+        p.title,
+        p.content,
+        p.created_at,
+        p.member_uuid,
+        p.category_id,
+        m.nickname AS author_nickname,
+        c.name AS category_name,
+        (
+        SELECT COUNT(*)
+        FROM comment cm
+        WHERE cm.post_id = p.id
+        ) AS comment_count
+
         FROM post p
-            LEFT JOIN category c ON p.category_id = c.id
+        LEFT JOIN category c ON p.category_id = c.id
+        LEFT JOIN member m ON p.member_uuid = m.uuid
+
         WHERE 1 = 1
         <include refid="searchWhereConditions"/>
 
@@ -101,17 +125,25 @@
             <otherwise>DESC</otherwise>
         </choose>
 
-        <!-- 페이징 -->
         LIMIT #{page.size} OFFSET #{page.offset}
+
     </select>
 
-    <!-- 조건 기반 게시글 검색 개수 -->
+
+    <!-- ========================================================
+         조건 기반 게시글 검색 개수
+         ======================================================== -->
     <select id="countPostsByFilter" resultType="int">
-        SELECT COUNT(*)
+
+        SELECT COUNT(DISTINCT p.id)
+
         FROM post p
-            LEFT JOIN category c ON p.category_id = c.id
+        LEFT JOIN category c ON p.category_id = c.id
+        LEFT JOIN member m ON p.member_uuid = m.uuid
+
         WHERE 1 = 1
         <include refid="searchWhereConditions"/>
+
     </select>
 
 </mapper>
