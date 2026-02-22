@@ -66,4 +66,5 @@ class PostRepositoryTest {
         System.out.println(view);
 
     }
+
 }

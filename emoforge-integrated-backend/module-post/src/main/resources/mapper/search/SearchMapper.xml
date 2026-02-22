@@ -74,7 +74,7 @@
 
                 <!-- 작성자 -->
                 <if test="filter.authorChecked">
-                    OR m.username LIKE CONCAT('%', #{filter.keyword}, '%')
+                    OR m.nickname LIKE CONCAT('%', #{filter.keyword}, '%')
                 </if>
 
             </trim>
@@ -97,8 +97,8 @@
         p.created_at,
         p.member_uuid,
         p.category_id,
-        m.nickname AS author_nickname,
-        c.name AS category_name,
+        COALESCE(m.nickname, '[탈퇴 사용자]') AS author_nickname,
+        COALESCE(c.name, 'unknown') AS category_name,
         (
         SELECT COUNT(*)
         FROM comment cm

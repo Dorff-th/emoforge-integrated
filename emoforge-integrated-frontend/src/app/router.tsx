@@ -18,6 +18,7 @@ import DiaryListPage from "@/features/diary/pages/DiaryListPage";
 import PostListPage from "@/features/post/pages/PostListPage";
 import TagPostListPage from "@/features/post/pages/TagPostListPage";
 import PostDetailPage from "@/features/post/pages/PostDetailPage";
+import PostSearchPage from "@/features/post/pages/PostSearchPage";
 import AdminDashboardPage from "@/features/admin/pages/AdminDashboardPage";
 import AdminMembersPage from "@/features/admin/pages/AdminMembersPage";
 import AdminPostCategoryPage from "@/features/admin/pages/AdminPostCategoryPage";
@@ -54,6 +55,7 @@ export const router = createBrowserRouter([
       { path: "tags/:tagName", element: <TagPostListPage /> },
       { path: "new", element: <Navigate to="/user/posts/new" replace /> },
       { path: ":id", element: <PostDetailPage /> },
+      { path: "search", element: <PostSearchPage /> },
     ],
   },
 

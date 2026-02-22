@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Pencil, Search, FileText } from "lucide-react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { HeaderNavItem } from "../elements/HeaderNavItem";
+import { PostSearchInput } from "../elements/PostSearchInput";
 
 export function PostHeader() {
   const { isAuthenticated } = useAuth();
@@ -23,15 +24,8 @@ export function PostHeader() {
       </HeaderNavItem>
 
       {/* Center (Desktop only - Search placeholder) */}
-      <div className="hidden md:flex flex-1 justify-center">
-        <button
-          disabled
-          className="flex w-64 items-center gap-2 rounded-md border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--muted)] bg-[var(--surface)]"
-        >
-          <Search size={14} />
-          검색 (준비 중)
-        </button>
-      </div>
+
+      <PostSearchInput />
 
       {/* Right */}
       <div className="flex items-center gap-2">

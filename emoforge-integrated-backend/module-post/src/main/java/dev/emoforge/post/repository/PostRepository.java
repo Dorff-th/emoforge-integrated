@@ -112,7 +112,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                   p.created_at        AS createdAt,
             
                   COALESCE(c.name, 'unknown') AS categoryName,
-                  m.nickname          AS nickname,
+                  COALESCE(m.nickname, '[탈퇴 사용자]')          AS nickname,
             
                   (
                     SELECT COUNT(*)
