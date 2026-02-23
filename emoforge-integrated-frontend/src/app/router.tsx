@@ -24,6 +24,7 @@ import AdminMembersPage from "@/features/admin/pages/AdminMembersPage";
 import AdminPostCategoryPage from "@/features/admin/pages/AdminPostCategoryPage";
 import AdminLoginPage from "@/features/admin/pages/AdminLoginPage";
 import WithdrawalPendingPage from "@/features/user/pages/WithdrawalPendingPage";
+import AboutIntroPage from "@/features/about/pages/AboutIntroPage";
 
 const CalendarPage = lazy(
   () => import("@/features/calendar/pages/CalendarPage"),
@@ -45,6 +46,7 @@ export const router = createBrowserRouter([
       { path: "/auth/terms", element: <TermsAgreementPage /> },
       { path: "/kakao/callback", element: <OAuthCallbackPage /> },
       { path: "/withdraw/pending", element: <WithdrawalPendingPage /> },
+      { path: "/about/intro", element: <AboutIntroPage /> },
     ],
   },
   {

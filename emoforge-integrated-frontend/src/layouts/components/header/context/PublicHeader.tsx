@@ -27,7 +27,7 @@ export function PublicHeader() {
       </div>
 
       {/* Mobile Hamburger */}
-      <div className="md:hidden">
+      <div className="relative  md:hidden">
         <button
           onClick={() => setOpen((v) => !v)}
           aria-label="Open menu"
@@ -35,38 +35,50 @@ export function PublicHeader() {
         >
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
+
+        {/* Mobile Dropdown */}
+        {open && (
+          <div
+            className=" absolute
+      top-full
+      left-1/2
+      -translate-x-1/2
+      mt-2
+      w-40
+      rounded-md
+      border
+      bg-white
+      shadow-md
+      z-50"
+          >
+            <NavLink
+              to="/about"
+              onClick={() => setOpen(false)}
+              className={cn(
+                HEADER_MENU_ITEM_BASE,
+                HEADER_HOVER_TRANSITION,
+                HEADER_HOVER_BG,
+              )}
+            >
+              <Layers size={HEADER_ICON_SIZE_MOBILE} />
+              About
+            </NavLink>
+
+            <NavLink
+              to="/posts"
+              onClick={() => setOpen(false)}
+              className={cn(
+                HEADER_MENU_ITEM_BASE,
+                HEADER_HOVER_TRANSITION,
+                HEADER_HOVER_BG,
+              )}
+            >
+              <FileText size={14} />
+              Posts
+            </NavLink>
+          </div>
+        )}
       </div>
-
-      {/* Mobile Dropdown */}
-      {open && (
-        <div className="absolute right-0 top-full mt-2 w-40 rounded-md border bg-white shadow-md md:hidden">
-          <NavLink
-            to="/about"
-            onClick={() => setOpen(false)}
-            className={cn(
-              HEADER_MENU_ITEM_BASE,
-              HEADER_HOVER_TRANSITION,
-              HEADER_HOVER_BG,
-            )}
-          >
-            <Layers size={HEADER_ICON_SIZE_MOBILE} />
-            About
-          </NavLink>
-
-          <NavLink
-            to="/posts"
-            onClick={() => setOpen(false)}
-            className={cn(
-              HEADER_MENU_ITEM_BASE,
-              HEADER_HOVER_TRANSITION,
-              HEADER_HOVER_BG,
-            )}
-          >
-            <FileText size={14} />
-            Posts
-          </NavLink>
-        </div>
-      )}
     </nav>
   );
 }

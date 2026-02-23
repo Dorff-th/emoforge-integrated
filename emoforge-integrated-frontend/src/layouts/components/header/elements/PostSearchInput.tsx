@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
+import SearchInputUI from "./SearchInputUI";
 
 export function PostSearchInput() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,42 +29,11 @@ export function PostSearchInput() {
   };
 
   return (
-    <div className="hidden md:flex flex-1 justify-center">
-      <div className="relative w-64">
-        {/* 🔍 Icon */}
-        <Search
-          size={16}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-        />
-
-        <input
-          ref={inputRef}
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Search posts…"
-          className="
-          w-full rounded-md border border-[var(--border)]
-          bg-[var(--surface)]
-          pl-9 pr-8 py-1.5 text-sm
-          text-[var(--foreground)]
-          focus:outline-none focus:ring-2 focus:ring-primary/40
-        "
-        />
-
-        {/* ❌ Clear */}
-        {searchQuery && (
-          <button
-            type="button"
-            aria-label="검색어 지우기"
-            onClick={() => setSearchQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-          >
-            ✕
-          </button>
-        )}
-      </div>
-    </div>
+    <SearchInputUI
+      inputRef={inputRef}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      handleKeyDown={handleKeyDown}
+    />
   );
 }
