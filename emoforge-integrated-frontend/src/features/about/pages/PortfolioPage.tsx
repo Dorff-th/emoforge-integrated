@@ -1,4 +1,4 @@
-import ArchitectureToggleSection from "@/features/about/components/ArchitectureToggleSection";
+import ArchitectureToggleSection from "@/features/about/components/portfolio/ArchitectureToggleSection";
 
 export default function PortfolioPage() {
   return (
@@ -49,12 +49,12 @@ export default function PortfolioPage() {
 
           <div className="grid md:grid-cols-2 gap-6">
             <img
-              src="/images/msa-docker.png"
+              src="/images/portfolio/msa-docker.png"
               alt="MSA docker ps"
               className="rounded-lg border"
             />
             <img
-              src="/images/msa-memory.png"
+              src="/images/portfolio/msa-memory.png"
               alt="MSA free -h"
               className="rounded-lg border"
             />
@@ -74,12 +74,12 @@ export default function PortfolioPage() {
 
           <div className="grid md:grid-cols-2 gap-6">
             <img
-              src="/images/mono-docker.png"
+              src="/images/portfolio/mono-docker.png"
               alt="Monolith docker ps"
               className="rounded-lg border"
             />
             <img
-              src="/images/mono-memory.png"
+              src="/images/portfolio/mono-memory.png"
               alt="Monolith free -h"
               className="rounded-lg border"
             />

@@ -121,7 +121,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <Navigate to="/posts" replace />,
+    element: <Navigate to="/about/intro" replace />,
   },
   { path: "*", element: <div>404 NOT FOUND</div> },
 ]);
