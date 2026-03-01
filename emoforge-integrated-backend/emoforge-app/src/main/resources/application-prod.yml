@@ -32,12 +32,12 @@ server:
 
 logging:
   level:
-    root: INFO
-    org.springframework.web: WARN
-    org.springframework.transaction: WARN
-    org.hibernate.SQL: WARN
-    org.hibernate.type.descriptor.sql: WARN
-    dev.emoforge: INFO
+    root: ERROR
+    org.springframework.web: DEBUG
+    org.springframework.transaction: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: DEBUG
+    dev.emoforge: DEBUG
 
 #Swagger-ui에서 Try it out 버튼 비활성화
 springdoc:
