@@ -7,6 +7,7 @@ import { useToast } from "@/shared/stores/useToast";
 import { formatFileSize } from "@/shared/utils/fileUtils";
 import type { AttachmentItem } from "@/features/post/types/Attachment";
 import { Paperclip } from "lucide-react";
+import axios from "axios";
 
 interface AttachmentUploaderProps {
   groupTempKey: string;
@@ -87,7 +88,24 @@ const AttachmentUploader = ({
           });
         } catch (error) {
           console.error("업로드 실패:", error);
-          toast.error(`파일 ${file.name} 업로드 실패`);
+          //2026.03.02 추가
+          if (axios.isAxiosError(error)) {
+            const message = error.response?.data?.message;
+
+            //2026.03.02 추가
+            switch (message) {
+              case "INVALID_FILE_EXTENSION":
+                toast.error("허용되지 않은 파일 형식입니다.");
+                break;
+              case "FILE_SIZE_EXCEEDED":
+                toast.error("파일 용량이 허용 범위를 초과했습니다.");
+                break;
+              default:
+                toast.error("업로드에 실패했습니다.");
+            }
+          }
+
+          //toast.error(`파일 ${file.name} 업로드 실패`);
         }
       }
 

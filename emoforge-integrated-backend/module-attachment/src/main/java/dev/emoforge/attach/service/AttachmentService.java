@@ -49,7 +49,8 @@ public class AttachmentService {
 
         // 사이즈 체크
         if (file.getSize() > policy.getMaxSize()) {
-            throw new IllegalArgumentException("File exceeds max size: " + policy.getMaxSize());
+            //throw new IllegalArgumentException("File exceeds max size: " + policy.getMaxSize());
+            throw new IllegalArgumentException("FILE_SIZE_EXCEEDED");   //2026.03.02 수정
         }
 
         // 공통 저장 로직 실행
@@ -130,11 +131,13 @@ public class AttachmentService {
     private void validateExtension(MultipartFile file, UploadPolicy policy) {
         String originalName = file.getOriginalFilename();
         if (originalName == null) {
-            throw new IllegalArgumentException("Invalid file name");
+            //throw new IllegalArgumentException("Invalid file name");
+            throw new IllegalArgumentException("INVALID_FILE_NAME");    //2026.03.03 수정
         }
         String ext = originalName.substring(originalName.lastIndexOf('.') + 1).toLowerCase();
         if (!policy.allowedExtensions().contains(ext)) {
-            throw new IllegalArgumentException("Invalid file extension: " + ext);
+            //throw new IllegalArgumentException("Invalid file extension: " + ext);
+            throw new IllegalArgumentException("INVALID_FILE_EXTENSION");  //2026.03.02 수정
         }
     }
 

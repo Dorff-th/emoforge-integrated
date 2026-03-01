@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
@@ -55,6 +56,17 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.of(
                         HttpStatus.INTERNAL_SERVER_ERROR,
                         "Internal Server Error"
+                ));
+    }
+
+    //2026.03.02 추가
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUpload(MaxUploadSizeExceededException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(
+                        HttpStatus.BAD_REQUEST,
+                        "FILE_SIZE_EXCEEDED"
                 ));
     }
 }

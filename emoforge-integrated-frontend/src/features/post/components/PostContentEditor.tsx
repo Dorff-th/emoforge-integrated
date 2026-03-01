@@ -5,9 +5,9 @@ import { http } from "@/shared/api/httpClient";
 import { API } from "@/shared/api/endpoints";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useToast } from "@/shared/stores/useToast";
-
 import { fixContentForEditor } from "@/shared/utils/contentUrlHelper";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 interface Props {
   value: string;
@@ -78,8 +78,24 @@ const PostContentEditor = forwardRef<Editor, Props>(
           callback(imageUrl, altText);
         } catch (error) {
           console.error("Image upload failed:", error);
+          //2026.03.02 추가
+          if (axios.isAxiosError(error)) {
+            const message = error.response?.data?.message;
 
-          toast.error("이미지 업로드 실패");
+            //2026.03.02 추가
+            switch (message) {
+              case "INVALID_FILE_EXTENSION":
+                toast.error("허용되지 않은 파일 형식입니다.");
+                break;
+              case "FILE_SIZE_EXCEEDED":
+                toast.error("파일 용량이 허용 범위를 초과했습니다.");
+                break;
+              default:
+                toast.error("업로드에 실패했습니다.");
+            }
+          }
+
+          //toast.error("이미지 업로드 실패");
         }
 
         return false;
