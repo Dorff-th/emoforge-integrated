@@ -2,6 +2,7 @@ package dev.emoforge.app.common.exception;
 
 import dev.emoforge.app.common.response.ErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     /**
@@ -62,6 +64,7 @@ public class GlobalExceptionHandler {
     //2026.03.02 추가
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorResponse> handleMaxUpload(MaxUploadSizeExceededException e) {
+        log.warn("Business validation failed: {}", e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.of(
