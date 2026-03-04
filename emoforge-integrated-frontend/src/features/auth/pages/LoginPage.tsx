@@ -14,7 +14,7 @@ export default function LoginPage() {
             Emoforge
           </h1>
           <p className="mt-3 text-sm md:text-base text-slate-600">
-            하루를 적고, 잠시 생각에 잠겨 봅시다.
+            하루를 적고, 잠시 자신을 돌아 봅시다.
           </p>
         </div>
 
