@@ -1,0 +1,62 @@
+<configuration>
+
+    <!-- DEV 환경 -->
+    <springProfile name="dev">
+
+        <property name="LOG_PATH" value="C:/devtools/zmylong/EMOFORGE_INTEG/logs"/>
+
+    </springProfile>
+
+    <!-- PROD 환경 -->
+    <springProfile name="prod">
+
+        <property name="LOG_PATH"
+                  value="/home/ec2-user/emoforge-mono/logs"/>
+
+    </springProfile>
+
+    <!-- 콘솔 로그 -->
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger - %msg%n
+            </pattern>
+        </encoder>
+
+    </appender>
+
+    <!-- 파일 로그 -->
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOG_PATH}/maintenance.log</file>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+            <fileNamePattern>
+                ${LOG_PATH}/maintenance-%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+
+            <maxHistory>30</maxHistory>
+
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger - %msg%n
+            </pattern>
+        </encoder>
+
+    </appender>
+
+    <root level="INFO">
+
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+
+    </root>
+
+</configuration>

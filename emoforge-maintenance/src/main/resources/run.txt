@@ -1,0 +1,13 @@
+# 개발환경에서
+java -jar build/libs/emoforge-maintenance-1.0-SNAPSHOT.jar --spring.profiles.active=dev --mode=all
+
+#운영(EC2)
+cd /home/ec2-user/emoforge-mono/emoforge-maintenance
+
+set -a
+source .env
+set +a
+java -jar ./emoforge-maintenance-1.0-SNAPSHOT.jar --spring.profiles.active=prod --mode=all
+
+# .env는 해당 경로에서 참조바람
+
