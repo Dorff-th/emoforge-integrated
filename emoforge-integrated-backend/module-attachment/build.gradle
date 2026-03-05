@@ -9,5 +9,5 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
     //AS-IS 유지용
-    implementation "org.springframework.boot:spring-boot-starter-security"
+    //implementation "org.springframework.boot:spring-boot-starter-security"
 }

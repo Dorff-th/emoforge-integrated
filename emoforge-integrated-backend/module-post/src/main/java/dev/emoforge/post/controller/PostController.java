@@ -10,8 +10,7 @@ import dev.emoforge.post.dto.internal.PostRequestDTO;
 import dev.emoforge.post.dto.internal.PostUpdateDTO;
 import dev.emoforge.post.dto.internal.TagResponse;
 import dev.emoforge.post.dto.query.PostListItemSummary;
-import dev.emoforge.post.service.legacy.bff.PostDeleteFacadeService;
-import dev.emoforge.post.service.legacy.bff.PostDetailFacadeService;
+
 import dev.emoforge.post.service.internal.PostService;
 import dev.emoforge.post.service.internal.PostTagService;
 import dev.emoforge.post.service.query.PostQueryService;
@@ -61,10 +60,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PostController {
 
-    private final PostDetailFacadeService postDetailFacadeService; // bff <-- remove 대상
+
     private final PostTagService postTagService;
     private final PostService postService;
-    private final PostDeleteFacadeService postDeleteFacadeService; // bbf <-- remove 대상
+
     private final PostQueryService postQueryService;
 
     private static final int PAGE_BLOCK_SIZE = 10;

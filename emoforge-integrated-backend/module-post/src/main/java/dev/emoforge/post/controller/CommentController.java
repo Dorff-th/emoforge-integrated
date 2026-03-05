@@ -3,11 +3,11 @@ package dev.emoforge.post.controller;
 
 import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import dev.emoforge.post.domain.Post;
-import dev.emoforge.post.dto.legacy.bff.CommentDetailResponse;
+
 import dev.emoforge.post.dto.internal.CommentRequest;
 import dev.emoforge.post.dto.internal.CommentResponse;
 import dev.emoforge.post.dto.query.CommentViewDTO;
-import dev.emoforge.post.service.legacy.bff.CommentsFacadeService;
+
 import dev.emoforge.post.service.internal.CommentService;
 import dev.emoforge.post.service.internal.PostService;
 import dev.emoforge.post.service.query.CommentQueryService;

@@ -74,6 +74,12 @@ public class SecurityConfig {
                         .requestMatchers(DIARY_AUTHENTICATED_ENDPOINTS).authenticated()
                         //=== debug ====
                         .requestMatchers("/api/debug/**").permitAll()
+                        //swagger
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
 

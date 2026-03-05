@@ -5,7 +5,4 @@ include 'module-auth'
 include 'module-post'
 include 'module-diary'
 include 'module-attachment'
-include 'module-post'
-include 'module-diary'
-include 'module-attachment'
 
