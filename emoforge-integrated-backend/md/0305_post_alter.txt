@@ -1,0 +1,31 @@
+관리자가 게시글을 수정을 했다면 
+
+관리자가 2026-03-05 14:32:11 수정 이렇게 흔적남기기를 위한 post 테이블 필드 추가
+
+ALTER TABLE post
+ADD COLUMN admin_modified_at DATETIME NULL COMMENT '관리자 수정 시각' AFTER updated_at,
+ADD COLUMN admin_modified_by VARCHAR(50) NULL COMMENT '수정 관리자' AFTER admin_modified_at;
+
+Admin 수정 로직 예시 (참고)
+
+UPDATE post
+SET
+    title = ?,
+    content = ?,
+    admin_modified_at = NOW(),
+    admin_modified_by = 'admin'
+WHERE id = ?
+
+
+
+
+※ git repository에 commit 할때 GithubAction deploy 실행 안되게 하는법
+commit message 안에 [skip ci] 넣기
+예 
+git commit -m "wip: admin post service/controller implementation [skip ci]"
+
+참고 (같이 지원되는 키워드)
+[skip ci]
+[ci skip]
+[skip actions]
+[no ci]

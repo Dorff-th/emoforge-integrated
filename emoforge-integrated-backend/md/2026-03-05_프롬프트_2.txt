@@ -1,0 +1,238 @@
+Analyze the backend project structure.
+
+Create an AdminPostController in module-post.
+
+Requirements:
+
+- base path: /api/admin/posts
+- use AdminPostService
+- do not modify existing PostController
+- follow existing coding style
+- prepare endpoints for:
+  - list posts
+  - get post detail
+  - delete post
+  - bulk delete posts
+  - update post by admin
+
+Only create controller skeleton and service class.
+
+응답결과는 한국어로 출력해줘
+
+== 결과 ==
+ 프로젝트 구조 분석 (요약)
+
+  - 모노레포 Gradle 멀티모듈 구조: emoforge-core, emoforge-app, module-post, module-auth, module-diary, module-
+    attachment
+  - module-post는 다음 계층으로 구성:
+      - controller (일반 게시글 API)
+      - admin/controller, admin/service (관리자 API 전용)
+      - service/internal, service/query
+      - repository, domain, dto/*, config
+
+  추가한 파일
+
+  - AdminPostController.java
+  - AdminPostService.java
+
+  구현 내용
+
+  - AdminPostController
+      - base path: /api/admin/posts
+      - AdminPostService 주입 및 사용
+      - 스켈레톤 엔드포인트 준비:
+          - GET /api/admin/posts (list posts)
+          - GET /api/admin/posts/{id} (get detail)
+          - DELETE /api/admin/posts/{id} (delete)
+          - DELETE /api/admin/posts/bulk (bulk delete)
+          - PUT /api/admin/posts/{id} (update by admin)
+  - AdminPostService
+      - 위 5개 동작에 대응하는 메서드 시그니처만 생성
+      - 본문은 UnsupportedOperationException("Not implemented yet")로 스켈레톤 처리
+
+  요구사항 준수
+
+  - 기존 PostController 미수정
+  - 기존 코드 스타일(패키지 구조, Lombok, Spring 어노테이션 패턴) 준수
+  - 컨트롤러 + 서비스 클래스만 생성
+
+  검증
+
+  - .\gradlew :module-post:compileJava 성공 (BUILD SUCCESSFUL)
+
+---
+
+Implement getPostList in AdminPostService.
+
+Requirements:
+- reuse PostQueryService.getPostList
+- return Page<PostListItemSummary>
+- do not create new query logic
+
+응답 결과는 한국어로 출력해줘
+
+== 결과 ==
+ 요구사항대로 AdminPostService.getPostList를 구현했습니다.
+
+  변경 파일:
+
+  - AdminPostService.java
+
+  적용 내용:
+
+  - PostQueryService 주입 추가
+  - getPostList 반환 타입을 Page<PostListItemSummary>로 변경
+  - 구현은 신규 쿼리 로직 없이 아래처럼 재사용
+      - postQueryService.getPostList(null, requestDTO)
+
+  검증:
+
+  - .\gradlew :module-post:compileJava 빌드 성공
+
+---
+
+Implement admin post list query.
+
+Requirements:
+
+- Create AdminPostListItemDTO
+- AdminPostListItemDTO는 Post 엔티티를 참고하여 작성바람.
+- Add repository query method in PostRepository
+- Return Page<AdminPostListItemDTO>
+- Support keyword search on title
+- Use Pageable
+- Update AdminPostService.getPostList() to call repository
+
+== 결과 ==
+ 요구사항대로 관리자 게시글 목록 쿼리를 구현했습니다.
+
+  변경 파일:
+
+  - AdminPostListItemDTO.java
+  - PostRepository.java
+  - AdminPostService.java
+  - AdminPostController.java
+
+  적용 내용:
+
+  1. AdminPostListItemDTO 생성
+
+  - Post 엔티티 필드 기반으로 목록용 DTO 생성:
+  - id, title, viewCount, createdAt, updatedAt, memberUuid, categoryId, adminModifiedAt, adminModifiedBy
+
+  2. PostRepository에 관리자 목록 쿼리 메서드 추가
+
+  - Page<AdminPostListItemDTO> findAdminPostList(String keyword, Pageable pageable)
+  - JPQL new ...AdminPostListItemDTO(...) 프로젝션 사용
+  - 제목 키워드 검색 지원:
+      - keyword가 null/빈문자면 전체 조회
+      - 아니면 title LIKE %keyword% (대소문자 무시)
+
+  3. AdminPostService.getPostList() 수정
+
+  - 반환 타입: Page<AdminPostListItemDTO>
+  - PostRepository.findAdminPostList(keyword, requestDTO.toPageable()) 호출하도록 변경
+  - 신규 쿼리 로직 없이 Repository 호출 방식으로 처리
+
+  4. 컨트롤러 최소 연동
+
+  - GET /api/admin/posts에 keyword 요청 파라미터를 받아 서비스에 전달하도록 수정
+
+  검증:
+
+  - .\gradlew :module-post:compileJava 빌드 성공했습니다.
+
+---
+
+Implement updatePost in AdminPostService.
+
+Requirements:
+
+- Load Post entity using postRepository.findById
+- Update title and content from PostUpdateDTO
+- Record adminModifiedAt with current time
+- Record adminModifiedBy using admin username
+- Use JPA dirty checking (do not create custom update query)
+- Use @Transactional
+
+응답결과는 한국어로 출력해줘
+
+== 결과  ==
+• 요구사항대로 AdminPostService.updatePost 구현 완료했습니다.
+
+  변경 파일:
+
+  - AdminPostService.java
+  - Post.java
+  - AdminPostController.java
+
+  적용 내용:
+
+  1. AdminPostService.updatePost 구현
+
+  - postRepository.findById(id)로 엔티티 로드
+  - PostUpdateDTO에서 title, content 반영
+  - adminModifiedAt는 LocalDateTime.now()로 기록
+  - adminModifiedBy는 관리자 username으로 기록
+  - @Transactional 적용
+  - 커스텀 update 쿼리 미사용, JPA 더티체킹 방식 사용 (save() 호출 없음)
+
+  2. Post 엔티티에 관리자 수정 메서드 추가
+
+  - updateByAdmin(String title, String content, String adminUsername)
+
+  3. 관리자 username 전달 경로 반영
+
+  - AdminPostController.updatePost(...)에 Authentication 추가
+  - authentication.getName()을 서비스로 전달
+
+  검증:
+
+  - .\gradlew :module-post:compileJava 빌드 성공했습니다.
+
+---
+
+Update AdminPostController.updatePost endpoint.
+
+Requirements:
+
+- Extract admin username from Authentication
+- Pass admin username to AdminPostService.updatePost
+- Do not modify existing service logic
+
+응답 결과는 한국어로 출력해줘.
+
+== 결과 ==
+• 요구사항대로 AdminPostController.updatePost를 수정했습니다.
+
+  변경 파일:
+
+  - AdminPostController.java
+
+  적용 내용:
+
+  - Authentication에서 관리자 username을 먼저 추출:
+      - String adminUsername = authentication.getName();
+  - 추출한 username을 AdminPostService.updatePost에 전달:
+      - adminPostService.updatePost(id, request, adminUsername);
+  - 기존 서비스 로직은 수정하지 않았습니다.
+
+  검증:
+
+  - .\gradlew :module-post:compileJava 빌드 성공했습니다.
+
+---
+
+Implement bulkDeletePosts in AdminPostService.
+
+Requirements:
+
+- Method name: bulkDeletePosts(List<Long> postIds)
+- Use existing PostService.deletePost(Long postId) to delete posts
+- Iterate through postIds and call deletePost for each
+- Add @Transactional annotation
+- Do not create new repository query methods
+- Reuse existing deletion logic to ensure attachments and comments are also removed
+
+응답 결과는 한국어로 출력해줘.
+

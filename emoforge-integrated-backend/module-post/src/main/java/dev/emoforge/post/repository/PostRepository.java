@@ -1,10 +1,10 @@
 package dev.emoforge.post.repository;
 
+import dev.emoforge.post.admin.dto.AdminPostListItemDTO;
 import dev.emoforge.post.domain.Post;
 import dev.emoforge.post.dto.internal.PostDetailDTO;
 import dev.emoforge.post.dto.internal.PostSimpleDTO;
 import dev.emoforge.post.dto.internal.PostUpdateDTO;
-import dev.emoforge.post.dto.query.PostDetailViewDTO;
 import dev.emoforge.post.dto.query.PostDetailViewProjection;
 import dev.emoforge.post.dto.query.PostListItemProjection;
 import org.springframework.data.domain.Page;
@@ -15,12 +15,40 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
+
+    @Query("""
+        SELECT new dev.emoforge.post.admin.dto.AdminPostListItemDTO(
+            p.id,
+            p.title,
+            p.viewCount,
+            p.createdAt,
+            p.updatedAt,
+            p.memberUuid,
+            p.categoryId,
+            p.adminModifiedAt,
+            p.adminModifiedBy
+        )
+        FROM Post p
+        WHERE (
+            :keyword IS NULL
+            OR :keyword = ''
+            OR LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+            OR LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        )
+    """)
+    Page<AdminPostListItemDTO> findAdminPostList(
+        @Param("keyword") String keyword,
+        Pageable pageable
+    );
+
+
+
+    /* =============================================== */
 
     Page<Post> findAllByCategoryId(Long categoryId, Pageable pageable);
 

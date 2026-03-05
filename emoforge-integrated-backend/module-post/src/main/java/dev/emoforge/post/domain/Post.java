@@ -49,6 +49,13 @@ public class Post {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private List<PostTag> postTags = new ArrayList<>();
 
+    //2026-03-05 추가
+    @Column(name = "admin_modified_at")
+    private LocalDateTime adminModifiedAt;
+
+    @Column(name = "admin_modified_by")
+    private String adminModifiedBy;
+
     public static Post create(String title, String content, Long categoryId, String memberUuid) {
         return Post.builder()
                 .title(title)
@@ -67,5 +74,12 @@ public class Post {
 
     public void increaseViewCount() {
         this.viewCount += 1;
+    }
+
+    public void updateByAdmin(String title, String content, String adminUsername) {
+        this.title = title;
+        this.content = content;
+        this.adminModifiedAt = LocalDateTime.now();
+        this.adminModifiedBy = adminUsername;
     }
 }
