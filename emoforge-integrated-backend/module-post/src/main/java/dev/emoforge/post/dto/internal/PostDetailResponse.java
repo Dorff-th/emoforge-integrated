@@ -103,7 +103,12 @@ public record PostDetailResponse(
                         """,
             example = "[{ \"publicUrl\": \"https://www/emoforge/attach/file1.zip\" }]"
         )
-        List<AttachmentResponse> attachments
+        List<AttachmentResponse> attachments,
+
+        @Schema(description = "관리자 게시글 수정 시각", example = "2025-11-18T12:22:11")
+        LocalDateTime adminModifiedAt,
+        @Schema(description = "작성자 닉네임(Auth-Service)", example = "관리자")
+        String adminModifiedByNickname
 
 ) {
 }

@@ -194,21 +194,29 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     );
 
 
+    //2026.03.06  : admin_modified_by 조회컬럼 추가
     @Query(value = """
         SELECT
-            p.id               AS id,
-            m.uuid             AS memberUuid,
-            m.nickname         AS nickname,
-            p.title            AS title,
-            p.content          AS content,
-            p.created_at       AS createdAt,
-            p.updated_at       AS updatedAt,
-            c.id               AS categoryId,
-            COALESCE(c.name, 'unknown') AS categoryName
-        FROM post p
-        LEFT JOIN member m ON p.member_uuid = m.uuid
-        LEFT JOIN category c ON p.category_id = c.id
-        WHERE p.id = :postId
+              p.id               AS id,
+              m.uuid             AS memberUuid,
+              m.nickname         AS nickname,
+              p.title            AS title,
+              p.content          AS content,
+              p.created_at       AS createdAt,
+              p.updated_at       AS updatedAt,
+              p.admin_modified_at AS adminModifiedAt,
+              p.admin_modified_by AS adminModifiedBy,
+              am.nickname        AS adminModifiedByNickname,
+              c.id               AS categoryId,
+              COALESCE(c.name, 'unknown') AS categoryName
+          FROM post p
+          LEFT JOIN member m
+              ON p.member_uuid = m.uuid
+          LEFT JOIN member am
+              ON p.admin_modified_by = am.uuid
+          LEFT JOIN category c
+              ON p.category_id = c.id
+          WHERE p.id = :postId
       """, nativeQuery = true)
     Optional<PostDetailViewProjection> findPostDetailViewById(@Param("postId") Long postId);
 

@@ -32,6 +32,12 @@ export interface PostDetailDTO {
   nickname: string;
 
   attachments: Attachment[]; // ✅ 추가
+
+  adminModifiedAt: string;
+  adminModifiedByNickname: string;
+
+  commentCount: number;
+  attachmentCount: number;
 }
 
 export interface Tag {

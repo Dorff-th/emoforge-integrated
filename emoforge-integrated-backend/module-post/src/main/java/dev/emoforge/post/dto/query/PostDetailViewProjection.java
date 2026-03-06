@@ -13,4 +13,8 @@ public interface PostDetailViewProjection {
     LocalDateTime getUpdatedAt();
     Long getCategoryId();
     String getCategoryName();
+
+    // 2026.03.06 추가
+    LocalDateTime getAdminModifiedAt();
+    String getAdminModifiedByNickname();
 }

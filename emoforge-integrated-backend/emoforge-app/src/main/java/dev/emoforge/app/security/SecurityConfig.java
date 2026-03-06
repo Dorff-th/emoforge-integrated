@@ -55,20 +55,22 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // ==== Auth ====
                         .requestMatchers(AUTH_PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(AUTH_AUTHENTICATED_ENDPOINTS).authenticated()
                         .requestMatchers(AUTH_ADMIN_ENDPOINTS).hasRole("ADMIN")
+                        .requestMatchers(AUTH_AUTHENTICATED_ENDPOINTS).authenticated()
+
                         // ==== Attach ====
                         .requestMatchers(ATTACH_PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, ATTACH_AUTHENTICATED_GET_ENDPOINTS).authenticated()
                         .requestMatchers(HttpMethod.POST, ATTACH_AUTHENTICATED_POST_ENDPOINTS).authenticated()
                         .requestMatchers(ATTACH_AUTHENTICATED_ENDPOINTS).authenticated()
                         // ==== Post ====
+                        .requestMatchers(POST_ADMIN_ENDPOINTS).hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, POST_PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, POST_AUTHENTICATED_GET_ENDPOINTS).authenticated()
                         .requestMatchers(HttpMethod.POST, POST_AUTHENTICATED_POST_ENDPOINTS).authenticated()
                         .requestMatchers(HttpMethod.PUT, POST_AUTHENTICATED_PUT_ENDPOINTS).authenticated()
                         .requestMatchers(HttpMethod.DELETE, POST_AUTHENTICATED_DELETE_ENDPOINTS).authenticated()
-                        .requestMatchers(POST_ADMIN_ENDPOINTS).hasRole("ADMIN")
+
                         // ==== Diary ====
                         .requestMatchers(DIARY_PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(DIARY_AUTHENTICATED_ENDPOINTS).authenticated()

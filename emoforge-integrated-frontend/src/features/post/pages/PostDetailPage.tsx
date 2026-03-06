@@ -78,6 +78,20 @@ const PostDetailPage = () => {
     `${serverBaseUrl}/uploads/`,
   );
 
+  const formatAdminModifiedAt = (isoDate?: string) => {
+    if (!isoDate) return "";
+    const date = new Date(isoDate);
+    if (Number.isNaN(date.getTime())) return isoDate;
+
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    const hh = String(date.getHours()).padStart(2, "0");
+    const min = String(date.getMinutes()).padStart(2, "0");
+
+    return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
+  };
+
   useUILoading("user:post:detail", { duration: 150 });
 
   return (
@@ -98,6 +112,12 @@ const PostDetailPage = () => {
         {/* 본문 */}
         <div className="border rounded-lg p-4 bg-white shadow mb-6">
           <Viewer initialValue={content} />
+          {post?.adminModifiedAt && (
+            <div className="text-xs text-[#888] italic text-right mt-3">
+              관리자 수정 · {formatAdminModifiedAt(post.adminModifiedAt)} (
+              {post.adminModifiedByNickname})
+            </div>
+          )}
         </div>
 
         {/* ✅ 태그 리스트 */}

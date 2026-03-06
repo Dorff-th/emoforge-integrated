@@ -64,7 +64,6 @@ public class PostQueryService {
     @Transactional(readOnly = true)
     public PostDetailResponse getPostDetail(Long postId) throws NotFoundException {
 
-        log.debug("🤯🤯🤯🤯🤯🤯 postId " + postId);
 
         // 1️⃣ 게시글 조회
         PostDetailViewProjection view = postRepository.findPostDetailViewById(postId).orElseThrow(() -> new NotFoundException("게시글 없읍니다!"));
@@ -89,7 +88,9 @@ public class PostQueryService {
                 view.getNickname(),        // ✅ 공개용 닉네임
                 null,
                 null,
-                attachments
+                attachments,
+                view.getAdminModifiedAt(),
+                view.getAdminModifiedByNickname()
         );
     }
 
