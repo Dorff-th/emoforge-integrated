@@ -1,13 +1,17 @@
 package dev.emoforge.post.admin.service;
 
+import dev.emoforge.attach.repository.AttachmentRepository;
 import dev.emoforge.post.admin.dto.AdminPostListItemDTO;
+import dev.emoforge.post.admin.dto.AdminPostSearchType;
 import dev.emoforge.post.domain.Post;
 import dev.emoforge.post.dto.internal.PageRequestDTO;
 import dev.emoforge.post.dto.internal.PostDetailResponse;
 import dev.emoforge.post.dto.internal.PostUpdateDTO;
 import dev.emoforge.post.dto.legacy.bff.PageResponseDTO;
 import dev.emoforge.post.dto.legacy.bff.PostListItemResponse;
+import dev.emoforge.post.repository.CommentRepository;
 import dev.emoforge.post.repository.PostRepository;
+import dev.emoforge.post.repository.PostTagRepository;
 import dev.emoforge.post.service.internal.PostService;
 import dev.emoforge.post.service.query.PostQueryService;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +26,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminPostService {
     private final PostRepository postRepository;
+    private final PostTagRepository postTagRepository;
+    private final CommentRepository commentRepository;
+    private final AttachmentRepository attachmentRepository;
     private final PostQueryService postQueryService;
     private final PostService postService;
     private static final int PAGE_BLOCK_SIZE = 10;
 
-    public PageResponseDTO<PostListItemResponse> getPostList(PageRequestDTO requestDTO, String keyword) {
+    public PageResponseDTO<PostListItemResponse> getPostList(
+        PageRequestDTO requestDTO,
+        AdminPostSearchType searchType,
+        String keyword
+    ) {
+        String normalizedKeyword = (keyword == null) ? null : keyword.trim();
+        if (normalizedKeyword != null && normalizedKeyword.isEmpty()) {
+            normalizedKeyword = null;
+        }
 
-        Page<AdminPostListItemDTO> result = postRepository.findAdminPostList(keyword, requestDTO.toPageable());
+        Page<AdminPostListItemDTO> result =
+            postRepository.findAdminPostList(searchType.name(), normalizedKeyword, requestDTO.toPageable());
 
         List<PostListItemResponse> dtoList =
                 result.getContent().stream()
@@ -50,9 +66,17 @@ public class AdminPostService {
 
     @Transactional
     public void bulkDeletePosts(List<Long> postIds) {
-        for (Long postId : postIds) {
-            postService.deletePost(postId);
+        if (postIds == null || postIds.isEmpty()) {
+            return;
         }
+
+        List<Long> uniquePostIds = postIds.stream().distinct().toList();
+
+        // FK 제약 순서대로 자식 데이터부터 삭제
+        postTagRepository.deleteByPostIdIn(uniquePostIds);
+        commentRepository.deleteByPostIdIn(uniquePostIds);
+        attachmentRepository.deleteByPostIdIn(uniquePostIds);
+        postRepository.deleteByIdIn(uniquePostIds);
     }
 
     @Transactional

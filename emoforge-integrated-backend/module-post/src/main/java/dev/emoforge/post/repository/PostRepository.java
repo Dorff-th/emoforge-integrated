@@ -193,12 +193,26 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             WHERE (
                 :keyword IS NULL
                 OR :keyword = ''
-                OR LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
-                OR LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                OR (
+                    :searchType = 'ALL'
+                    AND (
+                        LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                        OR LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                    )
+                )
+                OR (
+                    :searchType = 'TITLE'
+                    AND LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                )
+                OR (
+                    :searchType = 'CONTENT'
+                    AND LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                )
             )
             ORDER BY p.id DESC
     """)
     Page<AdminPostListItemDTO> findAdminPostList(
+            @Param("searchType") String searchType,
             @Param("keyword") String keyword,
             Pageable pageable
     );

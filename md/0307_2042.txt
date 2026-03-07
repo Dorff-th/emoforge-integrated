@@ -1,0 +1,161 @@
+  1. 수정: AdminPostController.java
+  2. 수정: AdminPostService.java
+  3. 수정: PostRepository.java
+  4. 추가: AdminPostSearchType.java
+  5. 수정: adminPostApi.ts
+  6. 수정: AdminPostListPage.tsx
+
+
+1. Codex에게 애초에 한글 깨짐 방지하는 프롬프트
+
+AI가 한글을 \uXXXX 로 쓰는 이유는 보통 언어 안전성 때문입니다.
+그래서 프롬프트에 명시적으로 금지하면 됩니다.
+
+가장 간단한 방법
+Use plain Korean text for UI labels.
+Do NOT use unicode escape sequences like \uXXXX.
+Codex CLI용 추천
+When writing UI text, use plain Korean characters.
+Do not use unicode escape sequences (\uXXXX).
+실제 예
+
+프롬프트 끝에 붙입니다.
+
+Add admin post search.
+
+Search type:
+ALL / TITLE / CONTENT
+
+Add UI select box and search input.
+
+Use plain Korean text for labels (전체, 제목, 내용).
+Do NOT use unicode escape sequences.
+
+이렇게 하면 Codex가 거의 대부분 한글 그대로 출력합니다.
+
+2. 이미 깨진 코드 복구 프롬프트
+
+지금 상황처럼
+
+WuAC8C WuC2DC WuAE00 WuAD00 WuB9AC
+
+같은 경우는 unicode escape → UTF8 decode를 AI에게 시키면 됩니다.
+
+Codex에게 복구시키는 프롬프트
+Some Korean UI text was generated using unicode escape sequences.
+Convert all unicode escape sequences to normal Korean characters.
+
+Example:
+\uC804\uCCB4 → 전체
+\uC81C\uBAA9 → 제목
+\uB0B4\uC6A9 → 내용
+
+Update the code to use plain Korean text.
+더 짧은 버전
+Replace all unicode escaped Korean text (\uXXXX) with normal Korean characters.
+
+---
+
+
+Add bulk delete functionality to the admin post list.
+
+Requirements:
+
+UI
+- Add a checkbox column on the left side of the post list table.
+- Each row should have a checkbox.
+- Add a "select all" checkbox in the table header.
+- Add a "Delete Selected" button below the list.
+
+Behavior
+- Admin can select multiple posts using checkboxes.
+- When clicking "Delete Selected", send the selected post IDs to the backend.
+- Show a confirmation dialog before deleting.
+
+Backend
+- Create an API endpoint to delete multiple posts.
+- Example: DELETE /api/admin/posts
+- Request body: { postIds: number[] }
+
+Repository
+- Implement bulk delete using the provided post IDs.
+
+Other
+- Keep pagination working.
+- After deletion, refresh the list.
+
+응답결과를 변경되거나 추가한 소스파일 목록과 함께 한국어로 출력해줘
+
+== 결과 ==
+
+• 적용 완료했습니다. 관리자 게시글 목록에 다중 선택 삭제를 추가했고, 삭제 후 목록/페이징이 정상 갱신되도록 반영했습니다.
+
+  구현 결과
+
+  1. UI
+
+  - 테이블 맨 왼쪽에 체크박스 컬럼 추가
+  - 헤더에 전체 선택 체크박스 추가
+  - 각 행에 개별 체크박스 추가
+  - 목록 하단에 선택 삭제 버튼 추가
+
+  2. 동작
+
+  - 여러 게시글 선택 가능
+  - 선택 삭제 클릭 시 window.confirm 확인 다이얼로그 표시
+  - 확인 시 선택된 postId 배열을 백엔드로 전송
+  - 삭제 성공 후 현재 페이지 기준으로 목록 재조회
+  - 페이지가 삭제로 인해 유효 범위를 벗어나면 마지막 유효 페이지로 자동 보정
+
+  3. 백엔드 API
+
+  - DELETE /api/posts/admin/posts 추가
+  - 요청 바디: { "postIds": [1, 2, 3] }
+  - 기존 DELETE /api/posts/admin/posts/bulk도 레거시 호환으로 유지
+
+  4. Repository 기반 일괄 삭제
+
+  - 서비스에서 자식 데이터(post_tag, comment, attachment)를 ...deleteByPostIdIn(...)으로 먼저 삭제
+  - 이후 postRepository.deleteByIdIn(...)으로 게시글 일괄 삭제
+
+  5. 검증
+
+  - 백엔드: :module-post:compileJava 성공
+  - 프론트: npm run build 성공
+
+  이번 작업에서 변경/추가한 소스파일
+
+  1. 수정: AdminPostController.java
+  2. 수정: AdminPostService.java
+  3. 추가: AdminPostBulkDeleteRequest.java
+  4. 수정: adminPostApi.ts
+  5. 수정: AdminPostListPage.tsx
+
+  참고: 예시 경로로 주신 /api/admin/posts는 현재 프로젝트 라우팅 규칙에 맞춰 /api/posts/admin/posts로 구현했습니다.
+
+› AdminPostBulkDeleteRequest 의 프로퍼티는 List<Long> postIds 이거 하나인데 굳이 해당 DTO를 생성한 이유를 답해주세요.
+
+
+• 좋은 지적입니다. 현재 요구사항만 보면 List<Long> 직접 받는 것도 충분합니다.
+
+  제가 AdminPostBulkDeleteRequest를 만든 이유는 4가지입니다.
+
+  1. API 계약 명확화
+
+  - 요청 바디가 {"postIds":[...]} 형태라는 걸 메서드 시그니처에서 바로 드러내기 위해서입니다.
+  - 단순 배열([...])보다 문서/클라이언트 구현 시 오해가 적습니다.
+
+  2. 확장성
+
+  - 나중에 reason, requestedBy, hardDelete 같은 필드가 추가돼도 메서드 시그니처 변경 없이 DTO만 확장하면 됩니다.
+
+  3. 검증/바인딩 포인트 확보
+
+  - @Valid, @NotEmpty 같은 검증을 DTO 필드에 붙이기 쉽습니다.
+  - List<Long> 직접 바인딩보다 에러 메시지/검증 관리가 수월합니다.
+
+  4. 일관성
+
+  - 이 프로젝트의 다른 요청들도 DTO 기반이 많아서 컨트롤러 스타일을 맞추려는 의도였습니다.
+
+  원하시면 간소화해서 @RequestBody List<Long> postIds로 바로 받도록 바꿔도 됩니다.

@@ -1,5 +1,7 @@
 package dev.emoforge.post.admin.controller;
 
+import dev.emoforge.post.admin.dto.AdminPostBulkDeleteRequest;
+import dev.emoforge.post.admin.dto.AdminPostSearchType;
 import dev.emoforge.post.admin.service.AdminPostService;
 import dev.emoforge.post.dto.internal.PageRequestDTO;
 import dev.emoforge.post.dto.internal.PostUpdateDTO;
@@ -28,9 +30,10 @@ public class AdminPostController {
     @GetMapping
     public ResponseEntity<?> getPostList(
         PageRequestDTO requestDTO,
+        @RequestParam(value = "searchType", required = false, defaultValue = "ALL") AdminPostSearchType searchType,
         @RequestParam(value = "keyword", required = false) String keyword
     ) {
-        return ResponseEntity.ok(adminPostService.getPostList(requestDTO, keyword));
+        return ResponseEntity.ok(adminPostService.getPostList(requestDTO, searchType, keyword));
     }
 
     @Operation(summary = "Get post detail")
@@ -47,8 +50,15 @@ public class AdminPostController {
     }
 
     @Operation(summary = "Bulk delete posts")
+    @DeleteMapping
+    public ResponseEntity<Void> bulkDeletePosts(@RequestBody AdminPostBulkDeleteRequest request) {
+        adminPostService.bulkDeletePosts(request.postIds());
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Bulk delete posts (legacy)")
     @DeleteMapping("/bulk")
-    public ResponseEntity<Void> bulkDeletePosts(@RequestBody List<Long> postIds) {
+    public ResponseEntity<Void> bulkDeletePostsLegacy(@RequestBody List<Long> postIds) {
         adminPostService.bulkDeletePosts(postIds);
         return ResponseEntity.noContent().build();
     }

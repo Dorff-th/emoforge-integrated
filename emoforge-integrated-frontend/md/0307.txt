@@ -11,3 +11,8 @@ GET		/api/posts/admin/{postId}/comments		관리자 페이지에서 특정 게시
 DELETE	/api/posts/admin/{postId}/comments/{commentId}  관리자 페이지에서 특정 게시물의 댓글 삭제 처리
 DELETE	/api/posts/admin/{postId}/comments/bulk	관리자 페이지에서 특정 게시물의 댓글 일괄 삭제 처리
 
+
+=============
+
+
+
