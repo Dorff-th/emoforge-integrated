@@ -27,6 +27,8 @@ import WithdrawalPendingPage from "@/features/user/pages/WithdrawalPendingPage";
 import AboutLayout from "@/layouts/AboutLayout";
 import AboutIntroPage from "@/features/about/pages/AboutIntroPage";
 import PortfolioPage from "@/features/about/pages/PortfolioPage";
+import AdminPostListPage from "@/features/admin/pages/AdminPostListPage";
+import AdminPostDetailPage from "@/features/admin/pages/AdminPostDetailPage";
 
 const CalendarPage = lazy(
   () => import("@/features/calendar/pages/CalendarPage"),
@@ -117,6 +119,8 @@ export const router = createBrowserRouter([
       { path: "dashboard", element: <AdminDashboardPage /> },
       { path: "members", element: <AdminMembersPage /> },
       { path: "posts/categories", element: <AdminPostCategoryPage /> },
+      { path: "posts", element: <AdminPostListPage /> },
+      { path: ":id", element: <AdminPostDetailPage /> },
     ],
   },
   {

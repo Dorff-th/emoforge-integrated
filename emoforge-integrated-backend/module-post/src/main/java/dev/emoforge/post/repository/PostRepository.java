@@ -21,30 +21,6 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("""
-        SELECT new dev.emoforge.post.admin.dto.AdminPostListItemDTO(
-            p.id,
-            p.title,
-            p.viewCount,
-            p.createdAt,
-            p.updatedAt,
-            p.memberUuid,
-            p.categoryId,
-            p.adminModifiedAt,
-            p.adminModifiedBy
-        )
-        FROM Post p
-        WHERE (
-            :keyword IS NULL
-            OR :keyword = ''
-            OR LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
-            OR LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%'))
-        )
-    """)
-    Page<AdminPostListItemDTO> findAdminPostList(
-        @Param("keyword") String keyword,
-        Pageable pageable
-    );
 
 
 
@@ -193,6 +169,39 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             Pageable pageable
     );
 
+
+    //2026 0306 관리자 목록 쿼리 추가
+    @Query("""
+        SELECT new dev.emoforge.post.admin.dto.AdminPostListItemDTO(
+                p.id,
+                p.title,
+                p.viewCount,
+                p.createdAt,
+                p.updatedAt,
+                p.memberUuid,
+                p.categoryId,
+                COALESCE(c.name, 'Unknown'),
+                p.adminModifiedAt,
+                p.adminModifiedBy,
+                COALESCE(m.nickname, '탈퇴회원')
+            )
+            FROM Post p
+            LEFT JOIN Member m
+                ON p.memberUuid = m.uuid
+            LEFT JOIN Category c
+                  ON p.categoryId = c.id    
+            WHERE (
+                :keyword IS NULL
+                OR :keyword = ''
+                OR LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                OR LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%'))
+            )
+            ORDER BY p.id DESC
+    """)
+    Page<AdminPostListItemDTO> findAdminPostList(
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
 
     //2026.03.06  : admin_modified_by 조회컬럼 추가
     @Query(value = """

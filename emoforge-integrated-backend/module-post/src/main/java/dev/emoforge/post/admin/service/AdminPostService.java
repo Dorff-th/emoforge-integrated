@@ -5,6 +5,8 @@ import dev.emoforge.post.domain.Post;
 import dev.emoforge.post.dto.internal.PageRequestDTO;
 import dev.emoforge.post.dto.internal.PostDetailResponse;
 import dev.emoforge.post.dto.internal.PostUpdateDTO;
+import dev.emoforge.post.dto.legacy.bff.PageResponseDTO;
+import dev.emoforge.post.dto.legacy.bff.PostListItemResponse;
 import dev.emoforge.post.repository.PostRepository;
 import dev.emoforge.post.service.internal.PostService;
 import dev.emoforge.post.service.query.PostQueryService;
@@ -22,9 +24,20 @@ public class AdminPostService {
     private final PostRepository postRepository;
     private final PostQueryService postQueryService;
     private final PostService postService;
+    private static final int PAGE_BLOCK_SIZE = 10;
 
-    public Page<AdminPostListItemDTO> getPostList(PageRequestDTO requestDTO, String keyword) {
-        return postRepository.findAdminPostList(keyword, requestDTO.toPageable());
+    public PageResponseDTO<PostListItemResponse> getPostList(PageRequestDTO requestDTO, String keyword) {
+
+        Page<AdminPostListItemDTO> result = postRepository.findAdminPostList(keyword, requestDTO.toPageable());
+
+        List<PostListItemResponse> dtoList =
+                result.getContent().stream()
+                        .map(PostListItemResponse::fromAdminDTO)
+                        .toList();
+
+        PageResponseDTO pageResponseDTO = new PageResponseDTO(requestDTO, result.getTotalElements(), dtoList, PAGE_BLOCK_SIZE);
+
+        return pageResponseDTO;
     }
 
     public PostDetailResponse getPostDetail(Long id) throws NotFoundException {

@@ -162,7 +162,7 @@ const PostDetailPage = () => {
         {/* 버튼 영역 */}
         <div className="flex space-x-2 mt-7">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/posts")}
             className="icon-btn"
             title="To List"
           >

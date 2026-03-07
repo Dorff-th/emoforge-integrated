@@ -3,14 +3,16 @@ package dev.emoforge.post.admin.dto;
 import java.time.LocalDateTime;
 
 public record AdminPostListItemDTO(
-    Long id,
-    String title,
-    int viewCount,
-    LocalDateTime createdAt,
-    LocalDateTime updatedAt,
-    String memberUuid,
-    Long categoryId,
-    LocalDateTime adminModifiedAt,
-    String adminModifiedBy
+        Long id,
+        String title,
+        int viewCount,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        String memberUuid,
+        Long categoryId,
+        String categoryName,
+        LocalDateTime adminModifiedAt,
+        String adminModifiedBy,
+        String nickname
 ) {
 }

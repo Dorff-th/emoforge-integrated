@@ -1,5 +1,6 @@
 package dev.emoforge.post.dto.legacy.bff;
 
+import dev.emoforge.post.admin.dto.AdminPostListItemDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
@@ -45,8 +46,8 @@ import java.time.LocalDateTime;
 public record PostListItemResponse(
 
     @Schema(description = "게시글 ID", example = "42")
-    //Long postId,
-    Long id,
+    Long postId,
+    //Long id,
 
     @Schema(description = "게시글 제목", example = "Spring Boot로 JWT 인증 구현하기")
     String title,
@@ -72,4 +73,18 @@ public record PostListItemResponse(
     @Schema(description = "첨부파일 개수", example = "3")
     int attachmentCount
 
-) {}
+) {
+    //2026.03.7 추가
+    public static PostListItemResponse fromAdminDTO(AdminPostListItemDTO dto) {
+        return new PostListItemResponse(
+                dto.id(),
+                dto.title(),
+                dto.createdAt(),
+                dto.categoryName(),
+                dto.nickname(),
+                null,
+                null,
+                0
+        );
+    }
+}

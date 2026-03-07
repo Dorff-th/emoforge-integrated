@@ -1,6 +1,7 @@
 package dev.emoforge.post.admin.controller;
 
 import dev.emoforge.post.admin.service.AdminCommentService;
+import dev.emoforge.post.dto.query.CommentViewDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,11 +9,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/comments")
+@RequestMapping("/api/posts/admin/{postId}/comments")
 @RequiredArgsConstructor
 public class AdminCommentController {
 
     private final AdminCommentService adminCommentService;
+
+    public ResponseEntity<List<CommentViewDTO>> getCommentsByPostId(@PathVariable("postId") Long postId) {
+
+        List<CommentViewDTO> comments = adminCommentService.findByPostId(postId);
+
+        return ResponseEntity.ok(comments);
+    }
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {

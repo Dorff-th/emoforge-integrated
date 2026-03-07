@@ -5,6 +5,7 @@ export default function AdminSidebar() {
     { name: "대시보드", path: "/admin/dashboard" },
     { name: "회원관리", path: "/admin/members" },
     { name: "게시판카테고리관리", path: "/admin/posts/categories" },
+    { name: "게시판관리", path: "/admin/posts" },
   ];
 
   return (
