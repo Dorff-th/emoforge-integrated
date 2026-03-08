@@ -56,12 +56,12 @@ public class AdminPostController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Bulk delete posts (legacy)")
+    /*@Operation(summary = "Bulk delete posts (legacy)")
     @DeleteMapping("/bulk")
     public ResponseEntity<Void> bulkDeletePostsLegacy(@RequestBody List<Long> postIds) {
         adminPostService.bulkDeletePosts(postIds);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 
     @Operation(summary = "Update post by admin")
     @PutMapping("/{id:\\d+}")

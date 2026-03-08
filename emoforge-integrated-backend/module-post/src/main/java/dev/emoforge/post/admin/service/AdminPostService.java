@@ -4,6 +4,8 @@ import dev.emoforge.attach.repository.AttachmentRepository;
 import dev.emoforge.post.admin.dto.AdminPostListItemDTO;
 import dev.emoforge.post.admin.dto.AdminPostSearchType;
 import dev.emoforge.post.domain.Post;
+import dev.emoforge.post.domain.PostTag;
+import dev.emoforge.post.domain.Tag;
 import dev.emoforge.post.dto.internal.PageRequestDTO;
 import dev.emoforge.post.dto.internal.PostDetailResponse;
 import dev.emoforge.post.dto.internal.PostUpdateDTO;
@@ -13,7 +15,9 @@ import dev.emoforge.post.repository.CommentRepository;
 import dev.emoforge.post.repository.PostRepository;
 import dev.emoforge.post.repository.PostTagRepository;
 import dev.emoforge.post.service.internal.PostService;
+import dev.emoforge.post.service.internal.TagService;
 import dev.emoforge.post.service.query.PostQueryService;
+import dev.emoforge.post.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.data.domain.Page;
@@ -31,6 +35,8 @@ public class AdminPostService {
     private final AttachmentRepository attachmentRepository;
     private final PostQueryService postQueryService;
     private final PostService postService;
+    private final TagService tagService;
+
     private static final int PAGE_BLOCK_SIZE = 10;
 
     public PageResponseDTO<PostListItemResponse> getPostList(
@@ -83,6 +89,22 @@ public class AdminPostService {
     public Long updatePost(Long id, PostUpdateDTO request, String adminUsername) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Post not found. id=" + id));
+
+        //삭제 대상 tag id들을 List<Long> 타입으로 변환후 삭제 쿼리 실행
+        List<Long> deleteTagIds = StringUtils.toLongList(request.deleteTagIds());
+        if(deleteTagIds != null && !deleteTagIds.isEmpty()) {
+            postTagRepository.deleteByPostIdAndTagIdIn(post.getId(), deleteTagIds);
+        }
+
+        //태그 & post_tag 관계 저장
+        if (request.tags() != null) {
+            String[] tagArray = request.tags().split(",");
+            for (String tagName : tagArray) {
+                Tag tag = tagService.getOrCreateTag(tagName);
+                PostTag postTag = new PostTag(post, tag);
+                postTagRepository.save(postTag);
+            }
+        }
 
         post.updateByAdmin(request.title(), request.content(), adminUsername);
 

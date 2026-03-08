@@ -120,7 +120,7 @@ export const router = createBrowserRouter([
       { path: "members", element: <AdminMembersPage /> },
       { path: "posts/categories", element: <AdminPostCategoryPage /> },
       { path: "posts", element: <AdminPostListPage /> },
-      { path: ":id", element: <AdminPostDetailPage /> },
+      { path: "posts/:id", element: <AdminPostDetailPage /> },
     ],
   },
   {

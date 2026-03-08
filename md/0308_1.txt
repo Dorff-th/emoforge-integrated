@@ -1,0 +1,37 @@
+Refactor AdminPostListPage.tsx.
+
+Extract the search UI into a separate component called
+AdminPostSearchBar.tsx.
+
+Location:
+src/features/admin/components/posts/
+
+Requirements:
+- keep existing behavior
+- props for searchType, keyword
+- props for onSearch
+
+응답결과는 한국어로 출력해줘.
+
+== 응답결과 ==
+ 리팩터링 완료했습니다. 검색 UI를 별도 컴포넌트로 분리했고, 기존 동작(검색 타입 변경, 키워드 입력, Enter 검색, 버튼 검
+  색)은 유지했습니다.
+
+  변경 파일:
+
+  - 신규: AdminPostSearchBar.tsx
+  - 수정: AdminPostListPage.tsx
+
+  적용 내용:
+
+  - AdminPostSearchBar 분리
+  - AdminPostListPage에서 기존 검색 마크업 제거 후 컴포넌트 사용
+  - searchType, keyword, onSearch props 반영
+  - 상태 제어 유지를 위해 onSearchTypeChange, onKeywordChange도 함께 props로 구성
+
+  검증:
+
+  - npm run build 성공 (타입체크 + Vite 빌드 통과)
+
+---
+

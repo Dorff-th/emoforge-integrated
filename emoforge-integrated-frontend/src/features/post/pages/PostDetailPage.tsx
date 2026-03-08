@@ -56,9 +56,9 @@ const PostDetailPage = () => {
     try {
       const result = await deletePost(postIdToDelete);
       toast.success("게시글이 삭제되었습니다.");
-      navigate("/");
+      navigate("/posts");
       if (result !== null) {
-        navigate("/");
+        navigate("/posts");
         return true;
       }
     } catch {

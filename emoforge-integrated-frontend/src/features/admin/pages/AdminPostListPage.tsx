@@ -1,16 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   bulkDeleteAdminPosts,
   fetchAdminPosts,
   type AdminPostSearchType,
 } from "@/features/admin/api/adminPostApi";
-import type { PostDTO } from "@/features/post/types/Post";
-import type { PageResponse } from "@/features/post/types/Common";
-import { useToast } from "@/shared/stores/useToast";
+import AdminPostSearchBar from "@/features/admin/components/posts/AdminPostSearchBar";
 import Pagination from "@/features/post/components/Pagination";
-import { SectionLoading } from "@/shared/components/SectionLoading";
-import { useUILoading } from "@/shared/stores/useUILoading";
+import type { PageResponse } from "@/features/post/types/Common";
+import type { PostDTO } from "@/features/post/types/Post";
 import ConfirmModal from "@/shared/components/ConfirmModal";
+import { SectionLoading } from "@/shared/components/SectionLoading";
+import { useToast } from "@/shared/stores/useToast";
+import { useUILoading } from "@/shared/stores/useUILoading";
 
 export default function AdminPostListPage() {
   const [posts, setPosts] = useState<PostDTO[]>([]);
@@ -21,6 +23,8 @@ export default function AdminPostListPage() {
   const [appliedKeyword, setAppliedKeyword] = useState("");
   const [selectedPostIds, setSelectedPostIds] = useState<number[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const toast = useToast();
 
@@ -115,48 +119,25 @@ export default function AdminPostListPage() {
     loadPosts(1);
   }, []);
 
-  useUILoading("user:posts:admin:list", { duration: 150 });
+  useUILoading("admin:posts:list", { duration: 150 });
 
   return (
     <SectionLoading scope="user:posts:admin:list">
       <div className="p-4">
-        <h2 className="text-xl font-bold mb-4">게시글 관리</h2>
+        <h2 className="mb-4 text-xl font-bold">게시글 관리</h2>
 
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <select
-            className="h-10 rounded border px-3 text-sm"
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value as AdminPostSearchType)}
-          >
-            <option value="ALL">전체</option>
-            <option value="TITLE">제목</option>
-            <option value="CONTENT">내용</option>
-          </select>
-          <input
-            type="text"
-            className="h-10 w-64 rounded border px-3 text-sm"
-            placeholder="검색어를 입력하세요"
-            value={keywordInput}
-            onChange={(e) => setKeywordInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
-          />
-          <button
-            type="button"
-            className="h-10 rounded bg-gray-900 px-4 text-sm font-medium text-white"
-            onClick={handleSearch}
-          >
-            검색
-          </button>
-        </div>
+        <AdminPostSearchBar
+          searchType={searchType}
+          keyword={keywordInput}
+          onSearchTypeChange={setSearchType}
+          onKeywordChange={setKeywordInput}
+          onSearch={handleSearch}
+        />
 
-        <table className="min-w-full bg-white border">
+        <table className="min-w-full border bg-white">
           <thead>
-            <tr className="bg-gray-100 border-b">
-              <th className="p-2 text-center w-10">
+            <tr className="border-b bg-gray-100">
+              <th className="w-10 p-2 text-center">
                 <input
                   type="checkbox"
                   checked={isAllChecked}
@@ -171,24 +152,46 @@ export default function AdminPostListPage() {
             </tr>
           </thead>
           <tbody>
-            {posts.map((post) => (
-              <tr key={post.postId} className="border-b hover:bg-gray-50">
-                <td className="border px-2 py-1 text-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedPostIds.includes(post.postId)}
-                    onChange={(e) => handleToggleRow(post.postId, e.target.checked)}
-                  />
-                </td>
-                <td className="border px-2 py-1">{post.postId}</td>
-                <td className="border px-2 py-1">{post.categoryName}</td>
-                <td className="border px-2 py-1">{post.title}</td>
-                <td className="border px-2 py-1">{post.nickname}</td>
-                <td className="border px-2 py-1">
-                  {post.createdAt ? new Date(post.createdAt).toLocaleString("ko-KR") : "-"}
+            {posts.length === 0 ? (
+              <tr>
+                <td
+                  className="border px-2 py-10 text-center text-gray-500"
+                  colSpan={6}
+                >
+                  조회된 데이터가 없습니다.
                 </td>
               </tr>
-            ))}
+            ) : (
+              posts.map((post) => (
+                <tr
+                  key={post.postId}
+                  className="border-b hover:bg-yellow-50 cursor-pointer"
+                  onClick={() => navigate(`${post.postId}`)}
+                >
+                  <td
+                    className="border px-2 py-1 text-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedPostIds.includes(post.postId)}
+                      onChange={(e) =>
+                        handleToggleRow(post.postId, e.target.checked)
+                      }
+                    />
+                  </td>
+                  <td className="border px-2 py-1">{post.postId}</td>
+                  <td className="border px-2 py-1">{post.categoryName}</td>
+                  <td className="border px-2 py-1">{post.title}</td>
+                  <td className="border px-2 py-1">{post.nickname}</td>
+                  <td className="border px-2 py-1">
+                    {post.createdAt
+                      ? new Date(post.createdAt).toLocaleString("ko-KR")
+                      : "-"}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
 
@@ -211,7 +214,9 @@ export default function AdminPostListPage() {
               endPage={pageInfo.endPage}
               prev={pageInfo.prev}
               next={pageInfo.next}
-              onPageChange={(targetPage) => loadPosts(targetPage, searchType, appliedKeyword)}
+              onPageChange={(targetPage) =>
+                loadPosts(targetPage, searchType, appliedKeyword)
+              }
             />
           </div>
         )}

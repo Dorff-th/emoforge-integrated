@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/posts/admin/{postId}/comments")
+@RequestMapping("/api/posts/admin/posts/{postId}/comments")
 @RequiredArgsConstructor
 public class AdminCommentController {
 

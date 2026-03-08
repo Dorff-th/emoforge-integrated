@@ -38,9 +38,6 @@ public class PostService {
     @Transactional
     public Post createPost(PostRequestDTO dto, String memberUuid) {
 
-        log.debug("\n\n\n====debuging");
-        log.debug("input category id " + dto.categoryId());
-
         Category category = categoryRepository.findById(dto.categoryId()).orElseThrow(()->new IllegalArgumentException("카테고리가 없습니다."));
 
         Post post = Post.create(dto.title(), dto.content(), category.getId(), memberUuid);
