@@ -20,12 +20,16 @@ interface PostFormProps {
   mode: "write" | "edit";
   initialData?: PostDetailDTO;
   groupTempKey?: string;
+  apiBase?: string; // 0309 추가
+  redirectBase?: string; // 0309 추가
 }
 
 export default function PostForm({
   mode,
   initialData,
   groupTempKey,
+  apiBase = API.POST,
+  redirectBase = "/posts",
 }: PostFormProps) {
   const editorRef = useRef<Editor>(null);
   const navigate = useNavigate();
@@ -92,10 +96,13 @@ export default function PostForm({
 
     try {
       let res;
+
       if (mode === "write") {
-        res = await http.post(`${API.POST}`, payload);
+        //res = await http.post(`${API.POST}`, payload);
+        res = await http.post(`${apiBase}`, payload);
       } else {
-        res = await http.put(`${API.POST}/${existingPostId}`, payload);
+        //res = await http.put(`${API.POST}/${existingPostId}`, payload);
+        res = await http.put(`${apiBase}/${existingPostId}`, payload);
       }
       const postId = res.data;
 
@@ -133,7 +140,8 @@ export default function PostForm({
       if (mode === "write") toast.success("게시글이 등록되었습니다.");
       if (mode === "edit") toast.success("게시글이 수정되었습니다.");
 
-      navigate(`/posts/${postId}`);
+      //navigate(`/posts/${postId}`);
+      navigate(`${redirectBase}/${postId}`); //0309 추가
     } catch (error) {
       console.error("게시글 저장 실패", error);
       if (mode === "write") toast.error("게시글 등록 실패");
