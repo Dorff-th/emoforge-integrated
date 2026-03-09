@@ -1,7 +1,10 @@
 package dev.emoforge.post.repository;
 
+import dev.emoforge.post.admin.dto.AdminCommentListItemResponse;
 import dev.emoforge.post.domain.Comment;
 import dev.emoforge.post.dto.query.CommentViewProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -67,5 +70,90 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                   ORDER BY c.created_at ASC
             """, nativeQuery = true)
     List<CommentViewProjection> findCommentsByPostId(@Param("postId") Long postId);
+
+    // 관리자 전용화면의 댓글 목록 쿼리 0309 추가
+    @Query(value = """
+        SELECT
+            c.member_uuid AS memberUuid,
+            c.id AS commentId,
+            c.content AS content,
+            COALESCE(m.nickname, '탈퇴회원') AS author,
+            p.id AS postId,
+            p.title AS postTitle,
+            c.created_at AS createdAt
+        FROM comment c
+        JOIN post p ON c.post_id = p.id
+        LEFT JOIN member m ON c.member_uuid = m.uuid
+        WHERE
+        (
+            :searchType = 'ALL'
+            AND (
+                COALESCE(m.nickname,'') LIKE CONCAT('%', :keyword, '%')
+                OR p.title LIKE CONCAT('%', :keyword, '%')
+                OR c.content LIKE CONCAT('%', :keyword, '%')
+            )
+        )
+        OR
+        (
+            :searchType = 'NICKNAME'
+            AND COALESCE(m.nickname,'') LIKE CONCAT('%', :keyword, '%')
+        )
+        OR
+        (
+            :searchType = 'POST'
+            AND p.title LIKE CONCAT('%', :keyword, '%')
+        )
+        OR
+        (
+            :searchType = 'COMMENT'
+            AND c.content LIKE CONCAT('%', :keyword, '%')
+        )
+        OR
+        (
+            :keyword IS NULL OR :keyword = ''
+        )
+        ORDER BY c.created_at DESC
+        """,
+                    countQuery = """
+        SELECT COUNT(*)
+        FROM comment c
+        JOIN post p ON c.post_id = p.id
+        LEFT JOIN member m ON c.member_uuid = m.uuid
+        WHERE
+        (
+            :searchType = 'ALL'
+            AND (
+                COALESCE(m.nickname,'') LIKE CONCAT('%', :keyword, '%')
+                OR p.title LIKE CONCAT('%', :keyword, '%')
+                OR c.content LIKE CONCAT('%', :keyword, '%')
+            )
+        )
+        OR
+        (
+            :searchType = 'NICKNAME'
+            AND COALESCE(m.nickname,'') LIKE CONCAT('%', :keyword, '%')
+        )
+        OR
+        (
+            :searchType = 'POST'
+            AND p.title LIKE CONCAT('%', :keyword, '%')
+        )
+        OR
+        (
+            :searchType = 'COMMENT'
+            AND c.content LIKE CONCAT('%', :keyword, '%')
+        )
+        OR
+        (
+            :keyword IS NULL OR :keyword = ''
+        )
+        """,
+            nativeQuery = true)
+    Page<AdminCommentListItemResponse> findAdminComments(
+            @Param("searchType") String searchType,
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
+
 
 }

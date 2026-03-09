@@ -57,7 +57,7 @@ public class AdminPostService {
                         .map(PostListItemResponse::fromAdminDTO)
                         .toList();
 
-        PageResponseDTO pageResponseDTO = new PageResponseDTO(requestDTO, result.getTotalElements(), dtoList, PAGE_BLOCK_SIZE);
+        PageResponseDTO pageResponseDTO = new PageResponseDTO(requestDTO, result.getTotalElements(), dtoList, requestDTO.size());
 
         return pageResponseDTO;
     }

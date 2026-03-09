@@ -36,7 +36,7 @@ export default function AdminPostListPage() {
     try {
       const data = await fetchAdminPosts(
         pageNum,
-        10,
+        15,
         "createdAt",
         "DESC",
         activeSearchType,
@@ -122,7 +122,7 @@ export default function AdminPostListPage() {
   useUILoading("admin:posts:list", { duration: 150 });
 
   return (
-    <SectionLoading scope="user:posts:admin:list">
+    <SectionLoading scope="admin:posts:list">
       <div className="p-4">
         <h2 className="mb-4 text-xl font-bold">게시글 관리</h2>
 

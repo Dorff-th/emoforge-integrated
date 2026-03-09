@@ -29,6 +29,7 @@ import AboutIntroPage from "@/features/about/pages/AboutIntroPage";
 import PortfolioPage from "@/features/about/pages/PortfolioPage";
 import AdminPostListPage from "@/features/admin/pages/AdminPostListPage";
 import AdminPostDetailPage from "@/features/admin/pages/AdminPostDetailPage";
+import AdminCommentsPage from "@/features/admin/pages/AdminCommentsPage";
 
 const CalendarPage = lazy(
   () => import("@/features/calendar/pages/CalendarPage"),
@@ -121,6 +122,7 @@ export const router = createBrowserRouter([
       { path: "posts/categories", element: <AdminPostCategoryPage /> },
       { path: "posts", element: <AdminPostListPage /> },
       { path: "posts/:id", element: <AdminPostDetailPage /> },
+      { path: "posts/comments", element: <AdminCommentsPage /> },
     ],
   },
   {
