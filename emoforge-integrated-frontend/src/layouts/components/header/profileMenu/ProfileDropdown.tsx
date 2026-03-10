@@ -2,7 +2,15 @@ import { ProfileSummary } from "./ProfileSummary";
 import { ProfileMenuItem } from "./ProfileMenuItem";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { Settings, LogOut, BookOpen, LayoutDashboard } from "lucide-react";
+import {
+  Settings,
+  LogOut,
+  BookOpen,
+  LayoutDashboard,
+  Moon,
+  Sun,
+} from "lucide-react";
+import { useThemeStore } from "@/shared/stores/themeStore";
 
 interface Props {
   onClose: () => void;
@@ -11,6 +19,7 @@ interface Props {
 export function ProfileDropdown({ onClose }: Props) {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { theme, toggle } = useThemeStore();
 
   const handleLogout = async () => {
     await logout();
@@ -36,6 +45,14 @@ export function ProfileDropdown({ onClose }: Props) {
           label="DashBoard"
           onClick={() => navigate("/user")}
           icon={LayoutDashboard}
+        />
+      </div>
+
+      <div className="border-t py-1 md:hidden">
+        <ProfileMenuItem
+          label={theme === "dark" ? "Light Mode" : "Dark Mode"}
+          onClick={toggle}
+          icon={theme === "dark" ? Sun : Moon}
         />
       </div>
 
