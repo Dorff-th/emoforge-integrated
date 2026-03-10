@@ -4,7 +4,11 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { HeaderNavItem } from "../elements/HeaderNavItem";
 import { PostSearchInput } from "../elements/PostSearchInput";
 
-export function PostHeader() {
+interface PostHeaderProps {
+  mobileSearchOnly?: boolean;
+}
+
+export function PostHeader({ mobileSearchOnly = false }: PostHeaderProps) {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -16,36 +20,40 @@ export function PostHeader() {
     navigate("/posts/new");
   };
 
+  if (mobileSearchOnly) {
+    return (
+      <div className="md:hidden">
+        <PostSearchInput />
+      </div>
+    );
+  }
+
   return (
-    <>
-      {/* Top Row */}
-      <div className="flex w-full items-center justify-between text-[var(--text)]">
-        {/* Left */}
+    <div className="flex w-full min-w-0 items-center justify-end text-[var(--text)] md:justify-between">
+      {/* Left */}
+      <div className="hidden md:block">
         <HeaderNavItem to="/posts" icon={FileText}>
           Posts
         </HeaderNavItem>
+      </div>
 
-        {/* Desktop Search */}
-        <div className="hidden md:flex flex-1 justify-center px-6">
+      {/* Desktop Search */}
+      <div className="hidden min-w-0 flex-1 justify-center px-6 md:flex">
+        <div className="w-full max-w-md">
           <PostSearchInput />
         </div>
-
-        {/* Right */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleWriteClick}
-            className="flex items-center gap-1 rounded-md border border-[var(--border)] px-3 py-1.5 md:px-4 text-sm text-[var(--text)] bg-[var(--surface)] hover:bg-[var(--border)]"
-          >
-            <Pencil size={16} />
-            <span className="hidden md:inline">Write</span>
-          </button>
-        </div>
       </div>
 
-      {/* Mobile Search Row */}
-      <div className="md:hidden mt-2 px-4">
-        <PostSearchInput />
+      {/* Right */}
+      <div className="flex shrink-0 items-center gap-2">
+        <button
+          onClick={handleWriteClick}
+          className="flex items-center gap-1 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-sm text-[var(--text)] hover:bg-[var(--border)] md:px-4"
+        >
+          <Pencil size={16} />
+          <span className="hidden md:inline">Write</span>
+        </button>
       </div>
-    </>
+    </div>
   );
 }

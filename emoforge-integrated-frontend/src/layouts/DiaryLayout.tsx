@@ -3,7 +3,7 @@ import { AppHeader } from "@/layouts/components/header/AppHeader";
 import { HeaderContextProvider } from "@/layouts/components/header/context/headerContext";
 import { HEADER_HEIGHT } from "@/layouts/components/header/header.constants";
 
-export function PostLayout() {
+export function DiaryLayout() {
   return (
     <HeaderContextProvider value="DIARY">
       <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors">

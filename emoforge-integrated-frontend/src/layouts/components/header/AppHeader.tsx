@@ -22,22 +22,32 @@ export function AppHeader() {
         scrolled && "shadow-sm",
       )}
     >
-      <div className="mx-auto flex h-14 max-w-7xl items-center px-4">
-        {/* Left */}
-        <div className="flex items-center gap-4">
-          <Logo />
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="flex h-14 items-center gap-3">
+          {/* Left */}
+          <div className="flex shrink-0 items-center gap-4">
+            <Logo />
+          </div>
+
+          {/* Center */}
+          <div className="flex min-w-0 flex-1 justify-center">
+            {context === "PUBLIC" && <PublicHeader />}
+            {context === "POST" && <PostHeader />}
+            {context === "USER" && <UserHeader />}
+            {context === "DIARY" && <DiaryHeader />}
+          </div>
+
+          {/* Right */}
+          <div className="ml-auto shrink-0">
+            <AppHeaderRight context={context} />
+          </div>
         </div>
 
-        {/* Center */}
-        <div className="flex flex-1 justify-center">
-          {context === "PUBLIC" && <PublicHeader />}
-          {context === "POST" && <PostHeader />}
-          {context === "USER" && <UserHeader />}
-          {context === "DIARY" && <DiaryHeader />}
-        </div>
-
-        {/* Right */}
-        <AppHeaderRight context={context} />
+        {context === "POST" && (
+          <div className="border-t border-[var(--border)] py-2 md:hidden">
+            <PostHeader mobileSearchOnly />
+          </div>
+        )}
       </div>
     </header>
   );

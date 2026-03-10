@@ -1,0 +1,60 @@
+Analyze the current header structure and improve the mobile responsive layout.
+
+Context:
+This project uses a shared AppHeader with context-specific center components
+(PUBLIC, POST, USER, DIARY).
+
+Current issue:
+On mobile screens the ProfileMenu in the header right area gets clipped
+because the center section (PostHeader search input) occupies too much width.
+
+Requirements:
+1. Keep the desktop layout unchanged.
+2. On mobile screens:
+   - move the search input to a second row under the header
+   - hide ThemeToggle
+   - ensure ProfileMenu never shrinks or overflows
+3. Use Tailwind responsive utilities.
+4. Do not break existing header context logic.
+
+Please modify:
+- AppHeader.tsx
+- AppHeaderRight.tsx
+- PostHeader.tsx
+
+Also explain the layout changes briefly.
+
+== 응답결과 ==
+ 모바일 헤더 레이아웃을 요구사항대로 조정했습니다.
+
+  변경 파일:
+
+  - AppHeader.tsx
+  - AppHeaderRight.tsx
+  - PostHeader.tsx
+
+  적용 내용:
+
+  - AppHeader
+      - 상단 1행에서 좌/중앙/우측 영역에 shrink-0, min-w-0를 명시해 우측 ProfileMenu가 줄어들지 않게 했습니다.
+      - POST 컨텍스트일 때만 모바일(md:hidden)에서 검색창을 헤더 아래 2행으로 분리했습니다.
+  - AppHeaderRight
+      - 모바일에서는 ThemeToggle을 숨기고(hidden md:block), 우측 전체 영역을 shrink-0로 고정했습니다.
+  - PostHeader
+      - mobileSearchOnly prop을 추가했습니다.
+      - 기본 렌더에서는 모바일 검색창을 제거하고, 데스크톱에서만 검색창을 중앙에 유지합니다.
+      - 모바일에서는 상단 행에 검색창이 없고, AppHeader가 별도 2행으로 검색창만 렌더링합니다.
+
+  레이아웃 결과:
+
+  - 데스크톱은 기존과 동일합니다.
+  - 모바일 POST 헤더는
+      - 1행: Logo / 중앙 최소 영역 / 우측 ProfileMenu
+      - 2행: PostSearchInput
+        구조로 바뀌어서 ProfileMenu가 더 이상 잘리거나 밀리지 않습니다.
+
+  핵심 변경 코드:
+
+  - AppHeader.tsx:22
+  - AppHeaderRight.tsx:20:20
+  - PostHeader.tsx:10:10

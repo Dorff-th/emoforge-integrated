@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { PostLayout } from "@/layouts/PostLayout";
 import { UserLayout } from "@/layouts/UserLayout ";
+import { DiaryLayout } from "@/layouts/DiaryLayout";
 import { RequireAuth } from "@/guards/RequireAuth";
 import { SectionLoading } from "@/shared/components/SectionLoading";
 import { AdminProtectedLayout } from "@/layouts/AdminProtectedLayout";
@@ -74,7 +75,6 @@ export const router = createBrowserRouter([
       { path: "search", element: <PostSearchPage /> },
     ],
   },
-
   {
     path: "/user",
     element: <RequireAuth />,
@@ -85,15 +85,15 @@ export const router = createBrowserRouter([
           { index: true, element: <Navigate to="/user/home" replace /> },
           { path: "home", element: <UserHomePage /> },
           { path: "profile", element: <ProfilePage /> },
-
-          // 🔒 게시글 작성/수정
           { path: "posts/new", element: <PostWritePage /> },
           { path: "posts/:id/edit", element: <PostEditPage /> },
-
-          // 🔒 다이어리 전부
+        ],
+      },
+      {
+        element: <DiaryLayout />,
+        children: [
           { path: "diary/write", element: <DiaryWritePage /> },
           { path: "diary/list", element: <DiaryListPage /> },
-          // 🔒 다이어리 - lazy 묶음
           {
             element: (
               <Suspense fallback={<SectionLoading scope="route:diary" />}>
@@ -110,9 +110,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
-
   { path: "/admin/login", element: <AdminLoginPage /> },
-
   {
     path: "/admin",
     element: <AdminProtectedLayout />,

@@ -21,8 +21,10 @@ export function AppHeaderRight({ context }: Props) {
     context === "DIARY";
 
   return (
-    <div className="flex items-center gap-3">
-      <ThemeToggle />
+    <div className="flex shrink-0 items-center gap-3">
+      <div className="hidden md:block">
+        <ThemeToggle />
+      </div>
 
       {showLoginButton && <LoginButton />}
       {showProfileMenu && <ProfileMenu />}

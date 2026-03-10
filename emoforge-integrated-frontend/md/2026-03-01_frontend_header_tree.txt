@@ -1,0 +1,167 @@
+• 프로젝트의 Header 구조는 크게 일반 사용자 공통 헤더(AppHeader 계열)와 관리자 헤더(AdminHeader)로 분리되어 있습니다.
+
+  1. 라우팅/레이아웃 기준 Header 트리
+
+  router
+  ├─ PublicLayout
+  │  └─ HeaderContextProvider("PUBLIC")
+  │     └─ AppHeader
+  ├─ PostLayout
+  │  └─ HeaderContextProvider("POST")
+  │     └─ AppHeader
+  ├─ UserLayout
+  │  └─ HeaderContextProvider("USER")
+  │     └─ AppHeader
+  ├─ DiaryLayout
+  │  └─ HeaderContextProvider("DIARY")
+  │     └─ AppHeader
+  ├─ AboutLayout
+  │  └─ 별도 상단 바 직접 구현
+  └─ AdminLayout
+     ├─ AdminSidebar
+     └─ AdminHeader
+
+  설명:
+
+  - AppHeader는 컨텍스트(PUBLIC | POST | USER | DIARY)에 따라 중앙 메뉴와 우측 액션이 바뀌는 공통 헤더입니다.
+  - AboutLayout은 AppHeader를 쓰지 않고 자체 상단 영역을 직접 구성합니다.
+  - 관리자 화면은 완전히 별도 구조로 AdminHeader를 사용합니다.
+
+  관련 파일:
+
+  - src/app/router.tsx
+  - src/layouts/PublicLayout.tsx
+  - src/layouts/PostLayout.tsx
+  - src/layouts/UserLayout .tsx
+  - src/layouts/DiaryLayout.tsx
+  - src/layouts/AboutLayout.tsx
+  - src/layouts/AdminLayout.tsx
+
+  2. 공통 AppHeader 내부 트리
+
+  AppHeader
+  ├─ header
+  │  └─ div.container
+  │     ├─ Left
+  │     │  └─ Logo
+  │     ├─ Center
+  │     │  ├─ PublicHeader   (context === "PUBLIC")
+  │     │  ├─ PostHeader     (context === "POST")
+  │     │  ├─ UserHeader     (context === "USER")
+  │     │  └─ DiaryHeader    (context === "DIARY")
+  │     └─ Right
+  │        └─ AppHeaderRight
+  │           ├─ ThemeToggle
+  │           ├─ LoginButton   (PUBLIC 또는 비로그인 POST)
+  │           └─ ProfileMenu   (로그인 POST / USER / DIARY)
+
+  관련 파일:
+
+  - src/layouts/components/header/AppHeader.tsx
+  - src/layouts/components/header/AppHeaderRight.tsx
+  - src/layouts/components/header/context/headerContext.tsx
+
+  3. 컨텍스트별 Center 영역 트리
+
+  PublicHeader
+  ├─ Desktop
+  │  ├─ HeaderNavItem("/about")
+  │  └─ HeaderNavItem("/posts")
+  └─ Mobile
+     ├─ Hamburger Button
+     └─ Dropdown
+        ├─ NavLink("/about")
+        └─ NavLink("/posts")
+
+  PostHeader
+  ├─ Left
+  │  └─ HeaderNavItem("/posts")
+  ├─ Center
+  │  └─ PostSearchInput
+  │     └─ SearchInputUI
+  ├─ Right
+  │  └─ Write Button
+  └─ Mobile Search Row
+     └─ PostSearchInput
+
+  UserHeader
+  ├─ Desktop Nav
+  │  ├─ HeaderNavItem("/user/profile")
+  │  └─ HeaderNavItem("/posts")
+  ├─ Mobile Top Bar
+  │  ├─ Hamburger Button
+  │  ├─ Current Label
+  │  └─ Placeholder
+  └─ Mobile Dropdown
+     ├─ NavLink("/user/profile")
+     └─ NavLink("/posts")
+
+  DiaryHeader
+  ├─ Desktop Nav
+  │  ├─ HeaderNavItem("/user/diary/write")
+  │  ├─ HeaderNavItem("/user/diary/calendar")
+  │  ├─ HeaderNavItem("/user/diary/list")
+  │  ├─ HeaderNavItem("/user/diary/insights")
+  │  └─ Board NavLink("/posts")
+  ├─ Mobile
+  │  └─ Hamburger Button
+  ├─ Right
+  │  └─ DiarySearchInput
+  └─ Mobile Dropdown
+     ├─ NavLink("/user/diary/write")
+     ├─ NavLink("/user/diary/calendar")
+     ├─ NavLink("/user/diary/list")
+     ├─ NavLink("/user/diary/insights")
+     └─ NavLink("/posts")
+
+  관련 파일:
+
+  - src/layouts/components/header/context/PublicHeader.tsx
+  - src/layouts/components/header/context/PostHeader.tsx
+  - src/layouts/components/header/context/UserHeader.tsx
+  - src/layouts/components/header/context/DiaryHeader.tsx
+
+  4. 우측 ProfileMenu 트리
+
+  ProfileMenu
+  ├─ ProfileTrigger
+  │  └─ ChevronDown
+  └─ ProfileDropdown
+     ├─ ProfileSummary
+     │  ├─ nickname
+     │  └─ email
+     ├─ ProfileMenuItem("Profile Setting")
+     └─ ProfileMenuItem("Logout")
+
+  관련 파일:
+
+  - src/layouts/components/header/profileMenu/ProfileMenu.tsx
+  - src/layouts/components/header/profileMenu/ProfileTrigger.tsx
+  - src/layouts/components/header/profileMenu/ProfileDropdown.tsx
+
+  5. 별도 Header 구조
+
+  AboutLayout Header Area
+  ├─ Left
+  │  ├─ Home Link("/posts")
+  │  └─ Title("About Emoforge")
+  ├─ Right
+  │  └─ Login Link("/login")
+  └─ Tabs
+     ├─ NavLink("intro")
+     └─ NavLink("portfolio")
+
+  AdminLayout
+  ├─ AdminSidebar
+  └─ Main Area
+     ├─ AdminHeader
+     │  ├─ Title
+     │  ├─ Admin nickname
+     │  └─ Logout button
+     └─ main
+
+  관찰 포인트
+
+  - AppHeader는 꽤 일관된 구조입니다: Logo + 컨텍스트별 중앙 메뉴 + 우측 액션.
+  - 다만 src/layouts/DiaryLayout.tsx 는 함수명이 PostLayout으로 되어 있어 오타 가능성이 있습니다.
+  - src/app/router.tsx 에서는 DiaryLayout이 실제 라우트에 연결되지 않고, /user 아래는 현재 UserLayout 하나로 처리되고 있습니다.
