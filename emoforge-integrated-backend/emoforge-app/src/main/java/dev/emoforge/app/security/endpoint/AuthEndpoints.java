@@ -16,7 +16,8 @@ public final class AuthEndpoints {
     };
 
     public static final String[] AUTH_ADMIN_ENDPOINTS = {
-            "/api/auth/admin/**"
+            "/api/auth/admin/**",
+            "/api/admin/**"
     };
 
     public static final String[] AUTH_AUTHENTICATED_ENDPOINTS = {

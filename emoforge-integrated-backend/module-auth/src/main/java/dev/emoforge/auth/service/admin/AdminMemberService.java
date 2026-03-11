@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class MemberAdminService {
+public class AdminMemberService {
 
     private final MemberRepository memberRepository;
 

@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = "dev.emoforge")
 @EntityScan(basePackages = "dev.emoforge")
 @MapperScan("dev.emoforge.post.mapper")
-@ConfigurationPropertiesScan
+@ConfigurationPropertiesScan(basePackages = "dev.emoforge")
 public class EmoforgeApplication {
     public static void main(String[] args) {
         SpringApplication.run(EmoforgeApplication.class, args);

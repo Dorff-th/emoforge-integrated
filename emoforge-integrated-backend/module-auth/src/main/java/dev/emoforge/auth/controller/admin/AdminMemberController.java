@@ -2,7 +2,10 @@ package dev.emoforge.auth.controller.admin;
 
 import dev.emoforge.auth.entity.Member;
 import dev.emoforge.auth.enums.MemberStatus;
-import dev.emoforge.auth.service.admin.MemberAdminService;
+import dev.emoforge.auth.repository.MemberRepository;
+import dev.emoforge.auth.service.admin.AdminMemberService;
+import dev.emoforge.auth.service.admin.MemberDeletionService;
+import dev.emoforge.core.security.principal.CustomUserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -10,12 +13,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
- * MemberAdminController
+ * AdminMemberController
  *
  * 관리자 전용 "회원 관리" API 컨트롤러.
  * - 모든 회원 목록 조회
@@ -30,9 +35,12 @@ import java.util.List;
 @RequestMapping("/api/auth/admin/members")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
-public class MemberAdminController {
+public class AdminMemberController {
 
-    private final MemberAdminService memberAdminService;
+    private final AdminMemberService adminMemberService;
+    private final MemberDeletionService memberDeletionService;
+
+    private final MemberRepository memberRepository;
 
     // ---------------------------------------------------------
     // 🔹 회원 목록 조회
@@ -49,7 +57,7 @@ public class MemberAdminController {
     })
     @GetMapping
     public ResponseEntity<List<Member>> getAllMembers() {
-        return ResponseEntity.ok(memberAdminService.getAllMembers());
+        return ResponseEntity.ok(adminMemberService.getAllMembers());
     }
 
     // ---------------------------------------------------------
@@ -73,7 +81,7 @@ public class MemberAdminController {
             @PathVariable("uuid") String uuid,
             @RequestParam("status") String status
     ) {
-        memberAdminService.updateStatus(uuid, MemberStatus.valueOf(status.toUpperCase()));
+        adminMemberService.updateStatus(uuid, MemberStatus.valueOf(status.toUpperCase()));
         return ResponseEntity.noContent().build();
     }
 
@@ -99,7 +107,24 @@ public class MemberAdminController {
             @PathVariable("uuid") String uuid,
             @RequestParam("deleted") boolean deleted
     ) {
-        Member updated = memberAdminService.updateDeleted(uuid, deleted);
+        Member updated = adminMemberService.updateDeleted(uuid, deleted);
         return ResponseEntity.ok(updated); // ✅ 변경된 회원 반환
+    }
+
+    // 2026-03-11: Added admin endpoint for full member deletion with audit actor tracking.
+    @Operation(summary = "회원 완전 삭제", description = "관리자가 회원과 연관된 게시글, 다이어리, 프로필 이미지, 인증 데이터를 함께 삭제하고 감사 로그를 남깁니다.")
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<Void> deleteMember(@PathVariable("uuid") UUID uuid,
+                                             @AuthenticationPrincipal CustomUserPrincipal adminUser) {
+
+        //백엔드에서도 탈퇴 상태(deleted = 1)인 사용자만 체크해서 완전 삭제 처리
+        Member member = memberRepository.findByUuid(uuid.toString()).orElseThrow(()-> new IllegalArgumentException("사용자가 존재하지 않습니다!"));
+
+        if (!member.isDeleted()) {
+            throw new IllegalStateException("탈퇴된 회원만 삭제할 수 있습니다.");
+        }
+        memberDeletionService.deleteMember(uuid, UUID.fromString(adminUser.getUuid()));
+
+        return ResponseEntity.noContent().build();
     }
 }

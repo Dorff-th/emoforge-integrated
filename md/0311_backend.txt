@@ -1,0 +1,361 @@
+1. POST를 db에서 삭제할때 서버에 남아있는 첨부파일과 에디터 이미지 파일도 삭제하도록 개선
+
+Analyze the backend project.
+
+Goal:
+When a post is deleted, all attached files stored on the server must also be deleted.
+
+Context:
+
+The attachment entity contains:
+- fileName
+- uploadType
+
+UploadType enum values:
+EDITOR_IMAGE
+ATTACHMENT
+PROFILE_IMAGE
+
+Upload paths are defined in application.yml:
+
+file.upload.path.editor-images.base-dir
+file.upload.path.attachments
+file.upload.path.profile-image.base-dir
+
+Tasks:
+
+1. Create FileUploadProperties to read configuration from application.yml.
+
+2. Implement FileStorageService with a method:
+   deleteFile(Attachment attachment)
+
+3. Determine the correct file path using uploadType:
+   - EDITOR_IMAGE → editor-images.base-dir
+   - ATTACHMENT → attachments
+   - PROFILE_IMAGE → profile-image.base-dir
+
+4. Use attachment.fileName to build the full path.
+
+5. Use Files.deleteIfExists to safely delete the file.
+
+6. Modify AttachmentService.deleteAttachment() to:
+   - delete the file
+   - delete the DB record
+
+7. Modify PostService.deletePost() so attachments are deleted through AttachmentService.
+
+Do not change existing APIs.
+
+변경된 파일은 아래입니다.
+
+  - FileUploadProperties.java 신규
+  - FileStorageService.java 신규
+  - AttachmentService.java
+  - AttachmentRepository.java
+  - PostService.java
+  - AdminPostService.java
+
+---
+
+Analyze the current backend project structure.
+
+Goal:
+Implement an **admin feature to completely delete a member and all related data**.
+
+Context:
+
+The system uses the following entities:
+
+* Member (identified by UUID)
+* Post
+* Attachment
+* Comment
+* PostTag
+* DiaryEntry
+* GptSummary
+* MusicRecommendHistory
+* MusicRecommendedSong
+* MemberArtistPreference
+
+File deletion for attachments is already implemented through:
+
+AttachmentService → FileStorageService → filesystem
+
+PostService.deletePost(postId) already handles:
+
+* attachment deletion (including server files)
+* comment deletion
+* postTag deletion
+
+Tasks:
+
+1. Create a new service:
+
+AdminMemberService
+
+with method:
+
+deleteMember(UUID memberUuid)
+
+2. Deletion order should be:
+
+1) Delete all posts created by the member using existing PostService.deletePost()
+
+2) Delete diary-related data:
+
+   * diary_entry
+   * gpt_summary
+   * music_recommendend_history
+   * music_recommended_song
+   * member_artist_preference
+
+3) Delete profile images using AttachmentService (UploadType.PROFILE_IMAGE)
+
+4) Finally delete the member record.
+
+3. Ensure the entire operation is wrapped in a **@Transactional** method.
+
+4. Add repository methods where needed, for example:
+
+findAllByMemberUuid(...)
+deleteByMemberUuid(...)
+
+5. Add an admin controller endpoint:
+
+DELETE /api/admin/members/{uuid}
+
+Example:
+
+AdminMemberController.deleteMember(UUID uuid)
+
+6. Only backend logic is required.
+   Do not modify frontend.
+
+7. Reuse existing services whenever possible.
+
+Important constraints:
+
+* Do NOT directly delete attachments through repository if AttachmentService already handles file deletion.
+* Always reuse PostService.deletePost for post removal.
+* Keep the code consistent with the current project architecture.
+
+Additional requirements:
+
+After completing the implementation:
+
+1. Provide a list of **all files that were created or modified**.
+
+2. For every **modified method**, add a short comment with today's date (YYYY-MM-DD) explaining the purpose of the change.
+
+Example:
+
+// 2026-03-11: Added member cascade deletion logic
+
+3. The comment should be short and placed directly above the modified method.
+
+== 응답결과 ==
+• 구현했습니다. 관리자용 회원 완전 삭제 흐름을 module-auth에 추가했고, 삭제 순서는 게시글 PostService.deletePost() 재사용, 다이어리 관련 데이터 정리, 프로필 이미지 파일 삭제, 마지막 회원 삭제로 연결했습니다.
+  새 엔드포인트는 DELETE /api/admin/members/{uuid}입니다.
+
+  검증은 .\gradlew :module-auth:compileJava :module-diary:compileJava :module-attachment:compileJava :module-post:compileJava로 완료했고, 빌드는 성공했습니다.
+
+  생성된 파일:
+
+  - AdminMemberService.java
+  - AdminMemberController.java
+
+  수정된 파일:
+
+  - build.gradle
+  - AuthEndpoints.java
+  - AttachmentRepository.java
+  - AttachmentService.java
+  - GptSummaryRepository.java
+  - MusicRecommendSongRepository.java
+
+  핵심 변경 지점:
+
+  - AdminMemberService.java:44
+  - AdminMemberController.java:28
+  - AttachmentService.java:167
+
+---
+
+Analyze the current backend project structure.
+
+Goal:
+Implement an **admin feature to completely delete a member and all related data**, and add **audit logging** for the deletion event.
+
+Context:
+
+Entities involved:
+
+* Member (identified by UUID)
+* Post
+* Attachment
+* Comment
+* PostTag
+* DiaryEntry
+* GptSummary
+* MusicRecommendHistory
+* MusicRecommendedSong
+* MemberArtistPreference
+
+Important existing behavior:
+
+* PostService.deletePost(postId) already deletes:
+
+  * attachments
+  * comments
+  * postTag relations
+  * attached files through AttachmentService → FileStorageService
+
+* AttachmentService.deleteAttachment() already deletes the file from the filesystem.
+
+Tasks:
+
+1️⃣ Create a new service
+
+AdminMemberService
+
+Method:
+
+deleteMember(UUID memberUuid, UUID adminUuid)
+
+2️⃣ Deletion order
+
+1. Delete all posts created by the member
+   Use existing `PostService.deletePost(postId)`
+   (do NOT directly delete through repository)
+
+2. Delete diary related data
+
+* diary_entry
+* gpt_summary
+* music_recommendend_history
+* music_recommended_song
+* member_artist_preference
+
+3. Delete profile images
+
+Use:
+
+AttachmentService.deleteProfileImages(memberUuid)
+
+4. Delete the member record
+
+memberRepository.deleteByUuid(memberUuid)
+
+3️⃣ Add an admin controller endpoint
+
+DELETE /api/admin/members/{uuid}
+
+Example:
+
+AdminMemberController.deleteMember(UUID uuid)
+
+4️⃣ Add Audit Logging
+
+Use a dedicated logger named **AUDIT**.
+
+Before deleting the member, calculate the counts of related data:
+
+* post count
+* comment count
+* attachment count
+* editor image count
+* profile image count
+* diary entry count
+
+After the deletion, write a single audit log entry.
+
+Example log format:
+
+ADMIN_MEMBER_DELETE
+admin=<adminUuid>
+target=<memberUuid>
+posts=<count>
+comments=<count>
+attachments=<count>
+editorImages=<count>
+profileImages=<count>
+diaryEntries=<count>
+timestamp=<yyyy-MM-dd HH:mm:ss>
+
+5️⃣ Ensure the method is annotated with:
+
+@Transactional
+
+6️⃣ Reuse existing services whenever possible.
+Do NOT refactor unrelated code.
+
+7️⃣ After finishing the implementation:
+
+Provide a list of **all files created or modified**.
+
+8️⃣ For every modified method, add a short comment above the method with today's date.
+
+Example:
+
+// 2026-03-11: Added admin member deletion and audit logging
+
+==응답 ==
+ 감사 로그용 카운트와 관리자 UUID 전달까지 반영됐습니다. 이제 다시 컴파일해서 AdminMemberService의 새 시그니처, 저장소 메서드 추가, 컨트롤러 principal 주입이 모두 맞는지 확인하겠습니다.
+
+• Ran .\gradlew :module-auth:compileJava :module-diary:compileJava :module-attachment:compileJava :module-post:compileJava
+  └ > Task :emoforge-core:compileJava UP-TO-DATE
+    > Task :module-attachment:compileJava UP-TO-DATE
+    … +21 lines
+    operations.
+    Note: Recompile with -Xlint:unchecked for details.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 구현했습니다. DELETE /api/admin/members/{uuid}는 이제 관리자 principal에서 adminUuid를 받아 AdminMemberService.deleteMember(UUID memberUuid, UUID adminUuid)를 호출하고, 삭제 전 관련 건수를 계산한 뒤 전용
+  AUDIT 로거에 단일 감사 로그를 남깁니다. 게시글 삭제는 계속 PostService.deletePost()를 재사용하고, 프로필 이미지는 AttachmentService.deleteProfileImages(...)를 통해 파일까지 삭제됩니다. 회원이 다른 게시글에
+  남긴 댓글도 CommentRepository.deleteByMemberUuid(...)로 함께 정리되도록 보강했습니다.
+
+  검증은 .\gradlew :module-auth:compileJava :module-diary:compileJava :module-attachment:compileJava :module-post:compileJava로 했고, 빌드는 성공했습니다.
+
+  이번 기능 기준 생성/수정 파일:
+
+  - AdminMemberService.java
+  - AdminMemberController.java
+  - MemberRepository.java
+  - CommentRepository.java
+  - build.gradle
+  - AuthEndpoints.java
+  - AttachmentRepository.java
+  - AttachmentService.java
+  - GptSummaryRepository.java
+  - MusicRecommendSongRepository.java
+
+  날짜 코멘트는 이번에 추가/수정한 메서드 바로 위에 넣어두었습니다.
+
+
+SET @memberUuid = 'xxxx-xxxx-xxxx';
+
+SELECT
+    (SELECT COUNT(*) FROM post WHERE member_uuid = :memberUuid) AS post_count,
+
+    (SELECT COUNT(*) FROM comment WHERE member_uuid = :memberUuid) AS comment_count,
+
+    (SELECT COUNT(*) FROM attachment 
+        WHERE member_uuid = :memberUuid AND upload_type = 'ATTACHMENT') AS attachment_count,
+
+    (SELECT COUNT(*) FROM attachment 
+        WHERE member_uuid = :memberUuid AND upload_type = 'EDITOR_IMAGE') AS editor_image_count,
+
+    (SELECT COUNT(*) FROM attachment 
+        WHERE member_uuid = :memberUuid AND upload_type = 'PROFILE_IMAGE') AS profile_image_count,
+
+    (SELECT COUNT(*) FROM diary_entry WHERE member_uuid = :memberUuid) AS diary_count,
+
+    (SELECT COUNT(*) FROM gpt_summary WHERE member_uuid = :memberUuid) AS gpt_summary_count,
+
+    (SELECT COUNT(*) FROM music_recommendend_history WHERE member_uuid = :memberUuid) AS music_history_count,
+
+    (SELECT COUNT(*) FROM music_recommended_song WHERE member_uuid = :memberUuid) AS music_song_count,
+
+    (SELECT COUNT(*) FROM member_artist_preference WHERE member_uuid = :memberUuid) AS artist_preference_count;
+

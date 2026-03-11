@@ -25,6 +25,9 @@ public interface GptSummaryRepository extends JpaRepository<GptSummary, Long> {
     //특정날짜 (예 오늘날짜)의 Gpt회고 요약만 조회하기
     Optional<GptSummary> findByMemberUuidAndDiaryDate(String memberUuid, LocalDate diaryDate);
 
+    // 2026-03-11: Added member summary lookup for admin member purge.
+    java.util.List<GptSummary> findAllByMemberUuid(String memberUuid);
+
     // GPT 요약 삭제
     @Transactional
     @Modifying

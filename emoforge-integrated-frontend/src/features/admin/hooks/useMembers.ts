@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { http } from "@/shared/api/httpClient";
 import { API } from "@/shared/api/endpoints";
 import { useToast } from '@/shared/stores/useToast';
+import { deleteMember } from "@/features/admin/api/adminMemberApi";
 
 export interface MemberDTO {
   uuid: string;
@@ -72,6 +73,19 @@ export function useToggleMemberDeleted() {
         old?.map((m) => (m.uuid === updatedMember.uuid ? updatedMember : m))
       );
       toast.success('회원 탈퇴 상태가 변경되었습니다.');
+    },
+  });
+}
+
+export function useDeleteMember() {
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  return useMutation({
+    mutationFn: deleteMember,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: memberKeys.all});
+      toast.success('사용자 정보가 삭제되었습니다.');
     },
   });
 }

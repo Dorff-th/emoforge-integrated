@@ -4,6 +4,9 @@ plugins {
 
 dependencies {
     implementation project(":emoforge-core")
+    implementation project(":module-post")
+    implementation project(":module-diary")
+    implementation project(":module-attachment")
 
     implementation "org.springframework.boot:spring-boot-starter-web"
     //implementation "org.springframework.boot:spring-boot-starter-security" -> emoforge-core모듈로 이동

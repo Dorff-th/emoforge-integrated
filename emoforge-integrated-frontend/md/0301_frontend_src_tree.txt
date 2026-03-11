@@ -1,0 +1,376 @@
+
+C:\devtools\zmylong\EMOFORGE_INTEG\emoforge-integrated\emoforge-integrated-frontend\src>tree /f
+Windows 볼륨에 대한 폴더 경로의 목록입니다.
+볼륨 일련 번호는 F44A-B05B입니다.
+C:.
+│  App.css
+│  index.css
+│  main.tsx
+│
+├─app
+│  │  App.tsx
+│  │  router.tsx
+│  │
+│  └─providers
+│          QueryProvider.tsx
+│          useInitTheme.ts
+│
+├─assets
+│  │  react.svg
+│  │
+│  ├─characters
+│  │      loading_bunny_gpt.png
+│  │
+│  ├─terms
+│  │      privacy_policy.txt
+│  │      service_terms.txt
+│  │
+│  └─toast
+│          toast_char_1.png
+│          toast_char_2.png
+│          toast_char_3.png
+│          toast_char_4.png
+│          toast_char_5.png
+│          toast_char_6.png
+│
+├─components
+│  └─ui
+│          alert-dialog.tsx
+│          button.tsx
+│          card.tsx
+│          tabs.tsx
+│
+├─features
+│  ├─about
+│  │  ├─components
+│  │  │  ├─IntroSection
+│  │  │  │      ArchitectureSection.tsx
+│  │  │  │      BoardSection.tsx
+│  │  │  │      ClosingSection.tsx
+│  │  │  │      FeatureCard.tsx
+│  │  │  │      FeatureSection.tsx
+│  │  │  │      HeroSection.tsx
+│  │  │  │
+│  │  │  └─portfolio
+│  │  │          ArchitectureToggleSection.tsx
+│  │  │
+│  │  └─pages
+│  │          AboutIntroPage.tsx
+│  │          PortfolioPage.tsx
+│  │
+│  ├─admin
+│  │  ├─api
+│  │  │      admin.type.ts
+│  │  │      adminApi.ts
+│  │  │      adminCategoryApi.ts
+│  │  │      adminPostApi.ts
+│  │  │
+│  │  ├─components
+│  │  │  │  AdminAuthLoading.tsx
+│  │  │  │
+│  │  │  ├─member
+│  │  │  │      DeleteTogglePill.tsx
+│  │  │  │
+│  │  │  ├─posts
+│  │  │  │      AdminCommentSearchBar.tsx
+│  │  │  │      AdminPostSearchBar.tsx
+│  │  │  │
+│  │  │  └─ui
+│  │  │          StatusPill.tsx
+│  │  │
+│  │  ├─hooks
+│  │  │      useAdminAuth.ts
+│  │  │      useAdminLogout.ts
+│  │  │      useAdminMe.ts
+│  │  │      useCategories.ts
+│  │  │      useMembers.ts
+│  │  │
+│  │  └─pages
+│  │          AdminCommentsPage.tsx
+│  │          AdminDashboardPage.tsx
+│  │          AdminLoginPage.tsx
+│  │          AdminMembersPage.tsx
+│  │          AdminPostCategoryPage.tsx
+│  │          AdminPostDetailPage.tsx
+│  │          AdminPostEditPage.tsx
+│  │          AdminPostListPage.tsx
+│  │
+│  ├─auth
+│  │  ├─api
+│  │  │      auth.types.ts
+│  │  │      authApi.ts
+│  │  │      authFlow.ts
+│  │  │
+│  │  ├─hooks
+│  │  │      useAuth.ts
+│  │  │      useKakaoAuth.ts
+│  │  │      useTermsModalStore.ts
+│  │  │
+│  │  └─pages
+│  │          LoginPage.tsx
+│  │          OAuthCallbackPage.tsx
+│  │          TermsAgreementPage.tsx
+│  │
+│  ├─calendar
+│  │  ├─api
+│  │  │      calendarApi.ts
+│  │  │
+│  │  ├─components
+│  │  │      Calendar.tsx
+│  │  │      CalendarDayCell.tsx
+│  │  │      CalendarSelector.tsx
+│  │  │
+│  │  ├─hooks
+│  │  │      useCalendarData.tsx
+│  │  │
+│  │  ├─pages
+│  │  │      CalendarPage.tsx
+│  │  │
+│  │  └─types
+│  │          calendar.types.ts
+│  │
+│  ├─diary
+│  │  ├─api
+│  │  │      diaryApi.ts
+│  │  │
+│  │  ├─components
+│  │  │      DiaryDetail.tsx
+│  │  │      DiaryForm.tsx
+│  │  │      DiaryItem.tsx
+│  │  │      DiaryListForDateModal.tsx
+│  │  │      DiarySearchInput.tsx
+│  │  │      DiaryTextarea.tsx
+│  │  │      EmotionSelector.tsx
+│  │  │      FeedbackTypeSelect.tsx
+│  │  │      FeelingInput.tsx
+│  │  │      HabitChecklist.tsx
+│  │  │      Pagination.tsx
+│  │  │      SubmitButton.tsx
+│  │  │
+│  │  ├─pages
+│  │  │      DiaryInsightsPage.tsx
+│  │  │      DiaryListPage.tsx
+│  │  │      DiarySearchPage.tsx
+│  │  │      DiaryWritePage.tsx
+│  │  │
+│  │  ├─search
+│  │  │      diarySearch.types.ts
+│  │  │      diarySearchParams.ts
+│  │  │      useDiarySearch.ts
+│  │  │
+│  │  ├─types
+│  │  └─ui
+│  │          EmotionRangeSlider.tsx
+│  │          GptFeelingLoadingModal.tsx
+│  │
+│  ├─gpt
+│  │  ├─api
+│  │  │      gptSummaryApi.ts
+│  │  │
+│  │  ├─components
+│  │  │      GPTFeedbackModal.tsx
+│  │  │
+│  │  └─types
+│  │          feedbackTypes.ts
+│  │
+│  ├─music
+│  │  ├─api
+│  │  │      musicApi.ts
+│  │  │
+│  │  └─components
+│  │          MusicRecommendModal.tsx
+│  │
+│  ├─post
+│  │  ├─api
+│  │  │      categoryApi.ts
+│  │  │      postApi.ts
+│  │  │      tagApi.ts
+│  │  │
+│  │  ├─components
+│  │  │      AttachmentUploader.tsx
+│  │  │      CategorySelect.tsx
+│  │  │      FormActions.tsx
+│  │  │      Pagination.tsx
+│  │  │      PostContentEditor.tsx
+│  │  │      PostForm.tsx
+│  │  │      PostTagInput.tsx
+│  │  │      PostTitleInput.tsx
+│  │  │      UserComment.tsx
+│  │  │
+│  │  ├─pages
+│  │  │      PostDetailPage.tsx
+│  │  │      PostEditPage.tsx
+│  │  │      PostListPage.tsx
+│  │  │      PostSearchPage.tsx
+│  │  │      PostWritePage.tsx
+│  │  │      TagPostListPage.tsx
+│  │  │
+│  │  ├─search
+│  │  └─types
+│  │          Attachment.ts
+│  │          Category.ts
+│  │          Comment.ts
+│  │          Common.ts
+│  │          Post.tsx
+│  │          PostRequest.ts
+│  │          Tag.ts
+│  │
+│  ├─statistics
+│  │  ├─api
+│  │  │      statisticsApi.ts
+│  │  │
+│  │  ├─components
+│  │  │      DayOfWeekBarChart.tsx
+│  │  │      EmotionBarChart.tsx
+│  │  │      EmotionSummaryCard.tsx
+│  │  │      WeeklyLineChart.tsx
+│  │  │
+│  │  └─types
+│  │          statisticsTypes.ts
+│  │
+│  └─user
+│      ├─api
+│      │      profile.api.ts
+│      │      profileImageApi.ts
+│      │      userStatApi.ts
+│      │      withdrawalApi.ts
+│      │
+│      ├─components
+│      │  ├─profile
+│      │  │  │  ProfileHeader.tsx
+│      │  │  │  ProfileImageSection.tsx
+│      │  │  │  ProfileInfoSection.tsx
+│      │  │  │  ProfileStatsSection.tsx
+│      │  │  │  ProfileWithdrawalSection.tsx
+│      │  │  │
+│      │  │  └─modals
+│      │  │          EmailEditModal.tsx
+│      │  │          NicknameEditModal.tsx
+│      │  │          ProfileImageUploadModal.tsx
+│      │  │
+│      │  └─userHome
+│      │          DiaryEntryCard.tsx
+│      │          DiaryQuickActions.tsx
+│      │          EmotionEmojiDisplay.tsx
+│      │          NoTodayDiaryState.tsx
+│      │          TodayDiarySection.tsx
+│      │          TodayEmotionState.tsx
+│      │          TodayHeroSection.tsx
+│      │          TodayPostActivitySection.tsx
+│      │          TodaySummarySection.tsx
+│      │
+│      ├─hooks
+│      │      useLogout.ts
+│      │      useProfileImage.ts
+│      │      useTodayHomeData.ts
+│      │      useWithdrawal.ts
+│      │
+│      └─pages
+│              ProfilePage.tsx
+│              UserHomePage.tsx
+│              WithdrawalPendingPage.tsx
+│
+├─guards
+│      RequireAdmin.tsx
+│      RequireAuth.tsx
+│
+├─layouts
+│  │  AboutLayout.tsx
+│  │  AdminHeader.tsx
+│  │  AdminLayout.tsx
+│  │  AdminProtectedLayout.tsx
+│  │  AdminSidebar.tsx
+│  │  DiaryLayout.tsx
+│  │  PostLayout.tsx
+│  │  PublicLayout.tsx
+│  │  UserLayout .tsx
+│  │
+│  └─components
+│      │  AuthErrorHandler.tsx
+│      │
+│      ├─header
+│      │  │  AppHeader.tsx
+│      │  │  AppHeaderRight.tsx
+│      │  │  header.constants.ts
+│      │  │
+│      │  ├─context
+│      │  │      AdminHeader.tsx
+│      │  │      DiaryHeader.tsx
+│      │  │      headerContext.tsx
+│      │  │      PostHeader.tsx
+│      │  │      PublicHeader.tsx
+│      │  │      UserHeader.tsx
+│      │  │
+│      │  ├─elements
+│      │  │      HeaderNavItem.tsx
+│      │  │      LoginButton.tsx
+│      │  │      Logo.tsx
+│      │  │      PostSearchInput.tsx
+│      │  │      SearchInputUI.tsx
+│      │  │      ThemeToggle.tsx
+│      │  │
+│      │  └─profileMenu
+│      │          ProfileDropdown.tsx
+│      │          ProfileMenu.tsx
+│      │          ProfileMenuItem.tsx
+│      │          ProfileSummary.tsx
+│      │          ProfileTrigger.tsx
+│      │
+│      └─hooks
+│              useHeaderContext.ts
+│              useHeaderScrolled.ts
+│              useOnClickOutside.ts
+│
+├─lib
+│      queryClient.ts
+│      utils.ts
+│
+└─shared
+    ├─api
+    │      endpoints.ts
+    │      httpClient.ts
+    │      langHttpClient.ts
+    │
+    ├─components
+    │      Avatar.tsx
+    │      ConfirmDialog.tsx
+    │      ConfirmModal.tsx
+    │      GlobalLoadingOverlay.tsx
+    │      Modal.tsx
+    │      NewPostButton.tsx
+    │      SectionLoading.tsx
+    │      ToastHost.tsx
+    │      ToastItem.tsx
+    │
+    ├─config
+    │      config.ts
+    │
+    ├─constants
+    │      emotionMap.ts
+    │
+    ├─hooks
+    │      useDebounce.ts
+    │
+    ├─stores
+    │      loadingStore.ts
+    │      themeStore.ts
+    │      toast.types.ts
+    │      toastStore.ts
+    │      useAuthStore.ts
+    │      useToast.ts
+    │      useUILoading.ts
+    │
+    ├─types
+    │      diary.ts
+    │
+    └─utils
+            calendarUtils.ts
+            cn.ts
+            contentUrlHelper.ts
+            dateUtils.ts
+            emotion.ts
+            fileUtils copy.ts
+            fileUtils.ts
+            generateId.ts
+            redirectToKakaoLogin.ts
+            resolveAttachmentUrl.ts

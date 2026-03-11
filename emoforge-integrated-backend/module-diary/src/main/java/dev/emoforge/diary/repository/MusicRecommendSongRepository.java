@@ -21,6 +21,9 @@ public interface MusicRecommendSongRepository extends JpaRepository<MusicRecomme
     // ✅ 특정 아티스트의 곡 추천 이력 조회
     List<MusicRecommendSong> findByArtistName(String artistName);
 
+    // 2026-03-11: Added song lookup by history ids for admin member purge.
+    List<MusicRecommendSong> findAllByHistoryIdIn(List<Long> historyIds);
+
     /**
      * @param historyId
      * 특정 히스토리(music_recommend_history)에 연결된 곡들을 일괄 삭제

@@ -1,6 +1,5 @@
 package dev.emoforge.post.admin.service;
 
-import dev.emoforge.attach.repository.AttachmentRepository;
 import dev.emoforge.post.admin.dto.AdminPostListItemDTO;
 import dev.emoforge.post.admin.dto.AdminPostSearchType;
 import dev.emoforge.post.domain.Post;
@@ -11,7 +10,6 @@ import dev.emoforge.post.dto.internal.PostDetailResponse;
 import dev.emoforge.post.dto.internal.PostUpdateDTO;
 import dev.emoforge.post.dto.legacy.bff.PageResponseDTO;
 import dev.emoforge.post.dto.legacy.bff.PostListItemResponse;
-import dev.emoforge.post.repository.CommentRepository;
 import dev.emoforge.post.repository.PostRepository;
 import dev.emoforge.post.repository.PostTagRepository;
 import dev.emoforge.post.service.internal.PostService;
@@ -31,8 +29,6 @@ import java.util.List;
 public class AdminPostService {
     private final PostRepository postRepository;
     private final PostTagRepository postTagRepository;
-    private final CommentRepository commentRepository;
-    private final AttachmentRepository attachmentRepository;
     private final PostQueryService postQueryService;
     private final PostService postService;
     private final TagService tagService;
@@ -40,9 +36,9 @@ public class AdminPostService {
     private static final int PAGE_BLOCK_SIZE = 10;
 
     public PageResponseDTO<PostListItemResponse> getPostList(
-        PageRequestDTO requestDTO,
-        AdminPostSearchType searchType,
-        String keyword
+            PageRequestDTO requestDTO,
+            AdminPostSearchType searchType,
+            String keyword
     ) {
         String normalizedKeyword = (keyword == null) ? null : keyword.trim();
         if (normalizedKeyword != null && normalizedKeyword.isEmpty()) {
@@ -50,16 +46,14 @@ public class AdminPostService {
         }
 
         Page<AdminPostListItemDTO> result =
-            postRepository.findAdminPostList(searchType.name(), normalizedKeyword, requestDTO.toPageable());
+                postRepository.findAdminPostList(searchType.name(), normalizedKeyword, requestDTO.toPageable());
 
         List<PostListItemResponse> dtoList =
                 result.getContent().stream()
                         .map(PostListItemResponse::fromAdminDTO)
                         .toList();
 
-        PageResponseDTO pageResponseDTO = new PageResponseDTO(requestDTO, result.getTotalElements(), dtoList, requestDTO.size());
-
-        return pageResponseDTO;
+        return new PageResponseDTO(requestDTO, result.getTotalElements(), dtoList, requestDTO.size());
     }
 
     public PostDetailResponse getPostDetail(Long id) throws NotFoundException {
@@ -76,27 +70,21 @@ public class AdminPostService {
             return;
         }
 
-        List<Long> uniquePostIds = postIds.stream().distinct().toList();
-
-        // FK 제약 순서대로 자식 데이터부터 삭제
-        postTagRepository.deleteByPostIdIn(uniquePostIds);
-        commentRepository.deleteByPostIdIn(uniquePostIds);
-        attachmentRepository.deleteByPostIdIn(uniquePostIds);
-        postRepository.deleteByIdIn(uniquePostIds);
+        postIds.stream()
+                .distinct()
+                .forEach(postService::deletePost);
     }
 
     @Transactional
     public Long updatePost(Long id, PostUpdateDTO request, String adminUsername) {
         Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Post not found. id=" + id));
+                .orElseThrow(() -> new IllegalArgumentException("Post not found. id=" + id));
 
-        //삭제 대상 tag id들을 List<Long> 타입으로 변환후 삭제 쿼리 실행
         List<Long> deleteTagIds = StringUtils.toLongList(request.deleteTagIds());
-        if(deleteTagIds != null && !deleteTagIds.isEmpty()) {
+        if (deleteTagIds != null && !deleteTagIds.isEmpty()) {
             postTagRepository.deleteByPostIdAndTagIdIn(post.getId(), deleteTagIds);
         }
 
-        //태그 & post_tag 관계 저장
         if (request.tags() != null) {
             String[] tagArray = request.tags().split(",");
             for (String tagName : tagArray) {
@@ -107,7 +95,6 @@ public class AdminPostService {
         }
 
         post.updateByAdmin(request.title(), request.content(), adminUsername);
-
         return post.getId();
     }
 }
