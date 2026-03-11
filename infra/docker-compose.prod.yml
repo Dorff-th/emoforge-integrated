@@ -29,6 +29,7 @@ services:
       JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Seoul"
     volumes:
       - /home/ec2-user/emoforge-mono/uploads:/home/ec2-user/emoforge-mono/uploads
+      - /home/ec2-user/emoforge-mono/logs:/app/logs
     networks:
       - emoforge-net
 
