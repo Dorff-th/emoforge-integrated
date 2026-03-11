@@ -8,10 +8,10 @@
     </springProfile>
 
     <!-- ===================== -->
-    <!-- PROD 환경 -->
+    <!-- PROD 환경 (docker-container 내부 로그경로를 /app/logs로 설정했기때문에 Dockerfile과  docker-compose.prod.yml 에서 volumes 설정참고 -->
     <!-- ===================== -->
     <springProfile name="prod">
-        <property name="LOG_PATH" value="/home/ec2-user/emoforge-mono/logs"/>
+        <property name="LOG_PATH" value="/app/logs"/>
     </springProfile>
 
     <!-- 로그 패턴 -->
