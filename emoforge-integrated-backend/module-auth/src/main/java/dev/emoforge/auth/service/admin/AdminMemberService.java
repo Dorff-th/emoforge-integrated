@@ -1,10 +1,16 @@
 package dev.emoforge.auth.service.admin;
 
+import dev.emoforge.auth.dto.admin.AdminMemberListDTO;
+import dev.emoforge.auth.dto.admin.MemberSearchCondition;
 import dev.emoforge.auth.entity.Member;
 import dev.emoforge.auth.enums.MemberStatus;
 import dev.emoforge.auth.repository.MemberRepository;
+import dev.emoforge.post.dto.internal.PageRequestDTO;
+import dev.emoforge.post.dto.legacy.bff.PageResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +26,34 @@ public class AdminMemberService {
     private final MemberRepository memberRepository;
 
     /**
-     * 전체 회원 목록 조회
+     * 전체 회원 목록 조회 - legacy
      */
-    public List<Member> getAllMembers() {
-        return memberRepository.findAllByOrderByCreatedAtDesc();
+    public Page<Member> getAllMembers(Pageable pageable) {
+        return memberRepository.findAllByOrderByCreatedAtDesc(pageable);
+    }
+
+    /**
+     * 전체 회원 목록 조회 - Paging
+     */
+    public PageResponseDTO<AdminMemberListDTO> getMemberList(PageRequestDTO requestDTO, MemberSearchCondition searchCondition) {
+        Page<Member> result = memberRepository.searchMembers(
+                searchCondition.nickname(),
+                searchCondition.deleted(),
+                searchCondition.startDate(),
+                searchCondition.endDate(),
+                requestDTO.toPageable()
+        );
+
+        System.out.println("nickname = " + searchCondition.nickname());
+
+        List<AdminMemberListDTO> dtoList =
+                result.stream()
+                        .map(AdminMemberListDTO::fromEntity)
+                        .toList();
+
+        System.out.println(result.getTotalElements());
+
+        return new PageResponseDTO(requestDTO, result.getTotalElements(), result.stream().toList(), requestDTO.size());
     }
 
     /**

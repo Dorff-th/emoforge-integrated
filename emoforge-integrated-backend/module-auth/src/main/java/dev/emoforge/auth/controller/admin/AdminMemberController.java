@@ -1,22 +1,25 @@
 package dev.emoforge.auth.controller.admin;
 
+import dev.emoforge.auth.dto.admin.MemberSearchCondition;
 import dev.emoforge.auth.entity.Member;
 import dev.emoforge.auth.enums.MemberStatus;
 import dev.emoforge.auth.repository.MemberRepository;
 import dev.emoforge.auth.service.admin.AdminMemberService;
 import dev.emoforge.auth.service.admin.MemberDeletionService;
 import dev.emoforge.core.security.principal.CustomUserPrincipal;
+import dev.emoforge.post.dto.internal.PageRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -55,10 +58,15 @@ public class AdminMemberController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공")
     })
+    /*@GetMapping
+    public ResponseEntity<Page<Member>> getAllMembers(Pageable pageable) {
+        return ResponseEntity.ok(adminMemberService.getAllMembers(pageable));
+    }*/
     @GetMapping
-    public ResponseEntity<List<Member>> getAllMembers() {
-        return ResponseEntity.ok(adminMemberService.getAllMembers());
+    public ResponseEntity<?> getAllMembers(PageRequestDTO requestDTO, MemberSearchCondition searchCondition) {
+        return ResponseEntity.ok(adminMemberService.getMemberList(requestDTO, searchCondition));
     }
+
 
     // ---------------------------------------------------------
     // 🔹 회원 상태 변경 (ACTIVE / INACTIVE)

@@ -1,24 +1,83 @@
+import { useEffect, useState } from "react";
 import {
-  useMembers,
-  useToggleMemberStatus,
-  useToggleMemberDeleted,
   useDeleteMember,
+  useMembers,
+  useToggleMemberDeleted,
+  useToggleMemberStatus,
 } from "@/features/admin/hooks/useMembers";
-import { StatusPill } from "@/features/admin/components/ui/StatusPill";
 import { DeleteTogglePill } from "@/features/admin/components/member/DeleteTogglePill";
+import MemberSearchBar, {
+  type MemberDeletedFilter,
+} from "@/features/admin/components/member/MemberSearchBar";
 import MemberDeleteButton from "../components/member/MemberDeleteButton";
-import { formatWithdrawInfo, formatDate } from "@/shared/utils/dateUtils";
+import { StatusPill } from "@/features/admin/components/ui/StatusPill";
+import Pagination from "@/features/post/components/Pagination";
+import { formatDate, formatWithdrawInfo } from "@/shared/utils/dateUtils";
+import { useToast } from "@/shared/stores/useToast";
+
+const PAGE_SIZE = 10;
+const MEMBER_SORT = "created_at";
+const MEMBER_DIRECTION = "DESC" as const;
 
 export default function AdminMembersPage() {
-  const { data: members = [], isLoading } = useMembers();
+  const [page, setPage] = useState(1);
+  const [nickname, setNickname] = useState("");
+  const [deletedFilter, setDeletedFilter] =
+    useState<MemberDeletedFilter>("ALL");
+  const [appliedNickname, setAppliedNickname] = useState("");
+  const [appliedDeleted, setAppliedDeleted] = useState<boolean>();
+
+  const toast = useToast();
   const toggleStatusMutation = useToggleMemberStatus();
   const toggleDeletedMutation = useToggleMemberDeleted();
-
   const deleteMemberMutation = useDeleteMember();
+
+  const {
+    data: pageInfo,
+    isLoading,
+    isFetching,
+    isError,
+  } = useMembers({
+    page,
+    size: PAGE_SIZE,
+    sort: MEMBER_SORT,
+    direction: MEMBER_DIRECTION,
+    nickname: appliedNickname,
+    deleted: appliedDeleted,
+  });
+
+  const members = pageInfo?.dtoList ?? [];
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("회원 목록 로드 실패");
+    }
+  }, [isError, toast]);
+
+  useEffect(() => {
+    if (!pageInfo) {
+      return;
+    }
+
+    const maxPage = Math.max(1, pageInfo.totalPages || 1);
+    if (page > maxPage) {
+      setPage(maxPage);
+    }
+  }, [page, pageInfo]);
+
+  const handleSearch = () => {
+    setAppliedNickname(nickname.trim());
+    setAppliedDeleted(
+      deletedFilter === "ALL"
+        ? undefined
+        : deletedFilter === "DELETED",
+    );
+    setPage(1);
+  };
 
   const handleDelete = (uuid: string) => {
     const message = `
-    정말 회원을 완전히 삭제하시겠습니까?
+    정말 회원을 완전 삭제하시겠습니까?
 
     삭제되는 데이터
     - 게시글
@@ -35,13 +94,16 @@ export default function AdminMembersPage() {
     deleteMemberMutation.mutate(uuid);
   };
 
-  if (isLoading) {
-    return <div className="p-4">회원 목록을 불러오는 중...</div>;
-  }
-
   return (
     <div>
       <h2 className="text-lg font-bold mb-4">회원 관리</h2>
+      <MemberSearchBar
+        nickname={nickname}
+        deletedFilter={deletedFilter}
+        onNicknameChange={setNickname}
+        onDeletedFilterChange={setDeletedFilter}
+        onSearch={handleSearch}
+      />
       <table className="min-w-full bg-white border">
         <thead className="bg-gray-100 border-b text-center">
           <tr>
@@ -50,7 +112,7 @@ export default function AdminMembersPage() {
             <th>상태</th>
             <th>탈퇴여부</th>
             <th>가입일</th>
-            <th>마지막로그인</th>
+            <th>마지막 로그인</th>
             <th>탈퇴일</th>
             <th>삭제</th>
           </tr>
@@ -88,7 +150,7 @@ export default function AdminMembersPage() {
                         })
                       }
                       isLoading={isStatusLoading}
-                      ariaLabel={`${m.username} 상태: ${m.status}. 클릭하여 토글`}
+                      ariaLabel={`${m.username} 상태: ${m.status}. 클릭하여 전환`}
                     />
                   ) : (
                     <span className="text-gray-400 text-sm">관리자</span>
@@ -125,8 +187,32 @@ export default function AdminMembersPage() {
               </tr>
             );
           })}
+          {!isLoading && members.length === 0 && (
+            <tr>
+              <td colSpan={8} className="p-6 text-sm text-gray-500">
+                조회된 회원이 없습니다.
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
+      {isFetching && (
+        <div className="mt-2 text-sm text-gray-500">
+          목록을 불러오는 중입니다.
+        </div>
+      )}
+      {pageInfo && (
+        <div className="mt-6">
+          <Pagination
+            page={page}
+            startPage={pageInfo.startPage}
+            endPage={pageInfo.endPage}
+            prev={pageInfo.prev}
+            next={pageInfo.next}
+            onPageChange={setPage}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,9 +1,17 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { http } from "@/shared/api/httpClient";
 import { API } from "@/shared/api/endpoints";
 import { useToast } from '@/shared/stores/useToast';
 import { deleteMember } from "@/features/admin/api/adminMemberApi";
+import type { PageResponse } from '@/features/post/types/Common';
 
+
+//member response type
 export interface MemberDTO {
   uuid: string;
   username: string;
@@ -17,12 +25,50 @@ export interface MemberDTO {
   lastLoginAt : string
 }
 
+
+
 export const memberKeys = {
   all: ['members'] as const,
+  list: (
+    page: number,
+    size: number = 15,
+    sort: string = 'createdAt',
+    direction: 'ASC' | 'DESC' = 'DESC',
+    nickname?: string,
+    deleted?: boolean,
+  ) =>
+    [
+      ...memberKeys.all,
+      'list',
+      { page, size, sort, direction, nickname: nickname?.trim() || '', deleted },
+    ] as const,
 };
 
-async function fetchMembers(): Promise<MemberDTO[]> {
-  const res = await http.get(`${API.ADMIN.AUTH}/members`);
+// async function fetchMembers(): Promise<MemberDTO[]> {
+//   const res = await http.get(`${API.ADMIN.AUTH}/members`, {
+    
+//   });
+//   return res.data;
+// }
+
+export async function fetchMembers(
+  page: number,
+  size: number = 15,
+  sort: string = 'createdAt',
+  direction: 'ASC' | 'DESC' = 'DESC',
+  nickname?: string,
+  deleted?: boolean,
+): Promise<PageResponse<MemberDTO>> {
+  const res = await http.get(`${API.ADMIN.AUTH}/members`, {
+    params: {
+      page,
+      size,
+      sort,
+      direction,
+      nickname: nickname?.trim() ? nickname.trim() : undefined,
+      deleted,
+    },
+  });
   return res.data;
 }
 
@@ -40,10 +86,27 @@ async function updateMemberDeleted(uuid: string, deleted: boolean): Promise<Memb
   return res.data;
 }
 
-export function useMembers() {
+export interface UseMembersParams {
+  page: number;
+  size?: number;
+  sort?: string;
+  direction?: 'ASC' | 'DESC';
+  nickname?: string;
+  deleted?: boolean;
+}
+
+export function useMembers({
+  page,
+  size = 15,
+  sort = 'createdAt',
+  direction = 'DESC',
+  nickname,
+  deleted,
+}: UseMembersParams) {
   return useQuery({
-    queryKey: memberKeys.all,
-    queryFn: fetchMembers,
+    queryKey: memberKeys.list(page, size, sort, direction, nickname, deleted),
+    queryFn: () => fetchMembers(page, size, sort, direction, nickname, deleted),
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -63,7 +126,7 @@ export function useToggleMemberStatus() {
   });
 }
 
-export function useToggleMemberDeleted() {
+export function useToggleMemberDeleted(options?: { onSuccess?: () => void }) {
   const queryClient = useQueryClient();
   const toast = useToast();
 
@@ -71,11 +134,10 @@ export function useToggleMemberDeleted() {
     mutationFn: ({ uuid, currentDeleted }: { uuid: string; currentDeleted: boolean }) => {
       return updateMemberDeleted(uuid, !currentDeleted);
     },
-    onSuccess: (updatedMember) => {
-      queryClient.setQueryData<MemberDTO[]>(memberKeys.all, (old) =>
-        old?.map((m) => (m.uuid === updatedMember.uuid ? updatedMember : m))
-      );
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: memberKeys.all });
       toast.success('회원 탈퇴 상태가 변경되었습니다.');
+      options?.onSuccess?.();
     },
   });
 }

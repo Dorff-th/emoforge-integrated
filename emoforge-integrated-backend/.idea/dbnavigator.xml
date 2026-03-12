@@ -55,7 +55,7 @@
     </connection>
     <connection id="793ce1bb-5daa-4759-bb0a-27b5e0fec354">
       <console name="Connection 1" type="STANDARD" schema="mysql" session="Main" />
-      <console name="RDS_MySQL 1" type="STANDARD" schema="emoforge_db" session="Main"><![CDATA[ALTER TABLE member ADD COLUMN last_login_at DATETIME NULL;]]></console>
+      <console name="RDS_MySQL 1" type="STANDARD" schema="emoforge_db" session="Main" />
     </connection>
     <connection id="6f0b7f52-9dad-4bfd-8a08-66bcaf8e59d7">
       <console name="Connection" type="STANDARD" schema="mysql" session="Main" />
@@ -71,9 +71,7 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="793ce1bb-5daa-4759-bb0a-27b5e0fec354" object-ref="consoles/RDS_MySQL 1" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="70669156-3e9a-40ff-ba24-2a77c3807a92" />

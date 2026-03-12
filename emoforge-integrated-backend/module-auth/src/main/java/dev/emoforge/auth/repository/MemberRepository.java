@@ -1,15 +1,18 @@
 package dev.emoforge.auth.repository;
 
+import dev.emoforge.auth.dto.admin.AdminMemberListDTO;
 import dev.emoforge.auth.entity.Member;
 import dev.emoforge.auth.enums.MemberStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -30,7 +33,36 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 2026-03-11: Added member deletion by uuid for admin purge flow.
     void deleteByUuid(String uuid);
 
-    List<Member> findAllByOrderByCreatedAtDesc();
+    //legacy
+    Page<Member> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    @Query(
+            value = """
+                    SELECT m.*
+                    FROM member m
+                    WHERE (:nickname IS NULL OR :nickname = '' OR m.nickname LIKE CONCAT('%', :nickname, '%'))
+                      AND (:deleted IS NULL OR m.deleted = :deleted)
+                      AND (:startDate IS NULL OR DATE(m.created_at) >= :startDate)
+                      AND (:endDate IS NULL OR DATE(m.created_at) <= :endDate)
+                    ORDER BY m.created_at DESC
+                    """,
+            countQuery = """
+                    SELECT COUNT(*)
+                    FROM member m
+                    WHERE (:nickname IS NULL OR :nickname = '' OR m.nickname LIKE CONCAT('%', :nickname, '%'))
+                      AND (:deleted IS NULL OR m.deleted = :deleted)
+                      AND (:startDate IS NULL OR DATE(m.created_at) >= :startDate)
+                      AND (:endDate IS NULL OR DATE(m.created_at) <= :endDate)
+                    """,
+            nativeQuery = true
+    )
+    Page<Member> searchMembers(
+            @Param("nickname") String nickname,
+            @Param("deleted") Boolean deleted,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            Pageable pageable
+    );
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Member m SET m.status = :status WHERE m.uuid = :uuid")

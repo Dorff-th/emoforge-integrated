@@ -1,0 +1,28 @@
+Refactor the MemberRepository to support pagination.
+
+Current method:
+
+List<Member> findAllByOrderByCreatedAtDesc();
+
+Change it to return a Page<Member> using Pageable.
+
+Do not implement search conditions yet.
+Only add pagination support.
+
+Also update the service layer if needed.
+
+---
+
+Refactor MemberRepository to support search conditions for the admin member list.
+
+Add a new repository method called searchMembers using a native query.
+
+Search conditions:
+- nickname (LIKE search)
+- withdrawn (boolean filter)
+- created_at date range (startDate, endDate)
+
+The method should return Page<Member> and support Pageable.
+
+Include a proper countQuery for pagination.
+Do not modify the controller yet.
