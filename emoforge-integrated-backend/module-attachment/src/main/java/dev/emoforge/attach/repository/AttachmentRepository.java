@@ -25,6 +25,8 @@ public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 
     long countByPostIdAndUploadTypeAndDeletedFalse(Long postId, UploadType uploadType);
 
+    long countByUploadTypeAndDeletedFalse(UploadType uploadType);
+
     List<Attachment> findByMemberUuidAndDeletedFalse(String memberUuid);
 
     // 2026-03-11: Added profile image lookup for admin member purge.

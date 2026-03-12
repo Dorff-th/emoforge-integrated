@@ -76,6 +76,8 @@ public class SecurityConfig {
                         .requestMatchers(DIARY_AUTHENTICATED_ENDPOINTS).authenticated()
                         //=== debug ====
                         .requestMatchers("/api/debug/**").permitAll()
+                        //=== admin dashboard ====
+                        .requestMatchers("/api/admin/dashboard").hasRole("ADMIN")
                         //swagger
                         .requestMatchers(
                                 "/swagger-ui/**",
