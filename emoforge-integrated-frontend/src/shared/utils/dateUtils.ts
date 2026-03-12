@@ -30,3 +30,25 @@ export const getDateRange = (option: PeriodOption): [string, string] => {
       return ['', '']; // custom 선택 시 별도 처리
   }
 };
+
+export const formatWithdrawInfo = (date?: string | null) => {
+  if (!date) return "-";
+
+  const withdrawDate = new Date(date);
+  const now = new Date();
+
+  const diff = Math.floor(
+    (now.getTime() - withdrawDate.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  const formattedDate = withdrawDate.toISOString().slice(0, 10);
+
+  return `${formattedDate} (${diff}일)`;
+};
+
+export const formatDate = (date?: string | null) => {
+  if (!date) return "-";
+
+  const d = new Date(date);
+  return d.toISOString().slice(0, 10);
+};

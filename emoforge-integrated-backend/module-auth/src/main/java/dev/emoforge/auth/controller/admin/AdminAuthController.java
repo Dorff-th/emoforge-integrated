@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 
@@ -81,6 +82,9 @@ public class AdminAuthController {
         }
 
         Member admin = adminAuthService.authenticate(request);
+
+        admin.setLastLoginAt(LocalDateTime.now());
+        memberRepository.save(admin);
 
         loginTokenService.handleLoginSuccess(
                 response,

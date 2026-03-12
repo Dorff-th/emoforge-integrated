@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -55,6 +56,9 @@ public class KakaoAuthService {
 
         // 4) 기존 회원 → 로그인 처리 → JWT 발급 + 쿠키 저장
         Member member = optionalMember.get();
+
+        member.setLastLoginAt(LocalDateTime.now());
+        memberRepository.save(member);
 
         loginTokenService.handleLoginSuccess(
                 response,

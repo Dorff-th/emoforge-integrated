@@ -6,7 +6,8 @@ import {
 } from "@/features/admin/hooks/useMembers";
 import { StatusPill } from "@/features/admin/components/ui/StatusPill";
 import { DeleteTogglePill } from "@/features/admin/components/member/DeleteTogglePill";
-import { Trash2 } from "lucide-react";
+import MemberDeleteButton from "../components/member/MemberDeleteButton";
+import { formatWithdrawInfo, formatDate } from "@/shared/utils/dateUtils";
 
 export default function AdminMembersPage() {
   const { data: members = [], isLoading } = useMembers();
@@ -42,16 +43,19 @@ export default function AdminMembersPage() {
     <div>
       <h2 className="text-lg font-bold mb-4">회원 관리</h2>
       <table className="min-w-full bg-white border">
-        <thead>
-          <tr className="bg-gray-100 border-b">
-            <th className="p-2 text-left">UUID</th>
-            <th className="p-2 text-left">닉네임</th>
-            <th className="p-2 text-left">상태</th>
-            <th className="p-2 text-left">탈퇴여부</th>
-            <th className="p-2 text-left">삭제</th>
+        <thead className="bg-gray-100 border-b text-center">
+          <tr>
+            <th className="p-2">UUID</th>
+            <th>닉네임</th>
+            <th>상태</th>
+            <th>탈퇴여부</th>
+            <th>가입일</th>
+            <th>마지막로그인</th>
+            <th>탈퇴일</th>
+            <th>삭제</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-center">
           {members.map((m) => {
             const isAdmin = m.role === "ADMIN";
             const isStatusLoading =
@@ -107,22 +111,16 @@ export default function AdminMembersPage() {
                     <span className="text-gray-400 text-sm">-</span>
                   )}
                 </td>
+                <td>{formatDate(m.createdAt)}</td>
+                <td>{formatDate(m.lastLoginAt)}</td>
+                <td>{m.deleted ? formatWithdrawInfo(m.deletedAt) : "-"}</td>
                 <td className="p-2">
-                  {!isAdmin ? (
-                    <button
-                      disabled={!m.deleted}
-                      onClick={() => handleDelete(m.uuid)}
-                      className="inline-flex items-center gap-1 px-2 py-1 text-xs
-                 text-red-600 border border-red-300 rounded-md
-                 hover:bg-red-50 hover:border-red-400
-                 transition-colors"
-                    >
-                      <Trash2 size={14} />
-                      삭제
-                    </button>
-                  ) : (
-                    <span className="text-gray-400 text-sm">-</span>
-                  )}
+                  <MemberDeleteButton
+                    isAdmin={isAdmin}
+                    deleted={m.deleted}
+                    uuid={m.uuid}
+                    onDelete={handleDelete}
+                  />
                 </td>
               </tr>
             );

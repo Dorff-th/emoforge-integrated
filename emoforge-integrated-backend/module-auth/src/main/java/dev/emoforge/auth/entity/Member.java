@@ -63,6 +63,10 @@ public class Member {
 
     @Column(name = "kakao_id", unique = true)
     private Long kakaoId; // ✅ 카카오 고유 ID
+
+    //마지막 로그인한 시각
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
     
     // Member 생성 시 UUID와 role 기본값 설정을 위한 메서드
     @PrePersist

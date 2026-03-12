@@ -12,6 +12,9 @@ export interface MemberDTO {
   role: string;
   status: string;
   deleted: boolean;
+  deletedAt : string;
+  createdAt: string;
+  lastLoginAt : string
 }
 
 export const memberKeys = {

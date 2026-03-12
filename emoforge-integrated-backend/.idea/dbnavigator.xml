@@ -55,17 +55,7 @@
     </connection>
     <connection id="793ce1bb-5daa-4759-bb0a-27b5e0fec354">
       <console name="Connection 1" type="STANDARD" schema="mysql" session="Main" />
-      <console name="RDS_MySQL 1" type="STANDARD" schema="emoforge_db" session="Main"><![CDATA[INSERT INTO member
-(uuid, username, password, email, nickname, role, status, deleted)
-VALUES
-('11111111-1111-1111-1111-111111111111','user1','$2a$10$dummyhash','user1@test.com','유저1','USER','ACTIVE',0),
-('22222222-2222-2222-2222-222222222222','user2','$2a$10$dummyhash','user2@test.com','유저2','USER','ACTIVE',0),
-('44444444-4444-4444-4444-444444444444','user4','$2a$10$dummyhash','user4@test.com','유저4','USER','ACTIVE',0),
-('55555555-5555-5555-5555-555555555555','user5','$2a$10$dummyhash','user5@test.com','유저5','USER','ACTIVE',0),
-('66666666-6666-6666-6666-666666666666','user6','$2a$10$dummyhash','user6@test.com','유저6','USER','ACTIVE',0),
-('77777777-7777-7777-7777-777777777777','user7','$2a$10$dummyhash','user7@test.com','유저7','USER','ACTIVE',0),
-('88888888-8888-8888-8888-888888888888','user8','$2a$10$dummyhash','user8@test.com','유저8','USER','ACTIVE',0),
-('99999999-9999-9999-9999-999999999999','user9','$2a$10$dummyhash','user9@test.com','유저9','USER','ACTIVE',0);]]></console>
+      <console name="RDS_MySQL 1" type="STANDARD" schema="emoforge_db" session="Main"><![CDATA[ALTER TABLE member ADD COLUMN last_login_at DATETIME NULL;]]></console>
     </connection>
     <connection id="6f0b7f52-9dad-4bfd-8a08-66bcaf8e59d7">
       <console name="Connection" type="STANDARD" schema="mysql" session="Main" />
