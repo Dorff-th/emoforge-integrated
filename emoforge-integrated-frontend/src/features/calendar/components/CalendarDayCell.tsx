@@ -54,6 +54,19 @@ const CalendarDayCell = ({
 
   const isClickable = !!emotion;
 
+  const emotionBackground =
+    averageScore === 1
+      ? "bg-red-50"
+      : averageScore === 2
+        ? "bg-orange-50"
+        : averageScore === 3
+          ? "bg-gray-50"
+          : averageScore === 4
+            ? "bg-yellow-50"
+            : averageScore === 5
+              ? "bg-pink-50"
+              : null;
+
   const dayColor =
     weekday === 0
       ? "text-red-500"
@@ -62,7 +75,7 @@ const CalendarDayCell = ({
         : "text-black dark:text-white";
 
   const highlightStyle = isToday
-    ? "ring-2 ring-yellow-400 bg-yellow-100 dark:bg-yellow-900/30"
+    ? "ring-2 ring-yellow-400"
     : "";
 
   return (
@@ -71,7 +84,10 @@ const CalendarDayCell = ({
       className={clsx(
         "h-20 w-full rounded-xl p-2 relative group transition-all duration-200 select-none min-h-[90px]",
         isClickable
-          ? "cursor-pointer bg-white dark:bg-gray-800 shadow-md hover:shadow-xl hover:-translate-y-1 hover:bg-neutral-50 dark:hover:bg-gray-700"
+          ? [
+              "cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-1",
+              emotionBackground ?? "bg-white",
+            ]
           : "cursor-not-allowed bg-gray-100 dark:bg-gray-700 text-gray-400",
         highlightStyle,
       )}

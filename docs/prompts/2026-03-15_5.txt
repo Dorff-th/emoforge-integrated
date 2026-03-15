@@ -1,0 +1,4 @@
+Read the PRD file: ./docs/PRD_Diary_Calendar_UX_Improvement.md
+
+Implement the feature described in the PRD.
+
