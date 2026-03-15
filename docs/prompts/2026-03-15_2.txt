@@ -1,0 +1,4 @@
+Read the PRD file: ./docs/PRD_Improve_PostDetailPage_UIUX.md
+
+Implement the feature described in the PRD.
+

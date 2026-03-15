@@ -1,0 +1,57 @@
+Refactor the PostDetailPage by extracting the Previous / Next post section into a separate component.
+
+Create a new component called:
+
+PostNavigation
+
+Location:
+
+features/post/components/PostNavigation/PostNavigation.tsx
+
+Requirements:
+
+1. The component should render the "Previous Post" and "Next Post" cards.
+2. It should receive props:
+
+previousPost
+nextPost
+categoryName
+
+Example props:
+
+{
+  previousPost: { id, title },
+  nextPost: { id, title },
+  categoryName: string
+}
+
+3. Move all layout and styling related to the navigation section from PostDetailPage into this component.
+
+4. Use the Emoforge UI design system:
+
+Cards:
+border border-gray-300 hover:border-gray-400 hover:shadow-sm rounded-xl p-4 transition
+
+Layout:
+grid grid-cols-2 gap-4
+
+Section title:
+
+More in {categoryName}
+
+5. Keep PostDetailPage clean by replacing the existing navigation section with:
+
+<PostNavigation
+  previousPost={previousPost}
+  nextPost={nextPost}
+  categoryName={post.categoryName}
+/>
+
+6. Do not change backend APIs.
+
+Only refactor the UI structure.
+
+7. Ensure the cards handle empty states:
+
+"이전 게시물이 없습니다."
+"다음 게시물이 없습니다."
