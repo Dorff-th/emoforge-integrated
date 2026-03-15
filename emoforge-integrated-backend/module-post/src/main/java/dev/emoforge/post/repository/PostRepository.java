@@ -145,6 +145,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                   ON t.id = pt.tag_id
             
                 WHERE (:tagName IS NULL OR t.name = :tagName)
+                  AND (:categoryId IS NULL OR p.category_id = :categoryId)
             
                 GROUP BY
                   p.id, p.title, p.created_at,
@@ -161,11 +162,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                 LEFT JOIN tag t
                   ON t.id = pt.tag_id
                 WHERE (:tagName IS NULL OR t.name = :tagName)
+                  AND (:categoryId IS NULL OR p.category_id = :categoryId)
               """,
             nativeQuery = true
     )
     Page<PostListItemProjection> findPostList(
             @Param("tagName") String tagName,
+            @Param("categoryId") Long categoryId,
             Pageable pageable
     );
 

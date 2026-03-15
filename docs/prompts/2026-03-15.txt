@@ -1,0 +1,20 @@
+Read the PRD file: ./docs/PRD_post_category_filter.md
+
+Implement the feature described in the PRD.
+
+Constraints:
+- Keep the existing PostListPage layout
+- Use the existing post API
+- Add category filtering
+- Do not implement tag UI
+
+---
+
+Refactor the PostList header layout.
+
+Requirements:
+- Place the "New Post" button on the same row as the "Posts" title
+- Align the title to the left
+- Align the button to the right
+- Keep the category filter below the header
+- Do not change existing functionality

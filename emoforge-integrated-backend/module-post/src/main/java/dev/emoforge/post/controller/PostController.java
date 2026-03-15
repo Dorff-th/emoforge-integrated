@@ -95,10 +95,13 @@ public class PostController {
                     """
     )
     @GetMapping
-    public PageResponseDTO<PostListItemResponse> getPostList(PageRequestDTO requestDTO) {
+    public PageResponseDTO<PostListItemResponse> getPostList(
+        @RequestParam(value = "categoryId", required = false) Long categoryId,
+        PageRequestDTO requestDTO
+    ) {
 
         Page<PostListItemSummary> page =
-                postQueryService.getPostList(null, requestDTO);
+                postQueryService.getPostList(null, categoryId, requestDTO);
 
         PageResponseDTO pageResponseDTO = new PageResponseDTO(requestDTO, page.getTotalElements(), page.stream().toList(), PAGE_BLOCK_SIZE);
 
@@ -128,7 +131,7 @@ public class PostController {
         @PathVariable("tagName") String tagName,
         PageRequestDTO requestDTO) {
         Page<PostListItemSummary> page =
-                postQueryService.getPostList(tagName, requestDTO);
+                postQueryService.getPostList(tagName, null, requestDTO);
 
         PageResponseDTO pageResponseDTO = new PageResponseDTO(requestDTO, page.getTotalElements(), page.stream().toList(), PAGE_BLOCK_SIZE);
 
@@ -295,4 +298,3 @@ public class PostController {
         return ResponseEntity.noContent().build(); // 204 반환
     }
 }
-

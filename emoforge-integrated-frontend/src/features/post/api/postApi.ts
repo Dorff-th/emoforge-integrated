@@ -10,9 +10,10 @@ export const fetchPosts = async (
   size: number = 10,
   sort: string = 'createdAt',
   direction: 'ASC' | 'DESC' = 'DESC',
+  categoryId?: number,
 ): Promise<PageResponse<PostDTO>> => {
   const response = await http.get<PageResponse<PostDTO>>(`${API.POST}`, {
-    params: { page, size, sort, direction },
+    params: { page, size, sort, direction, categoryId },
   });
   return response.data;
 };

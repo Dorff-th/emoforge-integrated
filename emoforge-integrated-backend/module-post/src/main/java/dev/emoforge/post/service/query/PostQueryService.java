@@ -38,6 +38,7 @@ public class PostQueryService {
 
     public Page<PostListItemSummary> getPostList(
             String tagName,
+            Long categoryId,
             PageRequestDTO requestDTO
     ) {
 
@@ -55,7 +56,7 @@ public class PostQueryService {
                         : tagName;
 
         Page<PostListItemProjection> posts =
-                postRepository.findPostList(normalizedTag, pageable);
+                postRepository.findPostList(normalizedTag, categoryId, pageable);
 
         // 🔹 Projection → Summary 변환
         return posts.map(PostListItemSummary::from);
