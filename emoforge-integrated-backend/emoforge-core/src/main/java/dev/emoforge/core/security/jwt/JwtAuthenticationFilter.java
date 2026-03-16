@@ -1,6 +1,7 @@
 package dev.emoforge.core.security.jwt;
 
 import dev.emoforge.core.security.principal.CustomUserPrincipal;
+import dev.emoforge.core.security.service.MemberSecurityReader;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,18 +22,20 @@ import java.util.List;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
     private final JwtTokenVerifier jwtTokenVerifier;     // 🔁 변경: 토큰 검증 전담
     private final JwtTokenParser  jwtTokenParser ;       // 🔁 변경: Claims 파싱 전담
+    private final MemberSecurityReader memberSecurityReader;
 
 
-    public JwtAuthenticationFilter(JwtTokenVerifier jwtTokenVerifier,
+    /*public JwtAuthenticationFilter(JwtTokenVerifier jwtTokenVerifier,
                                    JwtTokenParser jwtTokenParser) {
         this.jwtTokenVerifier = jwtTokenVerifier;
         this.jwtTokenParser = jwtTokenParser;
-    }
+    }*/
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -58,6 +62,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 String uuid = claims.getSubject(); // sub = member_uuid
                 String role = claims.get("role", String.class);
+
+                if (!memberSecurityReader.isActive(uuid)) {
+                    throw new DisabledException("inactive member");
+                }
 
                 CustomUserPrincipal principal =
                         new CustomUserPrincipal(

@@ -82,4 +82,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Member m SET m.deleted = false, m.deletedAt = NULL WHERE m.uuid = :uuid")
     int cancelMemberDeletion(@Param("uuid") String uuid);
+
+    //2026.03.16 추가 - 토큰 인증할때 status값을 먼저 조회해서 ACTVICE / INCATVICE 상태를 파악하는 용도
+    @Query("""
+       select m.status
+       from Member m
+       where m.uuid = :uuid
+       """)
+    Optional<MemberStatus> findStatusByUuid(@Param("uuid") String uuid);
 }
