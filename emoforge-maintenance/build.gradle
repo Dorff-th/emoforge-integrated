@@ -34,6 +34,9 @@ dependencies {
 
     //mysql db (aws rds 접속)
     runtimeOnly 'com.mysql:mysql-connector-j:8.2.0'
+
+    //0316 - 디스코드 알림을 위해 추가
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
 test {

@@ -7,6 +7,7 @@ import dev.emoforge.maintenance.cleaner.ProfileCleaner;
 import dev.emoforge.maintenance.config.CleanupProperties;
 import java.time.LocalDateTime;
 
+import dev.emoforge.maintenance.notify.DiscordNotifier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -21,6 +22,8 @@ public class MaintenanceRunner implements ApplicationRunner {
     private final ProfileCleaner profileCleaner;
     private final AttachmentCleaner attachmentCleaner;
     private final FileSystemCleaner fileSystemCleaner;
+    //2026.03.16 추가
+    private final DiscordNotifier notifier;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -35,24 +38,46 @@ public class MaintenanceRunner implements ApplicationRunner {
         System.out.println("[MAINTENANCE] BatchSize: " + props.getBatchSize());
         System.out.println("========================================");
 
-        switch (mode) {
-            case "profile" -> profileCleaner.run();
-            case "editor" -> editorCleaner.run();
-            case "attachment" -> attachmentCleaner.run();
-            case "filesystem" -> fileSystemCleaner.run();
-            case "all" -> {
-                editorCleaner.run();
-                profileCleaner.run();
-                attachmentCleaner.run();
-                fileSystemCleaner.run();
+        notifier.send(
+                "🚀 Emoforge maintenance started\n" +
+                        "mode=" + mode +
+                        "\nstarted=" + LocalDateTime.now()
+        );
+
+        try {
+
+            switch (mode) {
+                case "profile" -> profileCleaner.run();
+                case "editor" -> editorCleaner.run();
+                case "attachment" -> attachmentCleaner.run();
+                case "filesystem" -> fileSystemCleaner.run();
+                case "all" -> {
+                    editorCleaner.run();
+                    profileCleaner.run();
+                    attachmentCleaner.run();
+                    fileSystemCleaner.run();
+                }
+                default -> {
+                    System.out.println("❌ Invalid mode: " + mode);
+                    System.out.println("✅ Usage: --mode=profile|editor|attachment|all");
+                    // 배치 프로그램이면 실패코드로 종료하는게 깔끔
+                    System.exit(1);
+                }
             }
-            default -> {
-                System.out.println("❌ Invalid mode: " + mode);
-                System.out.println("✅ Usage: --mode=profile|editor|attachment|all");
-                // 배치 프로그램이면 실패코드로 종료하는게 깔끔
-                System.exit(1);
-            }
+
+        } catch (Exception e) {
+            notifier.send(
+                    "🔥 Emoforge maintenance FAILED\n" + e.getMessage()
+            );
+
+            throw e;
         }
+
+        notifier.send(
+                "🧹 Emoforge maintenance success\n" +
+                        "mode=" + mode +
+                        "\nfinished=" + LocalDateTime.now()
+        );
 
         System.out.println("========================================");
         System.out.println("[MAINTENANCE] Finished: " + LocalDateTime.now());

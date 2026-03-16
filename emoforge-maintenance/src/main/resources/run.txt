@@ -1,3 +1,6 @@
+#컴파일
+./gradlew bootJar
+
 # 개발환경에서
 java -jar build/libs/emoforge-maintenance-1.0-SNAPSHOT.jar --spring.profiles.active=dev --mode=all
 
