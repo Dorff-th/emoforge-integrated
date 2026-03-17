@@ -107,11 +107,6 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
 
-        /*if (Arrays.asList(env.getActiveProfiles()).contains("prod")) {
-            config.setAllowedOriginPatterns(corsProps.allowedOriginPatterns());
-        } else {
-            config.setAllowedOrigins(corsProps.allowedOrigins());
-        }*/
 
         config.setAllowedOriginPatterns(corsProps.allowedOriginPatterns());
 

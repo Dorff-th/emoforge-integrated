@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Component
 public class JwtTokenParser {
@@ -24,5 +26,14 @@ public class JwtTokenParser {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    //0317 추가  :  refresh_token 안에 있는 exp 값 추출
+    public LocalDateTime getRefreshTokenExpiry(String token) {
+        return parseClaims(token)
+                .getExpiration()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 }

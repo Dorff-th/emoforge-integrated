@@ -8,6 +8,8 @@ import dev.emoforge.auth.entity.Member;
 import dev.emoforge.auth.enums.LoginType;
 import dev.emoforge.auth.repository.MemberRepository;
 import dev.emoforge.auth.service.LoginTokenService;
+import dev.emoforge.auth.service.RefreshTokenService;
+import dev.emoforge.core.properties.CookieProvider;
 import dev.emoforge.core.security.jwt.JwtTokenVerifier;
 import dev.emoforge.core.security.principal.CustomUserPrincipal;
 
@@ -61,6 +63,10 @@ public class AuthController {
     private final JwtTokenVerifier jwtTokenVerifier;
 
     private final LoginTokenService loginTokenService;
+
+    //0317 추가
+    private final CookieProvider cookieProvider;
+    private final RefreshTokenService refreshTokenService;
 
 
     // ---------------------------------------------------------
@@ -127,9 +133,8 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         }
 
-        /*if (!"refresh".equals(jwtTokenVerifier.getTokenType(refreshToken))) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token type");
-        }*/
+        //0317 추가
+        refreshTokenService.validate(refreshToken);
 
         String memberUuid = jwtTokenVerifier.getUuidFromToken(refreshToken);
         Member member = memberRepository.findByUuid(memberUuid)
@@ -157,6 +162,7 @@ public class AuthController {
             @ApiResponse(responseCode = "204", description = "로그아웃 성공")
     })
 
+    //0317 수정 : refresh_token을 db에서 삭제하는 로직 추가
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
             HttpServletRequest request,
@@ -166,8 +172,12 @@ public class AuthController {
         var session = request.getSession(false);
         if (session != null) session.invalidate();
 
-        loginTokenService.handleLogout(response, LoginType.KAKAO);
+        String refreshToken = cookieProvider.extractRefreshTokenFromCookie(request);
+
+        //loginTokenService.handleLogout(response, LoginType.KAKAO);
+        loginTokenService.handleLogout(refreshToken, response); // LoginType 무의미
 
         return ResponseEntity.noContent().build();
     }
 }
+

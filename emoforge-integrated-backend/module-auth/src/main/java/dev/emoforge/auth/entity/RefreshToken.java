@@ -2,6 +2,7 @@ package dev.emoforge.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -18,14 +19,18 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String memberUuid;
 
     @Column(length = 512, nullable = false, unique = true)
-    private String token;
+    private String tokenHash;
 
-    private boolean expired;
+    @Column(nullable = false)
+    private LocalDateTime expiredAt;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @CreationTimestamp
     private LocalDateTime updatedAt;
 }

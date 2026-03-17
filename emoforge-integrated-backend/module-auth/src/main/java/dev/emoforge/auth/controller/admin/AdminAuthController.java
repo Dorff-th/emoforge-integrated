@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,8 +51,11 @@ public class AdminAuthController {
     private final AdminAuthService adminAuthService;
     private final RecaptchaService recaptchaService;
     private final LoginTokenService loginTokenService;
-    //private final CookieProvider cookieProvider;
+
     private final MemberRepository memberRepository;
+
+    //0317 추가
+    private CookieProvider cookieProvider;
 
     // ---------------------------------------------------------
     // 🔹 관리자 로그인
@@ -111,9 +115,11 @@ public class AdminAuthController {
             @ApiResponse(responseCode = "200", description = "로그아웃 완료")
     })
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse response) {
+    public ResponseEntity<Void> logout(HttpServletResponse response, HttpServletRequest request) {
 
-        loginTokenService.handleLogout(response, LoginType.ADMIN);
+        //loginTokenService.handleLogout(response, LoginType.ADMIN);
+        String refreshToken = cookieProvider.extractRefreshTokenFromCookie(request); //0317 추가(로그아웃 될때 DB에서 refrest_token삭제)
+        loginTokenService.handleLogout(refreshToken, response);
 
         return ResponseEntity.ok().build();
     }

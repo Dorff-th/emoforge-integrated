@@ -31,12 +31,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final MemberSecurityReader memberSecurityReader;
 
 
-    /*public JwtAuthenticationFilter(JwtTokenVerifier jwtTokenVerifier,
-                                   JwtTokenParser jwtTokenParser) {
-        this.jwtTokenVerifier = jwtTokenVerifier;
-        this.jwtTokenParser = jwtTokenParser;
-    }*/
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,

@@ -1,6 +1,8 @@
 package dev.emoforge.app.common.properties;
 
 import dev.emoforge.core.properties.CookieProvider;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -109,6 +111,16 @@ public class DefaultCookieProvider implements CookieProvider {
     }
 
 
+    public String extractRefreshTokenFromCookie(HttpServletRequest request) {
 
+        if (request.getCookies() == null) return null;
+
+        for (Cookie cookie : request.getCookies()) {
+            if ("refresh_token".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        return null;
+    }
 
 }
