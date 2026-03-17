@@ -55,7 +55,7 @@ public class AdminAuthController {
     private final MemberRepository memberRepository;
 
     //0317 추가
-    private CookieProvider cookieProvider;
+    private final CookieProvider cookieProvider;
 
     // ---------------------------------------------------------
     // 🔹 관리자 로그인
