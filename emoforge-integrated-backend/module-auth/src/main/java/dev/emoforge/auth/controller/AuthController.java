@@ -173,7 +173,6 @@ public class AuthController {
         if (session != null) session.invalidate();
 
         String refreshToken = cookieProvider.extractRefreshTokenFromCookie(request);
-
         //loginTokenService.handleLogout(response, LoginType.KAKAO);
         loginTokenService.handleLogout(refreshToken, response); // LoginType 무의미
 

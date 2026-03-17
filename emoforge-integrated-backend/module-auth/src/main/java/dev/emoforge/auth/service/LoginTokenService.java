@@ -13,6 +13,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -63,6 +64,7 @@ public class LoginTokenService {
     }
 
     //0317 수정 : 로그아웃 되면 DB에 저장된 refresh_token 삭제
+    @Transactional
     public void handleLogout(String refreshToken, HttpServletResponse response) {
 
         String tokenHash = hash(refreshToken);
