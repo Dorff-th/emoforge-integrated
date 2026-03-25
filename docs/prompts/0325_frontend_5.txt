@@ -1,0 +1,30 @@
+목표
+React 페이지에서 실제 호출되는 API를 분석한다.
+
+분석 규칙
+
+1. 다음 패턴을 모두 API 호출로 간주한다.
+
+- import된 api 함수
+- axios / http 호출
+- useQuery queryFn
+- useMutation mutationFn
+- fetch 함수
+
+2. API 호출이 wrapper를 거쳐도 추적한다.
+
+예
+useQuery({ queryFn: fetchDiaryList })
+
+→ API: fetchDiaryList
+
+3. api 폴더에서 import된 함수는 모두 API로 기록한다.
+
+예
+import { fetchPosts } from "@/api/postApi"
+
+결과는
+
+docs/md/frontend-page-api-dependency-map.md
+
+파일로 생성해줘.

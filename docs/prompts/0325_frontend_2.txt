@@ -1,0 +1,15 @@
+emoforge-integrated-frontend/package.json 파일을 분석해줘.
+
+요구사항
+1. dependencies와 devDependencies에 있는 패키지를 확인한다.
+2. 패키지 이름을 출력한다.
+3. 패키지 버전을 출력한다.
+4. 패키지 역할을 간단한 코멘트로 작성한다. (8단어 이하)
+5. 각 패키지의 npm install 명령어도 함께 작성한다.
+
+출력 예시
+
+react | ^19.2.0 | React UI framework | npm install react@19.2.0
+axios | ^1.13.4 | HTTP client library | npm install axios@1.13.4
+
+결과는 ./docs/md/현재시간-frontend-package-list.md 파일로 저장해줘

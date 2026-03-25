@@ -1,0 +1,41 @@
+목표
+React frontend 프로젝트의 페이지 구조를 파악한다.
+
+탐색 범위
+src/features 하위 전체
+
+요구사항
+1. 각 feature 디렉토리를 탐색한다.
+2. feature 내부의 pages 디렉토리를 찾는다.
+3. pages 내부의 페이지 파일을 수집한다.
+4. 각 페이지 파일이 import하는 component, hooks, api 모듈을 분석한다.
+
+출력 형식
+
+Feature: diary
+
+Page: DiaryInputPage
+components
+- DiaryForm
+- EmotionSelector
+
+hooks
+- useAuth
+
+api
+- diaryApi
+
+---
+
+Feature: calendar
+
+Page: CalendarPage
+components
+- CalendarGrid
+- CalendarCell
+
+결과를
+
+docs/md/frontend-page-dependency-map.md
+
+파일로 생성해줘.

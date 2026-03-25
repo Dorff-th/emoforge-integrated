@@ -1,0 +1,26 @@
+emoforge-integrated-frontend/src 하위 모든 source file을 분석해줘.
+
+요구사항
+1. 각 파일의 상대경로 출력
+2. 파일 역할을 한 줄로 요약
+3. 코멘트는 8단어 이하
+4. node_modules, dist 제외
+
+출력 예시
+
+src/pages/LoginPage.tsx // login page UI
+src/api/diaryApi.ts // diary API client
+
+결과는 ./docs/md/현재시간-frontend-file-list.md 파일로 저장해줘
+
+---------------------
+
+
+emoforge-integrated-frontend/package.json은 파일을 분석해줘.
+
+요구사항
+1. 패키지 이름
+2. 버전
+3. 역할을 설명할수 있는 코멘트 (8단어 이하)
+
+결과는 ./docs/md/현재시간-frontend-package-list.md 파일로 저장해줘
